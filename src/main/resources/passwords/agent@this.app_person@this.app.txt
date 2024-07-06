@@ -1,0 +1,13 @@
+
+
+From: agent@this.app
+Recipient: person@this.app
+Subject: Your offer was Accepted
+
+Dear Person your offer for the announcement House-12/10/2001 was accepted
+
+From: agent@this.app
+Recipient: person@this.app
+Subject: Your offer was Accepted
+
+Dear Person your offer for the announcement House-9/5/2000 was accepted

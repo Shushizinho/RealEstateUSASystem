@@ -1,0 +1,19 @@
+
+
+From: agent@this.app
+Recipient: null
+Subject: Your visit request was accepted
+
+" "
+
+From: agent@this.app
+Recipient: null
+Subject: Your visit request was accepted
+
+""
+
+From: agent@this.app
+Recipient: null
+Subject: Your visit request was accepted
+
+""

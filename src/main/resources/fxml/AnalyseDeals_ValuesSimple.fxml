@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="942.0" style="-fx-background-color: transparent;" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.esoft.project.ui.gui.AnalyseDealsUI">
+   <children>
+      <Label id="predictVariavel" fx:id="predictVariavel" alignment="CENTER" layoutX="133.0" layoutY="63.0" prefHeight="31.0" prefWidth="169.0" styleClass="labelForInputs" text="Predict - X">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <TextField id="inputValueX" fx:id="inputValueX" layoutX="156.0" layoutY="119.0" onMouseClicked="#getOutRed" prefHeight="39.0" prefWidth="123.0" />
+      <Label id="input3" alignment="CENTER" layoutX="528.0" layoutY="63.0" prefHeight="31.0" prefWidth="136.0" styleClass="labelForInputs" text="A0">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <TextField id="inputValueA" fx:id="inputValueA" layoutX="535.0" layoutY="113.0" onMouseClicked="#getOutRed" prefHeight="39.0" prefWidth="123.0" />
+      <Label id="inputIC" alignment="CENTER" layoutX="364.0" layoutY="63.0" prefHeight="31.0" prefWidth="91.0" styleClass="labelForInputs" text="IC">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <TextField id="inputValueICS" fx:id="inputValueICS" layoutX="348.0" layoutY="113.0" onMouseClicked="#getOutRed" prefHeight="39.0" prefWidth="123.0" />
+      <Label id="inputBeta" alignment="CENTER" layoutX="731.0" layoutY="63.0" prefHeight="31.0" prefWidth="91.0" styleClass="labelForInputs" text="B0">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <TextField id="inputValueB" fx:id="inputValueB" layoutX="715.0" layoutY="113.0" onMouseClicked="#getOutRed" prefHeight="39.0" prefWidth="123.0" />
+      <VBox layoutX="738.0" layoutY="173.0" prefHeight="259.0" prefWidth="191.0">
+         <children>
+            <RadioButton id="info" fx:id="radioinfo" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="53.0" prefWidth="155.0" stylesheets="@../styles/Styles.css" text="Get more Info">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <toggleGroup>
+                  <ToggleGroup fx:id="TypeOfOutput" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton id="prediction" fx:id="radiopredict" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="52.0" prefWidth="190.0" stylesheets="@../styles/Styles.css" text="Make a prediction" toggleGroup="$TypeOfOutput">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </RadioButton>
+            <RadioButton id="cofInterv" fx:id="radioCI" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="52.0" prefWidth="199.0" stylesheets="@../styles/Styles.css" text="Cofidence Interval" toggleGroup="$TypeOfOutput">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </RadioButton>
+            <RadioButton id="hypothesisTest" fx:id="radiohypo" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="52.0" prefWidth="185.0" stylesheets="@../styles/Styles.css" text="Hypothesis tests" toggleGroup="$TypeOfOutput">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </RadioButton>
+            <RadioButton id="anovaTable" fx:id="radioanova" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="53.0" prefWidth="233.0" stylesheets="@../styles/Styles.css" text="ANOVA Table" toggleGroup="$TypeOfOutput">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </RadioButton>
+         </children>
+      </VBox>
+      <TableView id="tableView" fx:id="tableView" focusTraversable="false" layoutX="29.0" layoutY="226.0" mouseTransparent="true" prefHeight="191.0" prefWidth="522.0" visible="false">
+        <columns>
+          <TableColumn id="variantColumn" fx:id="variantColumn" prefWidth="93.0" text="Variation font" />
+          <TableColumn id="sumColumn" fx:id="sumColumn" prefWidth="107.0" text="Sum of squares" />
+            <TableColumn id="degreesColumn" fx:id="degreesColumn" prefWidth="124.0" text="Degrees of freedom" />
+            <TableColumn id="meanColumn" fx:id="meanColumn" maxWidth="7000.0" prefWidth="91.0" text="Mean square" />
+            <TableColumn id="statisticsColumn" fx:id="statisticsColumn" minWidth="8.0" prefWidth="105.0" text="F test statistics" />
+        </columns>
+      </TableView>
+      <Label id="infoLabel" fx:id="infoLabel" alignment="TOP_LEFT" layoutX="149.0" layoutY="182.0" prefHeight="147.0" prefWidth="522.0" text="Info" visible="false">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

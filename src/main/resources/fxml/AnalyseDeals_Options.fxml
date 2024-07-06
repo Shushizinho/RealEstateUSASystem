@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="942.0" style="-fx-background-color: transparent;" styleClass="..\styles\Styles.css" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.esoft.project.ui.gui.AnalyseDealsUI">
+   <children>
+      <RadioButton id="area" fx:id="radio1" contentDisplay="CENTER" layoutX="394.0" layoutY="90.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="155.0" stylesheets="@../styles/Styles.css" text="Area">
+         <font>
+            <Font size="20.0" />
+         </font>
+         <toggleGroup>
+            <ToggleGroup fx:id="Values" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton id="center" fx:id="radio2" contentDisplay="CENTER" layoutX="394.0" layoutY="140.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="155.0" stylesheets="@../styles/Styles.css" text="D.Center" toggleGroup="$Values">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </RadioButton>
+      <RadioButton id="bedroom" fx:id="radio3" contentDisplay="CENTER" layoutX="394.0" layoutY="190.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="155.0" stylesheets="@../styles/Styles.css" text="Bedroom Nº" toggleGroup="$Values">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </RadioButton>
+      <RadioButton id="bathroom" fx:id="radio4" contentDisplay="CENTER" layoutX="394.0" layoutY="240.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="155.0" stylesheets="@../styles/Styles.css" text="Bathroom Nº" toggleGroup="$Values">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </RadioButton>
+      <RadioButton id="parking" fx:id="radio5" contentDisplay="CENTER" layoutX="394.0" layoutY="290.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="233.0" stylesheets="@../styles/Styles.css" text="Parking Space Nº" toggleGroup="$Values">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </RadioButton>
+      <Label id="titleLinear" alignment="CENTER" layoutX="248.0" layoutY="35.0" prefHeight="55.0" prefWidth="448.0" styleClass="..\styles\Styles.css" text="Choose one option" textAlignment="CENTER">
+         <font>
+            <Font size="28.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
