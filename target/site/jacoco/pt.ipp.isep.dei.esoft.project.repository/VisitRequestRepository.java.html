@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VisitRequestRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.repository</a> &gt; <span class="el_source">VisitRequestRepository.java</span></div><h1>VisitRequestRepository.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.repository;
+
+
+import pt.ipp.isep.dei.esoft.project.domain.*;
+import pt.ipp.isep.dei.esoft.project.dto.VisitRequestDTO;
+import pt.ipp.isep.dei.esoft.project.mapper.VisitRequestMapper;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Properties;
+
+/**
+ * The type Visit request repository.
+ */
+<span class="fc" id="L20">public class VisitRequestRepository {</span>
+
+<span class="fc" id="L22">    private final List&lt;VisitRequest&gt; visitRequests = new ArrayList&lt;&gt;();</span>
+    private SortingAlgorithm sortingAlgorithm;
+
+
+    /**
+     * This method allow to add a visit request to the visit request list.
+     *
+     * @param visitRequestDTO to add at the list.
+     * @return an Optional containing the new visit request if the addition is successful.
+     */
+    public Optional&lt;VisitRequest&gt; add(VisitRequestDTO visitRequestDTO) {
+
+<span class="fc" id="L34">        Optional&lt;VisitRequest&gt; newVisitRequest = Optional.empty();</span>
+<span class="fc" id="L35">        boolean operationSuccess = false;</span>
+
+
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        if (validateVisitRequest(visitRequestDTO)) {</span>
+<span class="fc" id="L39">            newVisitRequest = Optional.of(VisitRequestMapper.toEntity(visitRequestDTO.clone()));</span>
+<span class="fc" id="L40">            VisitRequest v = newVisitRequest.get();</span>
+<span class="fc" id="L41">            operationSuccess = visitRequests.add(v);</span>
+        }
+
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        if (!operationSuccess) {</span>
+<span class="fc" id="L45">            newVisitRequest = Optional.empty();</span>
+        }
+
+<span class="fc" id="L48">        return newVisitRequest;</span>
+    }
+
+    /**
+     * This method verify if the visit request was already add.
+     *
+     * @param visitRequestDTO to validate.
+     * @return true if the visitRequest isn't in the list of visitRequests.
+     */
+    public boolean validateVisitRequest(VisitRequestDTO visitRequestDTO) {
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        boolean wasAccepted = !visitRequests.contains(VisitRequestMapper.toEntity(visitRequestDTO));</span>
+<span class="fc" id="L59">        return wasAccepted;</span>
+    }
+
+    /**
+     * Get visit request accepted list.
+     *
+     * @return the list
+     */
+    public List&lt;VisitRequest&gt; getVisitRequestAccepted(){
+<span class="fc" id="L68">        List&lt;VisitRequest&gt; visitRequestList = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">        for (VisitRequest v: visitRequests) {</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">            if (v.accepted() == 1){</span>
+<span class="nc" id="L71">                visitRequestList.add(v);</span>
+            }
+<span class="nc" id="L73">        }</span>
+<span class="fc" id="L74">        return visitRequestList;</span>
+    }
+
+    /**
+     * Create visit request.
+     *
+     * @param visitRequestDTO the visit request dto
+     */
+    public static void CreateVisitRequest(VisitRequestDTO visitRequestDTO){
+<span class="fc" id="L83">        VisitRequest visitRequest = VisitRequestMapper.toEntity(visitRequestDTO);</span>
+<span class="fc" id="L84">    }</span>
+
+    /**
+     * This method returns a defensive (immutable) copy of the list of visit requests.     *
+     *
+     * @return The list of visitRequest objects.
+     */
+    public List&lt;VisitRequest&gt; getVisitRequests() {
+        //This is a defensive copy, so that the repository cannot be modified from the outside.
+<span class="fc" id="L93">        return List.copyOf(visitRequests);</span>
+    }
+
+
+/*
+   public List&lt;VisitRequest&gt; getVisitRequestsByAgent(String email){
+       EmployeeRepository employeeRepository = Repositories.getInstance().getEmployeeRepository();
+       Employee employee;
+       Agent agent;
+
+       try {
+           employee = employeeRepository.getEmployeeByEmail(email);
+           agent = employeeRepository.getAgentObject(employee);
+
+       } catch (Exception e) {
+           throw new IllegalArgumentException(&quot;Error getting agent information: &quot; + e.getMessage());
+       }
+
+       try {
+           if (visitRequests.isEmpty()){
+
+               throw new IllegalStateException(&quot;There are no visit requests available.&quot;);
+           }
+       } catch (IllegalStateException e) {
+
+           System.out.println (e.getMessage());
+
+       }
+
+       List&lt;VisitRequest&gt; agentVisitRequests = new ArrayList&lt;&gt;();
+       try {
+           for (VisitRequest visitRequest : visitRequests) {
+               if (visitRequest.getAgent().equals(agent) ) {
+                   agentVisitRequests.add(visitRequest);
+               }
+           }
+
+
+       }
+       catch (Exception e) {
+           throw new IllegalStateException(&quot;Error processing visit requests: &quot; + e.getMessage());
+       }
+
+
+
+
+       return agentVisitRequests;
+   }
+
+
+
+public  List&lt;VisitRequest&gt; getVisitRequestsByAgentInPeriod(String email, DateTime begin, DateTime end){
+        List &lt;VisitRequest&gt; visitRequestList = getVisitRequestsByAgent(email);
+        List&lt;VisitRequest&gt; visitRequestsInPeriod =  new ArrayList&lt;&gt;();
+
+        for( VisitRequest visitRequest : visitRequestList){
+            if(visitRequest.getPreferredDate().isAfter(begin) &amp;&amp; visitRequest.getPreferredDate().isBefore(end)|| visitRequest.getPreferredDate().isEqual(begin) || visitRequest.getPreferredDate().isEqual(end) ){
+
+                visitRequestsInPeriod.add(visitRequest);
+            }
+
+
+
+        }
+
+
+return  visitRequestsInPeriod;
+*/
+
+
+    /**
+     * Gets visit requests by agent in period.
+     *
+     * @param email the email
+     * @param begin the begin
+     * @param end   the end
+     * @return the visit requests by agent in period
+     */
+    public List&lt;VisitRequest&gt; getVisitRequestsByAgentInPeriod(String email, DateTime begin, DateTime end) {
+<span class="nc" id="L172">        EmployeeRepository employeeRepository = Repositories.getInstance().getEmployeeRepository();</span>
+        Employee employee;
+        Agent agent;
+<span class="nc" id="L175">        AnnouncementRepository announcementRepository = Repositories.getInstance().getAnnouncementRepository();</span>
+
+<span class="nc" id="L177">        List&lt;Announcement&gt; announcements = announcementRepository.getAnnouncements();</span>
+
+        try {
+<span class="nc" id="L180">            employee = employeeRepository.getEmployeeByEmail(email);</span>
+<span class="nc" id="L181">            agent = employeeRepository.getAgentObject(employee);</span>
+<span class="nc" id="L182">        } catch (Exception e) {</span>
+<span class="nc" id="L183">            throw new IllegalArgumentException(&quot;Error getting agent information: &quot; + e.getMessage());</span>
+<span class="nc" id="L184">        }</span>
+
+<span class="nc" id="L186">        List&lt;VisitRequest&gt; agentVisitRequests = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L187">        List&lt;VisitRequest&gt; visitRequestList = getVisitRequests();</span>
+        try {
+<span class="nc bnc" id="L189" title="All 2 branches missed.">            for (VisitRequest visitRequest : visitRequestList) {</span>
+<span class="nc bnc" id="L190" title="All 2 branches missed.">                for (Announcement announcement : announcements) {</span>
+
+<span class="nc bnc" id="L192" title="All 2 branches missed.">                    if (visitRequest.getProperty().equals(announcement.getProperty())) {</span>
+
+<span class="nc" id="L194">                         Agent agent1 = announcement.getAgent();</span>
+
+<span class="nc bnc" id="L196" title="All 2 branches missed.">                        if (agent.equals(agent1) &amp;&amp; (</span>
+<span class="nc bnc" id="L197" title="All 4 branches missed.">                                (visitRequest.getPreferredDate().isAfterOrEqual(begin) &amp;&amp; visitRequest.getPreferredDate().isBeforeOrEqual(end)) ||</span>
+<span class="nc bnc" id="L198" title="All 2 branches missed.">                                visitRequest.getPreferredDate().isEqual(begin) ||</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">                                visitRequest.getPreferredDate().isEqual(end)) ) {</span>
+                            {
+<span class="nc" id="L201">                                agentVisitRequests.add(visitRequest);</span>
+                            }
+                        }
+                    }
+<span class="nc" id="L205">                }</span>
+<span class="nc" id="L206">            }</span>
+
+
+
+<span class="nc" id="L210">        } catch (Exception e) {</span>
+<span class="nc" id="L211">            throw new IllegalStateException(&quot;Error processing visit requests: &quot; + e.getMessage());</span>
+<span class="nc" id="L212">        }</span>
+    try {
+<span class="nc bnc" id="L214" title="All 2 branches missed.">        if (agentVisitRequests.isEmpty()) {</span>
+<span class="nc" id="L215">            throw new IllegalStateException(&quot;There are no visit requests available.&quot;);</span>
+        }
+<span class="nc" id="L217">    }catch (IllegalStateException e){</span>
+<span class="nc" id="L218">        System.out.println((&quot;There are no visit requests available.&quot;));</span>
+<span class="nc" id="L219">    }</span>
+<span class="nc" id="L220">    configureSortingAlgorithm();</span>
+<span class="nc" id="L221">    sortingAlgorithm.sort(agentVisitRequests);</span>
+<span class="nc" id="L222">        return agentVisitRequests;</span>
+    }
+
+    /**
+     * Create email.
+     *
+     * @param sender    the sender
+     * @param recipient the recipient
+     * @param subject   the subject
+     * @param message   the message
+     */
+    public void createEmail(String sender, String recipient, String subject, String message) {
+<span class="nc" id="L234">        String fileName = sender + &quot;_&quot; + recipient + &quot;.txt&quot;;</span>
+<span class="nc" id="L235">        String fileContent = &quot;From: &quot; + sender + &quot;\n&quot; + &quot;Recipient: &quot; + recipient + &quot;\n&quot; + &quot;Subject: &quot; + subject + &quot;\n\n&quot; + message;</span>
+
+<span class="nc" id="L237">        String directory = &quot;src\\main\\resources\\passwords\\&quot;;</span>
+
+        try {
+<span class="nc" id="L240">            File file = new File(directory, fileName);</span>
+
+            FileWriter writer;
+<span class="nc bnc" id="L243" title="All 2 branches missed.">            if (file.exists()) {</span>
+<span class="nc" id="L244">                writer = new FileWriter(file, true);</span>
+            } else {
+<span class="nc" id="L246">                writer = new FileWriter(file);</span>
+            }
+
+<span class="nc" id="L249">            writer.append(&quot;\n\n&quot;);</span>
+<span class="nc" id="L250">            writer.write(fileContent);</span>
+<span class="nc" id="L251">            writer.close();</span>
+<span class="nc" id="L252">            System.out.println(&quot;=====================&quot;);</span>
+<span class="nc" id="L253">            System.out.println(&quot;E-mail was sent successfully.&quot;);</span>
+<span class="nc" id="L254">        } catch (IOException e) {</span>
+<span class="nc" id="L255">            System.out.println(&quot;An error occurred while creating the e-mail.&quot;);</span>
+<span class="nc" id="L256">            e.printStackTrace();</span>
+<span class="nc" id="L257">        }</span>
+<span class="nc" id="L258">    }</span>
+
+
+    /**
+     * Configure sorting algorithm.
+     */
+    public void configureSortingAlgorithm() {
+<span class="nc" id="L265">        final String CONFIGURATION_FILENAME = &quot;config.properties&quot;;</span>
+<span class="nc" id="L266">        Properties properties = new Properties();</span>
+        try {
+<span class="nc" id="L268">            FileInputStream inputStream = new FileInputStream(CONFIGURATION_FILENAME);</span>
+<span class="nc" id="L269">            properties.load(inputStream);</span>
+<span class="nc" id="L270">        } catch (IOException e) {</span>
+<span class="nc" id="L271">            e.printStackTrace();</span>
+<span class="nc" id="L272">            return;</span>
+<span class="nc" id="L273">        }</span>
+
+<span class="nc" id="L275">        String sortingAlgorithmName = properties.getProperty(&quot;SortingAlgorithm.Default&quot;);</span>
+    try {
+<span class="nc bnc" id="L277" title="All 2 branches missed.">        if (sortingAlgorithmName.equals(&quot;InsertionSort&quot;)) {</span>
+<span class="nc" id="L278">            sortingAlgorithm = new InsertionSort();</span>
+<span class="nc bnc" id="L279" title="All 2 branches missed.">        } else if (sortingAlgorithmName.equals(&quot;BubbleSort&quot;)) {</span>
+<span class="nc" id="L280">            sortingAlgorithm = new BubbleSort();</span>
+        } else {
+
+<span class="nc" id="L283">            throw new IllegalArgumentException(&quot;Invalid sorting algorithm specified in configuration.&quot;);</span>
+        }
+
+<span class="nc" id="L286">    }catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L287">        throw new IllegalStateException(&quot;Error configuring sorting algorithm.&quot;, e);</span>
+<span class="nc" id="L288">    }</span>
+<span class="nc" id="L289">    }</span>
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

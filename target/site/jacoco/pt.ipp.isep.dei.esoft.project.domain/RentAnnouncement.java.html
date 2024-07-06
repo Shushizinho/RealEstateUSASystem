@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RentAnnouncement.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.domain</a> &gt; <span class="el_source">RentAnnouncement.java</span></div><h1>RentAnnouncement.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.domain;
+
+
+import java.io.Serializable;
+import java.util.Objects;
+
+/**
+ * A class representing an announcement for a rental property.
+ */
+
+public class RentAnnouncement implements Serializable {
+
+    /**
+     * The duration of the rent
+     */
+    private Integer rentDuration;
+    private Announcement announcement;
+
+
+<span class="nc" id="L20">    public RentAnnouncement(Agent agent, DateTime date, double commission, BusinessType businessType, Property property, Integer rentDuration) {</span>
+<span class="nc" id="L21">        this.announcement = new Announcement(agent, date, commission, businessType,  property);</span>
+<span class="nc" id="L22">        this.rentDuration = rentDuration;</span>
+<span class="nc" id="L23">    }</span>
+
+<span class="fc" id="L25">    public RentAnnouncement(Announcement announcement, Integer rentDuration) {</span>
+<span class="fc" id="L26">        this.announcement = announcement;</span>
+<span class="fc" id="L27">        this.rentDuration = rentDuration;</span>
+<span class="fc" id="L28">    }</span>
+
+    /**
+     * Creates a default RentAnnouncement object.
+     */
+
+<span class="nc" id="L34">    public RentAnnouncement() {</span>
+
+<span class="nc" id="L36">    }</span>
+
+    /**
+     * Returns the duration of the rent.
+     *
+     * @return The duration of the rent
+     */
+    public Integer getRentDuration() {
+<span class="nc" id="L44">        return rentDuration;</span>
+    }
+
+
+    /**
+     * Sets the duration of the rent.
+     *
+     * @param rentDuration The duration of the rent to set
+     */
+    public void setRentDuration(Integer rentDuration) {
+<span class="nc" id="L54">        this.rentDuration = rentDuration;</span>
+<span class="nc" id="L55">    }</span>
+
+    /**
+     * Compares this RentAnnouncement object with another object for equality.
+     * Two RentAnnouncement objects are considered equal if they have the same rent duration and all their properties from the superclass are equal.
+     *
+     * @param obj The object to compare with
+     * @return true if this RentAnnouncement is equal to the specified object, false otherwise
+     */
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (this == obj) return true;</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (!(obj instanceof RentAnnouncement)) return false;</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        if (!super.equals(obj)) return false;</span>
+<span class="nc" id="L70">        RentAnnouncement that = (RentAnnouncement) obj;</span>
+<span class="nc" id="L71">        return Objects.equals(rentDuration, that.rentDuration);</span>
+
+
+    }
+
+    /**
+     * Returns a hash code value for this RentAnnouncement object.
+     *
+     * @return A hash code value for this object
+     */
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L84">        return Objects.hash(super.hashCode(), rentDuration);</span>
+    }
+
+    public Announcement getAnnouncement() {
+<span class="nc" id="L88">        return announcement;</span>
+    }
+
+    /**
+     * Creates and returns a new RentAnnouncement object that is a copy of this object.
+     *
+     * @return A new RentAnnouncement object that is a copy of this object
+     */
+
+
+    public RentAnnouncement clone() {
+<span class="nc" id="L99">        return new RentAnnouncement(this.getAnnouncement(), this.rentDuration);</span>
+
+
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

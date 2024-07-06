@@ -1,0 +1,747 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PropertyRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.repository</a> &gt; <span class="el_source">PropertyRepository.java</span></div><h1>PropertyRepository.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.repository;
+
+//import org.apache.commons.lang3.NotImplementedException;
+
+import pt.ipp.isep.dei.esoft.project.domain.*;
+import pt.ipp.isep.dei.esoft.project.dto.*;
+import pt.ipp.isep.dei.esoft.project.mapper.PropertyMapper;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * A repository class for managing all Properties.
+ */
+<span class="fc" id="L17">public class PropertyRepository {</span>
+<span class="fc" id="L18">    private final List&lt;Property&gt; properties = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L19">    private final List&lt;Land&gt; lands = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L20">    private static final List&lt;Inhabitable&gt; inhabitableProperties = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L21">    private final List&lt;Apartment&gt; apartments = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L22">    private final List&lt;House&gt; houses = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * This method returns an existing list of properties, sorted by a filter.
+     *
+     * @param choosenFilter the choosen filter
+     * @param properties    the properties
+     * @return list of properties.
+     */
+    public List&lt;Property&gt; sortPropertyList (String choosenFilter, List&lt;Property&gt; properties){
+<span class="nc" id="L32">        List&lt;Property&gt; newProperty = properties;</span>
+<span class="nc" id="L33">        List&lt;Filters&gt; filters = Repositories.getInstance().propertyFiltersRepository.getFilters();</span>
+<span class="nc" id="L34">        int j = 0;</span>
+<span class="nc bnc" id="L35" title="All 4 branches missed.">        if (choosenFilter.equals(filters.get(j).getDescription()) || choosenFilter.equals(filters.get(j + 1).getDescription())){</span>
+<span class="nc" id="L36">            newProperty = ComparatorPrice(properties, choosenFilter);</span>
+        }
+<span class="nc" id="L38">        j+=2;</span>
+<span class="nc bnc" id="L39" title="All 4 branches missed.">        if (choosenFilter.equals(filters.get(j).getDescription()) || choosenFilter.equals(filters.get(j + 1).getDescription())){</span>
+<span class="nc" id="L40">            newProperty = ComparatorCity(properties, choosenFilter);</span>
+        }
+<span class="nc" id="L42">        j+=2;</span>
+<span class="nc bnc" id="L43" title="All 4 branches missed.">        if (choosenFilter.equals(filters.get(j).getDescription()) || choosenFilter.equals(filters.get(j + 1).getDescription())){</span>
+<span class="nc" id="L44">            newProperty = ComparatorState(properties, choosenFilter);</span>
+        }
+
+<span class="nc" id="L47">        return newProperty;</span>
+    }
+
+
+    /**
+     * This method returns an existing list of properties by businessType, propertyType and bedroomNo.
+     *
+     * @param properties   the properties
+     * @param businessType the business type
+     * @param propertyType the property type
+     * @param bedroomNo    the bedroom no
+     * @return list of properties.
+     */
+    public List&lt;Property&gt; getPropertyList (List&lt;Property&gt; properties, String businessType,String propertyType, String bedroomNo){
+<span class="nc" id="L61">        List&lt;Property&gt; newProperty =properties;</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (businessType.equals(&quot;Sale&quot;)){</span>
+<span class="nc" id="L63">            newProperty = getPropertiesBySaleAnnoucement(businessType);</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        } else if (businessType.equals(&quot;Rent&quot;)) {</span>
+<span class="nc" id="L65">            newProperty = getPropertiesByRentAnnoucement(businessType);</span>
+        }
+<span class="nc" id="L67">        newProperty = getPropertiesByPropertyType(propertyType, newProperty);</span>
+
+<span class="nc bnc" id="L69" title="All 6 branches missed.">        if ((propertyType.equals(&quot;House&quot;)|| propertyType.equals(&quot;Apartment&quot;) &amp;&amp; !newProperty.isEmpty())){</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">            if (!bedroomNo.equals(&quot;n&quot;)) newProperty = getPropertiesByBedroomNo(Integer.parseInt(bedroomNo),newProperty);</span>
+        }
+
+
+<span class="nc" id="L74">        return newProperty;</span>
+    }
+
+    /**
+     * This method sort a list of properties by price.
+     *
+     * @param properties    the properties
+     * @param choosenFilter the choosen filter
+     * @return list of properties
+     */
+    public List&lt;Property&gt; ComparatorPrice(List&lt;Property&gt; properties, String choosenFilter){
+<span class="nc" id="L85">        List&lt;Filters&gt; filters = Repositories.getInstance().propertyFiltersRepository.getFilters();</span>
+<span class="nc" id="L86">        int j = 0;</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">        if(!properties.isEmpty()){</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">            if (choosenFilter.equals(filters.get(j).getDescription())){</span>
+<span class="nc" id="L89">                Collections.sort(properties, new PriceComparator());</span>
+<span class="nc" id="L90">            } else Collections.sort(properties, Collections.reverseOrder(new PriceComparator()));</span>
+        }
+
+<span class="nc" id="L93">        return properties;</span>
+    }
+
+
+    /**
+     * This method sort a list of properties by city.
+     *
+     * @param properties    the properties
+     * @param choosenFilter the choosen filter
+     * @return list of properties
+     */
+    public List&lt;Property&gt; ComparatorCity(List&lt;Property&gt; properties, String choosenFilter){
+<span class="nc" id="L105">        List&lt;Filters&gt; filters = Repositories.getInstance().propertyFiltersRepository.getFilters();</span>
+
+<span class="nc" id="L107">        int j = 2;</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        if(!properties.isEmpty()){</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">            if (choosenFilter.equals(filters.get(j).getDescription())){</span>
+<span class="nc" id="L110">                Collections.sort(properties, new CityComparator());</span>
+<span class="nc" id="L111">            } else Collections.sort(properties, Collections.reverseOrder(new CityComparator()));</span>
+        }
+<span class="nc" id="L113">        return properties;</span>
+    }
+
+    /**
+     * This method sort a list of properties by state.
+     *
+     * @param properties    the properties
+     * @param choosenFilter the choosen filter
+     * @return list of properties.
+     */
+    public List&lt;Property&gt; ComparatorState(List&lt;Property&gt; properties, String choosenFilter){
+<span class="nc" id="L124">        List&lt;Filters&gt; filters = Repositories.getInstance().propertyFiltersRepository.getFilters();</span>
+
+<span class="nc" id="L126">        int j = 4;</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        if(!properties.isEmpty()){</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">            if (choosenFilter.equals(filters.get(j).getDescription())){</span>
+<span class="nc" id="L129">                Collections.sort(properties, new StateComparator());</span>
+<span class="nc" id="L130">            } else Collections.sort(properties, Collections.reverseOrder(new StateComparator()));</span>
+        }
+
+<span class="nc" id="L133">        return properties;</span>
+    }
+
+    /**
+     * This method returns a defensive (immutable) copy of the list of properties.
+     *
+     * @return The list of properties.
+     */
+    public List&lt;Property&gt; getProperties(){
+<span class="fc" id="L142">        return List.copyOf(properties);</span>
+    }
+
+    /**
+     * Gets apartments.
+     *
+     * @return the apartments
+     */
+    public List&lt;Apartment&gt; getApartments() {
+<span class="fc" id="L151">        return apartments;</span>
+    }
+
+    /**
+     * Gets houses.
+     *
+     * @return the houses
+     */
+    public List&lt;House&gt; getHouses() {
+<span class="fc" id="L160">        return houses;</span>
+    }
+
+    /**
+     * Gets inhabitable properties.
+     *
+     * @return the inhabitable properties
+     */
+    public List&lt;Inhabitable&gt; getInhabitableProperties() {
+<span class="fc" id="L169">        return inhabitableProperties;</span>
+    }
+
+    /**
+     * Gets lands.
+     *
+     * @return the lands
+     */
+    public List&lt;Land&gt; getLands() {
+<span class="fc" id="L178">        return lands;</span>
+    }
+
+    /**
+     * This method returns a list of properties by its Store.
+     *
+     * @param store the store
+     * @return The property list
+     */
+    public List&lt;Property&gt; getPropertiesByStore(Store store){
+<span class="fc" id="L188">        List&lt;Property&gt; propertiesCopy = List.copyOf(properties);</span>
+<span class="fc" id="L189">        List&lt;Property&gt; propertiesByStore = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">        for (Property property : propertiesCopy) {</span>
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">            if (property.compareStore(store)) {</span>
+<span class="fc" id="L192">                propertiesByStore.add(property);</span>
+            }
+<span class="fc" id="L194">        }</span>
+<span class="fc" id="L195">        return propertiesByStore;</span>
+    }
+
+    /**
+     * This method returns a list of properties that are on sale announcements.
+     *
+     * @param businessType the business type
+     * @return the property list
+     */
+    public List&lt;Property&gt; getPropertiesBySaleAnnoucement(String businessType) {
+<span class="nc" id="L205">        List&lt;Announcement&gt; an = Repositories.getInstance().announcementRepository.getSaleAnnouncementByBusinessType(businessType);</span>
+
+<span class="nc" id="L207">        List&lt;Property&gt; pr= new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L209" title="All 2 branches missed.">        for (Announcement an1: an) {</span>
+<span class="nc" id="L210">            pr.add(an1.getProperty());</span>
+<span class="nc" id="L211">        }</span>
+<span class="nc" id="L212">        return pr;</span>
+    }
+
+    /**
+     * This method returns a list of properties that associated with announcements on a list.
+     *
+     * @param saleAnnouncementList the sale announcement list
+     * @return the property list
+     */
+    public List&lt;PropertyDTO&gt; getPropertiesBySaleAnnoucementList(List&lt;Announcement&gt; saleAnnouncementList) {
+<span class="nc" id="L222">        List&lt;PropertyDTO&gt; pr= new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L224" title="All 2 branches missed.">        for (Announcement anouncement: saleAnnouncementList) {</span>
+//            System.out.println(anouncement.getProperty());
+<span class="nc" id="L226">            pr.add(PropertyMapper.toDTO(anouncement.getProperty()));</span>
+<span class="nc" id="L227">        }</span>
+<span class="nc" id="L228">        return pr;</span>
+    }
+
+
+    /**
+     * This method returns a list of properties that are on rent announcements.
+     *
+     * @param businessType the business type
+     * @return the property list
+     */
+    public List&lt;Property&gt; getPropertiesByRentAnnoucement(String businessType){
+<span class="nc" id="L239">        List&lt;Announcement&gt; an = Repositories.getInstance().announcementRepository.getRentAnnouncementByProperty(businessType);</span>
+
+<span class="nc" id="L241">        List&lt;Property&gt; pr= new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L243" title="All 2 branches missed.">        for (Announcement an1: an) {</span>
+<span class="nc" id="L244">            pr.add(an1.getProperty());</span>
+<span class="nc" id="L245">        }</span>
+<span class="nc" id="L246">        return pr;</span>
+    }
+
+    /**
+     * This method returns a list of properties by a chosen property type and a given list of properties.
+     *
+     * @param propertyType the property type
+     * @param properties   the properties
+     * @return the list of properties
+     */
+    public List&lt;Property&gt; getPropertiesByPropertyType(String propertyType, List&lt;Property&gt; properties){
+<span class="nc" id="L257">        List&lt;Property&gt; p = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">        for (int i = 0; i &lt; properties.size(); i++) {</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">            if (properties.get(i).getPropertyType().getDescription().equals(propertyType)){</span>
+<span class="nc" id="L260">                p.add(properties.get(i));</span>
+            }
+        }
+<span class="nc" id="L263">        return p;</span>
+    }
+
+    /**
+     * This method returns a list of properties by a chosen bedroom number and a given list of properties.
+     *
+     * @param bedroomNo  the bedroom no
+     * @param properties the properties
+     * @return list list
+     */
+    public List&lt;Property&gt; getPropertiesByBedroomNo(int bedroomNo, List&lt;Property&gt; properties){
+
+<span class="nc" id="L275">        List&lt;Property&gt; p = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L276" title="All 2 branches missed.">        for (Property property : properties) {</span>
+<span class="nc" id="L277">            Inhabitable in = getInhabitableByProperty(property);</span>
+<span class="nc bnc" id="L278" title="All 2 branches missed.">            if (in != null){</span>
+<span class="nc bnc" id="L279" title="All 2 branches missed.">                if ((in).getBedroomNumber() == bedroomNo){</span>
+<span class="nc" id="L280">                    p.add(property);</span>
+                }
+            }
+
+<span class="nc" id="L284">        }</span>
+<span class="nc" id="L285">        return p;</span>
+    }
+
+    /**
+     * Gets inhabitable by property.
+     *
+     * @param property the property
+     * @return the inhabitable by property
+     */
+    public static Inhabitable getInhabitableByProperty(Property property) {
+<span class="nc bnc" id="L295" title="All 2 branches missed.">        for (Inhabitable inhabitable: inhabitableProperties) {</span>
+<span class="nc bnc" id="L296" title="All 2 branches missed.">            if (inhabitable.getProperty().equals(property)) return inhabitable;</span>
+<span class="nc" id="L297">        }</span>
+<span class="nc" id="L298">        return null;</span>
+    }
+
+    /**
+     * Retrieves a property with the specified description.
+     *
+     * @param propertyDescription the description of the property
+     * @return the Property object matching the description, or null if not found
+     */
+    public Property getPropertyByDescription(String propertyDescription) {
+<span class="nc bnc" id="L308" title="All 2 branches missed.">        for (Property property: properties) {</span>
+<span class="nc" id="L309">            String descriptionToCompare = property.toString();</span>
+<span class="nc bnc" id="L310" title="All 2 branches missed.">            if (propertyDescription.compareTo(descriptionToCompare) == 0) return property;</span>
+<span class="nc" id="L311">        }</span>
+<span class="nc" id="L312">        return null;</span>
+    }
+
+
+//    /**
+//     * Returns the property in this repository that matches the given property data.
+//     * @param property the property to be matched
+//     * @return the property in this repository that matches the given property data, or null if no such property is found
+//     */
+//    public Property getPropertyByData(Property property) {
+//        for (Property prop: properties) {
+//            if (property.equals(prop)) return prop;
+//        }
+//        return null;
+//    }
+
+    /**
+     * Adds a new property to the collection of properties managed by this repository.
+     *
+     * @param property the property to be added to the collection.
+     * @return true if the property was successfully added, false otherwise.
+     */
+    public boolean add(Property property) {
+
+        Optional&lt;Property&gt; newProperty;
+<span class="fc" id="L337">        boolean operationSuccess = false;</span>
+
+<span class="pc bpc" id="L339" title="1 of 2 branches missed.">        if (validateProperty(property)) {</span>
+<span class="fc" id="L340">            newProperty = Optional.of(property.clone());</span>
+<span class="fc" id="L341">            operationSuccess = properties.add(newProperty.get());</span>
+        }
+
+
+<span class="fc" id="L345">        return operationSuccess;</span>
+    }
+
+    /**
+     * Add boolean.
+     *
+     * @param land the land
+     * @return the boolean
+     */
+    public boolean add(Land land) {
+
+        Optional&lt;Property&gt; newProperty;
+        Optional&lt;Land&gt; newLand;
+<span class="nc" id="L358">        boolean operationSuccess = false;</span>
+
+<span class="nc bnc" id="L360" title="All 2 branches missed.">        if (validateProperty(land.getProperty())) {</span>
+<span class="nc" id="L361">            newProperty = Optional.of(land.getProperty().clone());</span>
+<span class="nc" id="L362">            newLand = Optional.of(land);</span>
+<span class="nc bnc" id="L363" title="All 4 branches missed.">            operationSuccess = (lands.add(newLand.get()) &amp;&amp; properties.add(newProperty.get()));</span>
+        }
+
+
+<span class="nc" id="L367">        return operationSuccess;</span>
+    }
+
+    /**
+     * Add boolean.
+     *
+     * @param apartment the apartment
+     * @return the boolean
+     */
+    public boolean add(Apartment apartment) {
+
+        Optional&lt;Property&gt; newProperty;
+        Optional&lt;Apartment&gt; newApartment;
+<span class="nc" id="L380">        boolean operationSuccess = false;</span>
+
+<span class="nc bnc" id="L382" title="All 2 branches missed.">        if (validateProperty(apartment.getInhabitable().getProperty())) {</span>
+<span class="nc" id="L383">            newProperty = Optional.of(apartment.getInhabitable().getProperty().clone());</span>
+<span class="nc" id="L384">            newApartment = Optional.of(apartment);</span>
+<span class="nc bnc" id="L385" title="All 6 branches missed.">            operationSuccess = (apartments.add(newApartment.get()) &amp;&amp; inhabitableProperties.add(newApartment.get().getInhabitable()) &amp;&amp; properties.add(newProperty.get()));</span>
+        }
+
+
+<span class="nc" id="L389">        return operationSuccess;</span>
+    }
+
+    /**
+     * Add boolean.
+     *
+     * @param house the house
+     * @return the boolean
+     */
+    public boolean add(House house) {
+
+        Optional&lt;Property&gt; newProperty;
+        Optional&lt;House&gt; newHouse;
+<span class="nc" id="L402">        boolean operationSuccess = false;</span>
+
+<span class="nc bnc" id="L404" title="All 2 branches missed.">        if (validateProperty(house.getInhabitable().getProperty())) {</span>
+<span class="nc" id="L405">            newProperty = Optional.of(house.getInhabitable().getProperty().clone());</span>
+<span class="nc" id="L406">            newHouse = Optional.of(house);</span>
+<span class="nc bnc" id="L407" title="All 6 branches missed.">            operationSuccess = (houses.add(newHouse.get()) &amp;&amp; inhabitableProperties.add(newHouse.get().getInhabitable()) &amp;&amp; properties.add(newProperty.get()));</span>
+        }
+
+
+<span class="nc" id="L411">        return operationSuccess;</span>
+    }
+
+    /**
+     * Validates if a given property is valid to be added to the repository.
+     *
+     * @param property The property to be validated.
+     * @return Returns true if the property is valid to be added, false otherwise.
+     */
+    public boolean validateProperty(Property property) {
+<span class="fc" id="L421">        List&lt;Property&gt; propertiesByStore = getPropertiesByStore(property.getStore());</span>
+<span class="pc bpc" id="L422" title="1 of 2 branches missed.">        boolean isValid = !propertiesByStore.contains(property);</span>
+<span class="fc" id="L423">        return isValid;</span>
+    }
+
+
+    /**
+     * Create property property.
+     *
+     * @param land the land
+     * @return the property
+     */
+    public Property createProperty(LandDTO land){
+
+
+
+<span class="nc" id="L437">        PropertyDTO property = land.getProperty();</span>
+
+<span class="nc" id="L439">        Property property1 = PropertyMapper.toEntity(property);</span>
+<span class="nc" id="L440">        Land land1 = PropertyMapper.landToEntity(land);</span>
+
+
+
+<span class="nc bnc" id="L444" title="All 4 branches missed.">        return ( addProperty(property1) &amp;&amp; addLand(land1) ) ? property1 : null;</span>
+    }
+
+    /**
+     * Create property property.
+     *
+     * @param propertyDTO                the property dto
+     * @param propertyBedroomNumber      the property bedroom number
+     * @param propertyBathroomNumber     the property bathroom number
+     * @param propertyParkingSpaceNumber the property parking space number
+     * @param propertyEquipmentList      the property equipment list
+     * @param propertyHasBasement        the property has basement
+     * @param propertyHasLoft            the property has loft
+     * @param propertySunExposure        the property sun exposure
+     * @return the property
+     */
+    public Property createProperty(PropertyDTO propertyDTO,Integer propertyBedroomNumber, Integer propertyBathroomNumber,
+                                   Integer propertyParkingSpaceNumber, List&lt;String&gt; propertyEquipmentList,
+                                   Boolean propertyHasBasement, Boolean propertyHasLoft, String propertySunExposure){
+
+<span class="nc" id="L464">        HouseDTO house = new HouseDTO(propertyDTO.getPrice(), propertyDTO.getArea(), propertyDTO.getAddress(), propertyDTO.getDistanceToCentre(),propertyDTO.getPhotographs(), propertyBedroomNumber,</span>
+<span class="nc" id="L465">                propertyBathroomNumber, propertyParkingSpaceNumber, propertyEquipmentList, propertyHasBasement, propertyHasLoft,</span>
+<span class="nc" id="L466">                propertySunExposure,propertyDTO.getPropertyType(),propertyDTO.getStore(),propertyDTO.getClient(),propertyDTO.getDate());</span>
+
+<span class="nc" id="L468">        PropertyDTO property = house.getInhabitable().getProperty();</span>
+
+<span class="nc" id="L470">        Property property1 = PropertyMapper.toEntity(property);</span>
+<span class="nc" id="L471">        House house1 = PropertyMapper.houseToEntity(house);</span>
+
+
+
+
+<span class="nc bnc" id="L476" title="All 4 branches missed.">        return ( addProperty(property1) &amp;&amp; addHouse(house1) ) ? property1 : null;</span>
+
+
+    }
+
+    /**
+     * Create property property.
+     *
+     * @param propertyDTO                the property dto
+     * @param propertyBedroomNumber      the property bedroom number
+     * @param propertyBathroomNumber     the property bathroom number
+     * @param propertyParkingSpaceNumber the property parking space number
+     * @param propertyEquipmentList      the property equipment list
+     * @return the property
+     */
+    public Property createProperty(PropertyDTO propertyDTO,Integer propertyBedroomNumber, Integer propertyBathroomNumber,
+                                   Integer propertyParkingSpaceNumber, List&lt;String&gt; propertyEquipmentList){
+
+<span class="nc" id="L494">        ApartmentDTO apartmentDTO = new ApartmentDTO(propertyDTO.getPrice(), propertyDTO.getArea(), propertyDTO.getAddress(), propertyDTO.getDistanceToCentre(),propertyDTO.getPhotographs(), propertyBedroomNumber,</span>
+<span class="nc" id="L495">                propertyBathroomNumber, propertyParkingSpaceNumber, propertyEquipmentList,propertyDTO.getPropertyType(),propertyDTO.getStore(),propertyDTO.getClient(),propertyDTO.getDate());</span>
+
+<span class="nc" id="L497">        PropertyDTO property = apartmentDTO.getInhabitable().getProperty();</span>
+
+<span class="nc" id="L499">        Property property1 = PropertyMapper.toEntity(property);</span>
+<span class="nc" id="L500">        Apartment apartment1 = PropertyMapper.apartmentToEntity(apartmentDTO);</span>
+
+
+
+
+<span class="nc bnc" id="L505" title="All 4 branches missed.">        return ( addProperty(property1) &amp;&amp; addApartment(apartment1) ) ? property1 : null;</span>
+
+
+    }
+
+
+    /**
+     * Create property property.
+     *
+     * @param apartmentDTO the apartment dto
+     * @return the property
+     */
+    public Property createProperty(ApartmentDTO apartmentDTO) {
+
+        //ApartmentDTO apartmentDTO = new ApartmentDTO(inhabitableDTO.getPrice(), propertyDTO.getArea(), propertyDTO.getAddress(), propertyDTO.getDistanceToCentre(),propertyDTO.getPhotographs(), propertyBedroomNumber,
+          //      propertyBathroomNumber, propertyParkingSpaceNumber, propertyEquipmentList,propertyDTO.getPropertyType(),propertyDTO.getStore(),propertyDTO.getclient(),propertyDTO.getDate());
+
+<span class="nc" id="L522">        PropertyDTO property = apartmentDTO.getInhabitable().getProperty();</span>
+
+<span class="nc" id="L524">        Property property1 = PropertyMapper.toEntity(property);</span>
+<span class="nc" id="L525">        Apartment apartment1 = PropertyMapper.apartmentToEntity(apartmentDTO);</span>
+
+
+
+
+<span class="nc bnc" id="L530" title="All 4 branches missed.">        return ( addProperty(property1) &amp;&amp; addApartment(apartment1) ) ? property1 : null;</span>
+
+
+    }
+
+
+    /**
+     * Create property property.
+     *
+     * @param houseDTO the house dto
+     * @return the property
+     */
+    public Property createProperty(HouseDTO houseDTO) {
+
+
+<span class="nc" id="L545">        PropertyDTO property = houseDTO.getInhabitable().getProperty();</span>
+
+<span class="nc" id="L547">        Property property1 = PropertyMapper.toEntity(property);</span>
+<span class="nc" id="L548">        House house = PropertyMapper.houseToEntity(houseDTO);</span>
+
+
+
+
+<span class="nc bnc" id="L553" title="All 4 branches missed.">        return ( addProperty(property1) &amp;&amp; addHouse(house) ) ? property1 : null;</span>
+
+
+    }
+
+
+
+
+
+
+
+
+ /*   public Property createProperty(HouseDTO houseDTO){
+
+
+        PropertyDTO property = houseDTO.getInhabitable().getProperty();
+        Property property1 = PropertyMapper.toEntity(property);
+        House house =
+
+
+
+
+       // return ( addProperty(property1) &amp;&amp; addHouse(house) ) ? property : null;
+
+    }*/
+
+
+    /**
+     * Creates a new property with the specified details.
+     *
+     * @param propertyPrice            the price of the property
+     * @param propertyArea             the area of the property
+     * @param propertyAddress          the address of the property
+     * @param propertyDistanceToCentre the distance to the city center
+     * @param propertyPhotographs      the list of photographs for the property
+     * @param propertyType             the type of the property
+     * @param store                    the store associated with the property
+     * @param client                   the Client creating the property
+     * @param date                     the date
+     * @return the created Property object, or null if creation failed
+     */
+    public Property createProperty(Double propertyPrice, Double propertyArea, Address propertyAddress,
+                                   Double propertyDistanceToCentre, List&lt;Photograph&gt; propertyPhotographs,
+                                   PropertyType propertyType, Store store, Client client, DateTime date){
+
+<span class="nc" id="L598">        Land land = new Land(propertyPrice, propertyArea, propertyAddress, propertyDistanceToCentre, propertyPhotographs, propertyType, store, client, date);</span>
+<span class="nc" id="L599">        Property property = land.getProperty();</span>
+
+
+
+<span class="nc bnc" id="L603" title="All 4 branches missed.">        return ( addProperty(property) &amp;&amp; addLand(land) ) ? property : null;</span>
+    }
+
+    /**
+     * Creates a new property with the specified details.
+     *
+     * @param propertyPrice              the price of the property
+     * @param propertyArea               the area of the property
+     * @param propertyAddress            the address of the property
+     * @param propertyDistanceToCentre   the distance to the city center
+     * @param propertyPhotographs        the list of photographs for the property
+     * @param propertyBedroomNumber      the number of bedrooms in the property
+     * @param propertyBathroomNumber     the number of bathrooms in the property
+     * @param propertyParkingSpaceNumber the number of parking spaces available
+     * @param propertyEquipmentList      the list of equipment included in the property
+     * @param propertyHasBasement        indicates if the property has a basement
+     * @param propertyHasLoft            indicates if the property has a loft
+     * @param propertySunExposure        the sun exposure of the property
+     * @param propertyType               the type of the property
+     * @param store                      the store associated with the property
+     * @param client                     the Client creating the property
+     * @param date                       the date
+     * @return the created Property object, or null if creation failed
+     */
+    public Property createProperty(Double propertyPrice, Double propertyArea, Address propertyAddress,
+                                   Double propertyDistanceToCentre, List&lt;Photograph&gt; propertyPhotographs,
+                                   Integer propertyBedroomNumber, Integer propertyBathroomNumber,
+                                   Integer propertyParkingSpaceNumber, List&lt;String&gt; propertyEquipmentList,
+                                   Boolean propertyHasBasement, Boolean propertyHasLoft, String propertySunExposure,
+                                   PropertyType propertyType, Store store, Client client, DateTime date){
+
+<span class="nc" id="L634">        House house = new House(propertyPrice, propertyArea, propertyAddress, propertyDistanceToCentre, propertyPhotographs, propertyBedroomNumber,</span>
+<span class="nc" id="L635">                propertyBathroomNumber, propertyParkingSpaceNumber, propertyEquipmentList, propertyHasBasement, propertyHasLoft,</span>
+                propertySunExposure, propertyType, store, client, date);
+<span class="nc" id="L637">        Property property = house.getInhabitable().getProperty();</span>
+
+
+
+<span class="nc bnc" id="L641" title="All 4 branches missed.">        return ( addProperty(property) &amp;&amp; addHouse(house) ) ? property : null;</span>
+
+    }
+
+    /**
+     * Creates a new property with the specified details.
+     *
+     * @param propertyPrice              the price of the property
+     * @param propertyArea               the area of the property
+     * @param propertyAddress            the address of the property
+     * @param propertyDistanceToCentre   the distance of the property to the city centre
+     * @param propertyPhotographs        the list of photographs of the property
+     * @param propertyBedroomNumber      the number of bedrooms in the property
+     * @param propertyBathroomNumber     the number of bathrooms in the property
+     * @param propertyParkingSpaceNumber the number of parking spaces available in the property
+     * @param propertyEquipmentList      the list of equipment available in the property
+     * @param propertyType               the type of the property
+     * @param store                      the store associated with the property
+     * @param client                     the client of the property
+     * @param date                       the date
+     * @return the created property if it was successfully added to the repository, or null otherwise
+     */
+    public Property createProperty(Double propertyPrice, Double propertyArea, Address propertyAddress,
+                                   Double propertyDistanceToCentre, List&lt;Photograph&gt; propertyPhotographs,
+                                   Integer propertyBedroomNumber, Integer propertyBathroomNumber,
+                                   Integer propertyParkingSpaceNumber, List&lt;String&gt; propertyEquipmentList,
+                                   PropertyType propertyType, Store store, Client client, DateTime date){
+
+<span class="nc" id="L669">        Apartment apartment = new Apartment(propertyPrice, propertyArea, propertyAddress, propertyDistanceToCentre, propertyPhotographs, propertyBedroomNumber, propertyBathroomNumber, propertyParkingSpaceNumber, propertyEquipmentList, propertyType, store, client, date);</span>
+<span class="nc" id="L670">        Property property = apartment.getInhabitable().getProperty();</span>
+
+
+
+
+<span class="nc bnc" id="L675" title="All 4 branches missed.">        return ( addProperty(property) &amp;&amp; addApartment(apartment) ) ? property : null;</span>
+    }
+
+    /**
+     * Adds a property to the repository.
+     *
+     * @param property the property to be added
+     * @return true if the property was successfully added, false otherwise
+     */
+    private Boolean addProperty(Property property) {
+
+<span class="nc" id="L686">        return properties.add(property);</span>
+    }
+    private Boolean addLand(Land land) {
+
+<span class="nc" id="L690">        return lands.add(land);</span>
+    }
+    private Boolean addInhabitable(Inhabitable inhabitable) {
+
+<span class="nc" id="L694">        return inhabitableProperties.add(inhabitable);</span>
+    }
+    private Boolean addApartment(Apartment apartment) {
+<span class="nc bnc" id="L697" title="All 2 branches missed.">        if (addInhabitable(apartment.getInhabitable()))return apartments.add(apartment);</span>
+<span class="nc" id="L698">        return false;</span>
+    }
+    private Boolean addHouse(House house) {
+<span class="nc bnc" id="L701" title="All 2 branches missed.">        if (addInhabitable(house.getInhabitable()))return houses.add(house);</span>
+<span class="nc" id="L702">        return false;</span>
+    }
+
+    /**
+     * Retrieves the last property in the list of properties.
+     *
+     * @return The last property in the list.
+     */
+    public Property getLast() {
+<span class="nc" id="L711">        return properties.get(properties.size()-1);</span>
+    }
+
+    /**
+     * Remove.
+     *
+     * @param property the property
+     */
+    public void remove(Property property) {
+<span class="nc" id="L720">        properties.removeIf(prop -&gt; prop.equals(property));</span>
+<span class="nc" id="L721">        houses.removeIf(house -&gt; house.getInhabitable().getProperty().equals(property));</span>
+<span class="nc" id="L722">        apartments.removeIf(apt -&gt; apt.getInhabitable().getProperty().equals(property));</span>
+<span class="nc" id="L723">        inhabitableProperties.removeIf(inhab -&gt; inhab.getProperty().equals(property));</span>
+<span class="nc" id="L724">        lands.removeIf(land -&gt; land.getProperty().equals(property));</span>
+<span class="nc" id="L725">    }</span>
+
+
+//    /**
+//     * Returns an ArrayList of properties that match the given BusinessType by iterating through all properties in the properties list.
+//     *
+//     * @param businessType the BusinessType to filter by
+//     * @return an ArrayList of properties that match the given BusinessType
+//     */
+//    public ArrayList&lt;Property&gt; addPropertyToListByBusinessType(BusinessType businessType) {
+//        ArrayList&lt;Property&gt; newProperty = new ArrayList&lt;&gt;();
+//        int i = 0;
+//        for (Property property : properties) {
+//            if(businessType.equals(getAnnouncement(property))){
+//                newProperty.add(property);
+//            }
+//            i++;
+//        }
+//       return newProperty;
+//    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

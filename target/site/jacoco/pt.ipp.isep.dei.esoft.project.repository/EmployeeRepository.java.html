@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EmployeeRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.repository</a> &gt; <span class="el_source">EmployeeRepository.java</span></div><h1>EmployeeRepository.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.repository;
+
+import pt.ipp.isep.dei.esoft.project.application.controller.authorization.AuthenticationController;
+import pt.ipp.isep.dei.esoft.project.domain.*;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Serializable;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+
+/**
+ * A repository class for managing all Employees.
+ */
+<span class="fc" id="L19">public class EmployeeRepository implements Serializable {</span>
+
+
+<span class="fc" id="L22">    private final List&lt;StoreManager&gt; storeManagers = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L23">    private final List&lt;Employee&gt; employees = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L24">    private final List&lt;Agent&gt; agents = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L26">    private static final Role AGENT_ROLE = new Role(2,AuthenticationController.ROLE_AGENT);</span>
+
+    /**
+     * Returns the Employee object with the specified email address. If no Employee object with the specified email address
+     * is found in the list of employees, an IllegalArgumentException is thrown.
+     *
+     * @param email the email address to look up
+     * @return the Employee object with the specified email address
+     * @throws IllegalArgumentException if no Employee object with the specified email address is found
+     */
+    public Employee getEmployeeByEmail(String email){
+<span class="fc" id="L37">        Employee employee = null;</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        for (Employee employeeCheck : List.copyOf(employees)) {</span>
+
+<span class="fc bfc" id="L40" title="All 2 branches covered.">            if (employeeCheck.hasEmail(email)) {</span>
+
+<span class="fc" id="L42">                employee = employeeCheck;</span>
+            }
+<span class="fc" id="L44">        }</span>
+
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">        if (employee == null) {</span>
+<span class="nc" id="L47">            throw new IllegalArgumentException(</span>
+                    &quot;Employee requested for [&quot; + email + &quot;] does not exist.&quot;);
+        }
+<span class="fc" id="L50">        return employee;</span>
+
+    }
+
+
+    /**
+     * Returns a list of all the employees who do not have the role of Store Manager.
+     *
+     * @return a list of all the employees who do not have the role of Store Manager
+     */
+    public List&lt;Employee&gt; getEmployeeToStoreManagers(){
+<span class="nc" id="L61">        List&lt;Employee&gt; copy = List.copyOf(employees);;</span>
+<span class="nc" id="L62">        List&lt;Employee&gt; send = new ArrayList&lt;&gt;(copy);</span>
+
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        for (Employee employee2 : copy) {</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">            if (employee2.getRolesbyDescription(AuthenticationController.ROLE_STORE_MANAGER)){</span>
+<span class="nc" id="L66">                send.remove(employee2);</span>
+            }
+<span class="nc" id="L68">        }</span>
+<span class="nc" id="L69">        return send;</span>
+    }
+
+    /**
+     * Get store managers list.
+     *
+     * @return the list
+     */
+    public List&lt;Employee&gt; getStoreManagers(){
+<span class="nc" id="L78">        List&lt;Employee&gt; employeeList = List.copyOf(employees);</span>
+<span class="nc" id="L79">        List&lt;Employee&gt; storeManagers = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        for (Employee employee : employeeList) {</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">            if (employee.getRolesbyDescription(AuthenticationController.ROLE_STORE_MANAGER)){</span>
+<span class="nc" id="L82">                storeManagers.add(employee);</span>
+            }
+<span class="nc" id="L84">        }</span>
+
+<span class="nc" id="L86">        return  storeManagers;</span>
+    }
+
+//    public List&lt;Employee&gt; getStoreManagerByDescription(String storeManagerDescription){
+//        List&lt;Employee&gt; employeeList = List.copyOf(employees);
+//
+//
+//
+//        if (storeManager == null) {
+//            throw new IllegalArgumentException(
+//                    &quot;Agent requested for [&quot; + storeManagerDescription + &quot;] does not exist.&quot;);
+//        }
+//    }
+
+
+    /**
+     * Returns a list of employees who have the role of &quot;agent&quot; and are associated with the specified store.
+     *
+     * @param store The store to filter the agents by.
+     * @return A list of agents from the specified store.
+     */
+    public List&lt;Employee&gt; getAgentsFromStore(Store store) {
+<span class="nc" id="L108">        List&lt;Employee&gt; employeesCopy = List.copyOf(employees);</span>
+<span class="nc" id="L109">        List&lt;Employee&gt; agentsFromStore = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        for (Employee employee : employeesCopy) {</span>
+<span class="nc bnc" id="L111" title="All 4 branches missed.">            if (employee.compareRole(AGENT_ROLE) &amp;&amp; employee.compareStore(store)) {</span>
+<span class="nc" id="L112">                agentsFromStore.add(employee);</span>
+            }
+<span class="nc" id="L114">        }</span>
+<span class="nc" id="L115">        return agentsFromStore;</span>
+    }
+
+    /**
+     * Gets agent object.
+     *
+     * @param employee the employee
+     * @return the agent object
+     */
+    public Agent getAgentObject(Employee employee) {
+<span class="fc" id="L125">        Agent agentObj = null;</span>
+//        System.out.println(employee);
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        for (Agent agent : agents) {</span>
+//            System.out.println(agent.getEmployee().equals(employee));
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">            if (agent.getEmployee().equals(employee)) {</span>
+<span class="fc" id="L130">                agentObj = agent.clone();</span>
+            }
+<span class="fc" id="L132">        }</span>
+<span class="fc" id="L133">        return agentObj;</span>
+    }
+
+    /**
+     * Returns the Employee object representing the agent with the specified description.
+     *
+     * @param agentDescription the description of the agent to retrieve
+     * @return the Employee object representing the agent with the specified description
+     */
+    public Employee getAgentByDescription(String agentDescription) {
+//        List&lt;Employee&gt; employeesCopy = List.copyOf(employees);
+//
+//        Employee agent = null;
+////        if (stores.contains(newStore)) {
+////            Store = stores.get(stores.indexOf(newStore));
+////        }
+//        for (Employee employee : List.copyOf(employees)) {
+////            if (employee.compareRole(AGENT_ROLE) &amp;&amp; employee.compareDescription(agentDescription) == 0) {
+//                agent = employee;
+////            }
+//        }
+//        if (agent == null) {
+//            throw new IllegalArgumentException(
+//                    &quot;Agent requested for [&quot; + agentDescription + &quot;] does not exist.&quot;);
+//        }
+
+<span class="nc" id="L159">        return getEmployeeByEmail(agentDescription);</span>
+    }
+
+    /**
+     * Adds a new employee to the list of employees, if the employee passes validation.
+     *
+     * @param employee The employee to be added.
+     * @return An optional containing the newly added employee if the operation was successful,         or an empty optional otherwise.
+     */
+    public Optional&lt;Employee&gt; add(Employee employee) {
+
+<span class="fc" id="L170">        Optional&lt;Employee&gt; newEmployee = Optional.empty();</span>
+<span class="fc" id="L171">        boolean operationSuccess = false;</span>
+
+<span class="fc bfc" id="L173" title="All 2 branches covered.">        if (validateEmployee(employee)) {</span>
+<span class="fc" id="L174">            newEmployee = Optional.of(employee.clone());</span>
+<span class="fc" id="L175">            operationSuccess = employees.add(newEmployee.get());</span>
+        }
+
+<span class="fc bfc" id="L178" title="All 2 branches covered.">        if (!operationSuccess) {</span>
+<span class="fc" id="L179">            newEmployee = Optional.empty();</span>
+        }
+
+<span class="fc" id="L182">        return newEmployee;</span>
+    }
+
+    /**
+     * Add agent optional.
+     *
+     * @param employee the employee
+     * @return the optional
+     */
+    public Optional&lt;Agent&gt; addAgent(Agent employee) {
+
+<span class="fc" id="L193">        Optional&lt;Agent&gt; newEmployee = Optional.empty();</span>
+<span class="fc" id="L194">        boolean operationSuccess = false;</span>
+
+<span class="fc bfc" id="L196" title="All 2 branches covered.">        if (validateAgent(employee)) {</span>
+<span class="fc" id="L197">            newEmployee = Optional.of(employee.clone());</span>
+<span class="fc" id="L198">            operationSuccess = agents.add(newEmployee.get());</span>
+        }
+
+<span class="fc bfc" id="L201" title="All 2 branches covered.">        if (!operationSuccess) {</span>
+<span class="fc" id="L202">            newEmployee = Optional.empty();</span>
+        }
+
+<span class="fc" id="L205">        return newEmployee;</span>
+    }
+
+    /**
+     * Validates the given employee by checking if the employee is already present in the list of employees.
+     *
+     * @param employee The employee to be validated.
+     * @return true if the employee is valid (i.e., not already present in the list of employees), false otherwise.
+     */
+
+    private boolean validateEmployee(Employee employee) {
+<span class="fc bfc" id="L216" title="All 2 branches covered.">        boolean isValid = !employees.contains(employee);</span>
+<span class="fc" id="L217">        return isValid;</span>
+    }
+    private boolean validateAgent(Agent employee) {
+<span class="fc bfc" id="L220" title="All 2 branches covered.">        boolean isValid = !agents.contains(employee);</span>
+<span class="fc" id="L221">        return isValid;</span>
+    }
+
+    /**
+     * Returns a copy of the list of employees.
+     *
+     * @return a copy of the list of employees.
+     */
+    public List&lt;Employee&gt; getEmployees(){
+<span class="fc" id="L230">        return List.copyOf(employees);</span>
+
+    }
+
+
+    /**
+     * Creates a new Employee object with the specified details, adds it to the employee repository, and creates a new user
+     * account for the Employee in the authentication repository with a randomly generated password. Returns an Optional
+     * containing the new Employee object if the creation was successful, or an empty Optional if the email address is already
+     * in use by another Employee.
+     *
+     * @param name           the name of the new Employee
+     * @param email          the email address of the new Employee
+     * @param passportNumber the passport number of the new Employee
+     * @param taxNumber      the tax number of the new Employee
+     * @param address        the address of the new Employee
+     * @param phoneNumber    the phone number of the new Employee
+     * @param store          the Store object that the new Employee belongs to
+     * @param role           the list of Role objects that the new Employee has
+     * @return an Optional containing the new Employee object if the creation was successful, or an empty Optional if the email         address is already in use by another Employee
+     */
+    public Optional&lt;Employee&gt; create(String name, String email, int passportNumber, String taxNumber, Address address, long phoneNumber, Store store, List&lt;Role&gt; role) {
+
+
+<span class="fc" id="L254">        Employee EmployeeClone = new Employee(name,email,passportNumber,taxNumber,address,phoneNumber,store,role);</span>
+
+<span class="fc" id="L256">        Optional&lt;Employee&gt; newEmployee = Optional.of(EmployeeClone.clone());</span>
+
+<span class="fc" id="L258">        employees.add(EmployeeClone);</span>
+
+<span class="fc" id="L260">        AuthenticationRepository authenticationRepository = Repositories.getInstance().getAuthenticationRepository();</span>
+
+<span class="fc" id="L262">        String pass = createPassword();</span>
+<span class="fc" id="L263">        String[] stringRoles = new String[role.size()];</span>
+<span class="fc" id="L264">        int i =0;</span>
+<span class="fc bfc" id="L265" title="All 2 branches covered.">        for (Role roleEach: role) {</span>
+<span class="fc" id="L266">            stringRoles[i] = roleEach.getDescription();</span>
+<span class="fc" id="L267">            i++;</span>
+<span class="fc" id="L268">        }</span>
+
+<span class="fc" id="L270">        authenticationRepository.addUserWithRoles(name, email, pass, stringRoles );</span>
+
+<span class="fc" id="L272">        createPasswordTxt(email,pass);</span>
+
+<span class="fc" id="L274">        return newEmployee;</span>
+
+    }
+
+    /**
+     * Creates a text file containing a password for a given email address.
+     *
+     * @param email the email address for which the password will be created
+     * @param pass the password to be written to the file
+     */
+
+    private void createPasswordTxt(String email,String pass){
+
+<span class="fc" id="L287">        String fileName = email + &quot;.txt&quot;; // The name of the file to create</span>
+<span class="fc" id="L288">        String fileContent = &quot;Email: &quot; + email + &quot;\n&quot; + &quot;Password: &quot; + pass; // The content to write to the file</span>
+
+<span class="fc" id="L290">        String directory = &quot;src\\main\\resources\\passwords\\&quot;;</span>
+
+        try {
+<span class="fc" id="L293">            File file = new File(directory,fileName); // Create a new File object with the given file name</span>
+<span class="fc" id="L294">            FileWriter writer = new FileWriter(file); // Create a new FileWriter object</span>
+
+<span class="fc" id="L296">            writer.write(fileContent); // Write the content to the file</span>
+<span class="fc" id="L297">            writer.close(); // Close the FileWriter</span>
+<span class="fc" id="L298">            System.out.println(&quot;\u001B[36m=======================\u001B[0m&quot;);</span>
+<span class="fc" id="L299">            System.out.println(&quot;\u001B[32mEmail sent successfully.\u001B[0m&quot;);</span>
+<span class="nc" id="L300">        } catch (IOException e) {</span>
+<span class="nc" id="L301">            System.out.println(&quot;\u001B[31mAn error occurred while creating the email.\u001B[0m&quot;);</span>
+<span class="nc" id="L302">            e.printStackTrace();</span>
+<span class="fc" id="L303">        }</span>
+<span class="fc" id="L304">    }</span>
+
+
+    /**
+     * Generates a random password of length 7, consisting of three uppercase letters,
+     * two digits, and two lowercase letters.
+     *
+     * @return the randomly generated password as a string
+     */
+
+    private String createPassword() {
+
+
+
+<span class="fc" id="L318">        String upper = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;;</span>
+<span class="fc" id="L319">        String numbers = &quot;0123456789&quot;;</span>
+<span class="fc" id="L320">        String lower = &quot;abcdefghijklmnopqrstuvwxyz&quot;;</span>
+<span class="fc" id="L321">        Random random = new SecureRandom();</span>
+
+<span class="fc" id="L323">        int length = 7; // Set the desired length of the password</span>
+
+<span class="fc" id="L325">        StringBuilder sb = new StringBuilder(length);</span>
+        // Add three uppercase letters
+<span class="fc bfc" id="L327" title="All 2 branches covered.">        for (int i = 0; i &lt; 3; i++) {</span>
+<span class="fc" id="L328">            sb.append(upper.charAt(random.nextInt(upper.length())));</span>
+        }
+        // Add two digits
+<span class="fc bfc" id="L331" title="All 2 branches covered.">        for (int i = 0; i &lt; 2; i++) {</span>
+<span class="fc" id="L332">            sb.append(numbers.charAt(random.nextInt(numbers.length())));</span>
+        }
+        // Fill up the remaining length with random characters
+<span class="fc bfc" id="L335" title="All 2 branches covered.">        for (int i = 0; i &lt; length - 5; i++) {</span>
+<span class="fc" id="L336">            sb.append(lower.charAt(random.nextInt(lower.length())));</span>
+        }
+
+<span class="fc" id="L339">        return sb.toString();</span>
+    }
+
+
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MultipleRegressionAnalysis.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.service</a> &gt; <span class="el_source">MultipleRegressionAnalysis.java</span></div><h1>MultipleRegressionAnalysis.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.service;
+
+import org.apache.commons.math.MathException;
+import org.apache.commons.math.distribution.FDistributionImpl;
+import org.apache.commons.math.distribution.TDistribution;
+import org.apache.commons.math.distribution.TDistributionImpl;
+import org.apache.commons.math.stat.regression.OLSMultipleLinearRegression;
+import pt.ipp.isep.dei.esoft.project.application.controller.GetDealsListController;
+import pt.ipp.isep.dei.esoft.project.domain.PurchaseOrder;
+import pt.ipp.isep.dei.esoft.project.repository.PropertyRepository;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * The type Multiple regression analysis.
+ */
+public class MultipleRegressionAnalysis {
+<span class="nc" id="L21">    private OLSMultipleLinearRegression multipleLinearRegression = new OLSMultipleLinearRegression();</span>
+
+    /**
+     * The K.
+     */
+    double k;
+
+    /**
+     * The N.
+     */
+    int n;
+
+    private final FDistributionImpl Fdistribution;
+
+    private final TDistribution distribution;
+
+    /**
+     * The Betas.
+     */
+    double [] betas;
+
+    /**
+     * The Xtx.
+     */
+    double [][] xtx;
+
+    /**
+     * The Fa.
+     */
+    double Fa;
+<span class="nc" id="L51">    private final List&lt;String&gt; tableAnova = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L52">    private final GetDealsListController controller = new GetDealsListController();</span>
+
+    /**
+     * Initializes a MultipleRegressionAnalysis object and performs a multiple linear regression analysis.
+     * The analysis is performed based on the given dependent variable (y) and independent variables (x).
+     * The regression model parameters (betas) and the variance of the regression parameters (xtx) are calculated.
+     * The degrees of freedom (k and n) for the F-distribution and t-distribution are set accordingly.
+     */
+<span class="nc" id="L60">    public MultipleRegressionAnalysis(){</span>
+<span class="nc" id="L61">        double[] y = getY();</span>
+<span class="nc" id="L62">        double[][] x = getX();</span>
+<span class="nc" id="L63">        multipleLinearRegression.newSampleData(y, x);</span>
+<span class="nc" id="L64">        this.k= 5;</span>
+<span class="nc" id="L65">        this.n = x.length;</span>
+<span class="nc" id="L66">        this.Fdistribution =new FDistributionImpl(k,n - (k +1));</span>
+<span class="nc" id="L67">        this.distribution  = new TDistributionImpl(n - (k +1) );</span>
+<span class="nc" id="L68">        this.betas = multipleLinearRegression.estimateRegressionParameters();</span>
+<span class="nc" id="L69">        this.xtx  = multipleLinearRegression.estimateRegressionParametersVariance();</span>
+
+<span class="nc" id="L71">    }</span>
+
+    /**
+     * This method saves the value of all announcement's listed price.
+     *
+     * @return array with all announcement's listed price.
+     */
+    public double[] getY(){
+<span class="nc" id="L79">        List&lt;PurchaseOrder&gt; p = controller.getDeals();</span>
+<span class="nc" id="L80">        List&lt;Double&gt; listY = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        for (PurchaseOrder order: p) {</span>
+<span class="nc" id="L82">           listY.add(order.getAnnouncement().getListedPrice());</span>
+<span class="nc" id="L83">        }</span>
+
+<span class="nc" id="L85">        double[] y = new double[listY.size()];</span>
+<span class="nc" id="L86">        int i = 0;</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">        for (double value: listY){</span>
+<span class="nc" id="L88">            y[i] = value;</span>
+<span class="nc" id="L89">            i++;</span>
+<span class="nc" id="L90">        }</span>
+        
+<span class="nc" id="L92">        return y;        </span>
+    }
+
+    /**
+     * This method saves in a matrix the value of all announcement's area, distance to center, property, number of bathrooms, number of bedrooms and number parking spaces.
+     *
+     * @return matrix with value of all announcement's area, distance to center, property, number of bathrooms, number of bedrooms and number parking spaces.
+     */
+    public double[][] getX(){
+<span class="nc" id="L101">        List&lt;PurchaseOrder&gt; p = controller.getDeals();</span>
+<span class="nc" id="L102">        List&lt;List&lt;Double&gt;&gt; listX = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L103">        List&lt;Double&gt; linhas = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L104">        int j = 0;</span>
+
+<span class="nc bnc" id="L106" title="All 2 branches missed.">            for (PurchaseOrder order : p) {</span>
+<span class="nc" id="L107">                linhas = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L108">                linhas.add(order.getAnnouncement().getProperty().getArea());</span>
+<span class="nc" id="L109">                linhas.add(order.getAnnouncement().getProperty().getDistanceToCentre());</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">                if (PropertyRepository.getInhabitableByProperty(order.getAnnouncement().getProperty()) != null)</span>
+<span class="nc" id="L111">                    linhas.add((double) Objects.requireNonNull(PropertyRepository.getInhabitableByProperty(order.getAnnouncement().getProperty())).getBedroomNumber());</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">                if (PropertyRepository.getInhabitableByProperty(order.getAnnouncement().getProperty()) != null) {</span>
+<span class="nc" id="L113">                    linhas.add((double) Objects.requireNonNull(PropertyRepository.getInhabitableByProperty(order.getAnnouncement().getProperty())).getBathroomNumber());</span>
+                }
+<span class="nc bnc" id="L115" title="All 2 branches missed.">                if (PropertyRepository.getInhabitableByProperty(order.getAnnouncement().getProperty()) != null) {</span>
+<span class="nc" id="L116">                    linhas.add((double) Objects.requireNonNull(PropertyRepository.getInhabitableByProperty(order.getAnnouncement().getProperty())).getParkingSpaceNumber());</span>
+                }
+<span class="nc" id="L118">                listX.add(linhas);</span>
+
+
+<span class="nc" id="L121">        }</span>
+
+<span class="nc" id="L123">        double[][] x = new double[listX.size()][listX.get(0).size()];</span>
+
+<span class="nc bnc" id="L125" title="All 2 branches missed.">        for (int l = 0; l &lt; listX.size(); l++) {</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">            for (int i = 0; i &lt; listX.get(0).size() ; i++){</span>
+<span class="nc" id="L127">                x[l][i] = listX.get(l).get(i);</span>
+            }
+        }
+
+<span class="nc" id="L131">        return x;</span>
+    }
+
+    /**
+     * Formats a floating-point number with four decimal places as a string.
+     *
+     * @param flota The floating-point number to be formatted.
+     * @return The formatted string representation of the number.
+     */
+    public String fourDecimalCase(Double flota){
+<span class="nc" id="L141">        DecimalFormat decimalFormat = new DecimalFormat(&quot;#.0000&quot;);</span>
+<span class="nc bnc" id="L142" title="All 4 branches missed.">        if(flota&lt;0 &amp;&amp; flota &gt; -1){</span>
+<span class="nc" id="L143">            return decimalFormat.format(flota).replace(&quot;-&quot;, &quot;-0&quot;);</span>
+
+<span class="nc bnc" id="L145" title="All 4 branches missed.">        } else if( flota &gt; 0 &amp;&amp; flota &lt;1){</span>
+<span class="nc" id="L146">            return &quot;0&quot; + decimalFormat.format(flota);</span>
+        }
+<span class="nc" id="L148">        return decimalFormat.format(flota);</span>
+    }
+
+    /**
+     * Returns the regression equation for least squares.
+     *
+     * @return The regression equation in the form: y = &lt;beta0&gt; + &lt;beta1&gt;X1 + &lt;beta2&gt;X2 + &lt;beta3&gt;X3 + &lt;beta4&gt;X4 + &lt;beta5&gt;X5,         where &lt;beta0&gt;, &lt;beta1&gt;, &lt;beta2&gt;, &lt;beta3&gt;, &lt;beta4&gt;, and &lt;beta5&gt; are formatted with four decimal places.
+     */
+    public String getEquation(){
+<span class="nc" id="L157">        return (&quot;The regression equation for least squares: \ny=&quot; + fourDecimalCase(betas[0]) + &quot; + &quot; +  fourDecimalCase(betas[1]) + &quot;X1&quot; + &quot; + &quot; +  fourDecimalCase(betas[2]) + &quot;X2&quot; + &quot; + \n&quot; +  fourDecimalCase(betas[3])</span>
+<span class="nc" id="L158">                + &quot;X3&quot; + &quot; + &quot; +  fourDecimalCase(betas[4]) + &quot;X4&quot; + &quot; + &quot; + fourDecimalCase(betas[5]) + &quot;X5&quot;);</span>
+    }
+
+    /**
+     * Calculates the predicted price based on the given input variables.
+     *
+     * @param area             The area value.
+     * @param distanceToCenter The distance to the center value.
+     * @param bedroomNumber    The number of bedrooms value.
+     * @param bathroomNumber   The number of bathrooms value.
+     * @param parkingSpace     The number of parking spaces value.
+     * @return The price prediction for the given input variables, formatted with four decimal places.
+     */
+    public String getPricePrediceted(double area, double distanceToCenter, double bedroomNumber, double bathroomNumber,
+                                     double parkingSpace){
+
+<span class="nc" id="L174">        double prediction = ((betas[0]) + ((betas[1]*area) + (betas[2]*distanceToCenter) + (betas[3]*bedroomNumber)</span>
+                + (betas[4]*bathroomNumber) + (betas[5]*parkingSpace)));
+
+
+<span class="nc" id="L178">        return (&quot;The price prediction for area = &quot; + area + &quot; \n, distance to center = &quot; + distanceToCenter +</span>
+                &quot;, number of bedrooms = &quot; + bedroomNumber + &quot;\n , number of bathrooms = &quot; + bathroomNumber
+<span class="nc" id="L180">                + &quot; , parking spaces =&quot; + parkingSpace + &quot;\n is &quot; + fourDecimalCase(prediction) + &quot;$.&quot;);</span>
+
+    }
+
+    /**
+     * Returns the determination coefficient (R^2) of the multiple linear regression model.
+     *
+     * @return The determination coefficient, formatted with four decimal places.
+     */
+    public String getR2(){
+<span class="nc" id="L190">        return (&quot;\nDetermination coefficient = &quot; + fourDecimalCase( multipleLinearRegression.calculateRSquared()) );</span>
+    }
+
+    /**
+     * Returns the adjusted determination coefficient (R^2 adjusted) of the multiple linear regression model.
+     *
+     * @return The adjusted determination coefficient, formatted with four decimal places.
+     */
+    public String getR2Adjusted(){
+<span class="nc" id="L199">        return  (&quot;\nDetermination coefficient adjusted = &quot; + fourDecimalCase(multipleLinearRegression.calculateAdjustedRSquared() ));</span>
+    }
+
+    /**
+     * Returns the critical value for the F-distribution with the specified significance level (alfa).
+     *
+     * @param alfa The significance level.
+     * @return The critical value for the F-distribution, formatted with four decimal places.
+     */
+    public double getFa (double alfa){
+        try {
+<span class="nc" id="L210">            this.Fa  = Fdistribution.inverseCumulativeProbability(1.0 -alfa);</span>
+<span class="nc" id="L211">        } catch (MathException e) {</span>
+<span class="nc" id="L212">            throw new RuntimeException(e);</span>
+<span class="nc" id="L213">        }</span>
+<span class="nc" id="L214">        return this.Fa;</span>
+    }
+
+    /**
+     * Returns the critical value for the t-distribution with the specified significance level (alfa).
+     *
+     * @param alfa The significance level.
+     * @return The critical value for the t-distribution, formatted with four decimal places.
+     */
+    public double getTc (double alfa){
+        try {
+<span class="nc" id="L225">            this.Fa  = distribution.inverseCumulativeProbability(1.0 - (alfa/2.0));</span>
+<span class="nc" id="L226">        } catch (MathException e) {</span>
+<span class="nc" id="L227">            throw new RuntimeException(e);</span>
+<span class="nc" id="L228">        }</span>
+<span class="nc" id="L229">        return this.Fa;</span>
+    }
+
+    /**
+     * Returns a message indicating the result of the ANOVA table justification.
+     *
+     * @param IC The confidence interval.
+     * @return The message explaining the ANOVA table justification.
+     */
+    public String getTabelaAnovaJustifiacao(double IC){
+<span class="nc" id="L239">        double SQE = multipleLinearRegression.calculateResidualSumOfSquares();</span>
+<span class="nc" id="L240">        double SQT = multipleLinearRegression.calculateTotalSumOfSquares();</span>
+<span class="nc" id="L241">        double SQR = SQT - SQE;</span>
+<span class="nc" id="L242">        double MQR = SQR/k;</span>
+<span class="nc" id="L243">        double glE = n - (k - 1);</span>
+<span class="nc" id="L244">        double MQE = SQE/glE;</span>
+<span class="nc" id="L245">        double f0 = MQR/MQE;</span>
+
+<span class="nc" id="L247">        double alfa = (100- IC)/100;</span>
+<span class="nc" id="L248">        String symbol = &quot;\u2260&quot;;</span>
+<span class="nc" id="L249">        String mesage = &quot;H0 : β1 = β2 = β3 = β4 = β5 = 0 v.s H1: β1 = β2 = β3 = β4 = β5 &quot;+ symbol +&quot; 0&quot;;</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">        if (f0 &gt; getFa(alfa)){</span>
+<span class="nc" id="L251">            mesage = mesage +  &quot;\nThe hypothesis H0 is rejected, which allows us to conclude that there is \n at least one independent variable that contributes significantly to explaining&quot; +</span>
+                    &quot; \nthe variation of the dependent variable. \nThe linear regression model presented significant&quot; ;
+        }else {
+<span class="nc" id="L254">            mesage =  mesage + &quot;\nThe hypothesis H0 isn't rejected, which allows us to conclude \n that there is a bad adjustment &quot; +</span>
+                    &quot; in the presented linear regression model. \nThe linear regression model presented isn't significant&quot;;
+        }
+<span class="nc" id="L257">        return mesage;</span>
+   }
+
+    /**
+     * Returns the critical value for the F-distribution as a formatted string with four decimal places.
+     *
+     * @param IC The confidence interval.
+     * @return The critical value for the F-distribution as a formatted string.
+     */
+    public String getFaToString(double IC){
+<span class="nc" id="L267">        double SQE = multipleLinearRegression.calculateResidualSumOfSquares();</span>
+<span class="nc" id="L268">        double SQT = multipleLinearRegression.calculateTotalSumOfSquares();</span>
+<span class="nc" id="L269">        double SQR = SQT - SQE;</span>
+<span class="nc" id="L270">        double MQR = SQR/k;</span>
+<span class="nc" id="L271">        double glE = n - (k - 1);</span>
+<span class="nc" id="L272">        double MQE = SQE/glE;</span>
+<span class="nc" id="L273">        double F = MQR/MQE;</span>
+
+
+<span class="nc" id="L276">       double alfa = (100- IC)/100;</span>
+
+<span class="nc" id="L278">       return fourDecimalCase(getFa(alfa));</span>
+   }
+
+
+    /**
+     * Returns the ANOVA table as a list of formatted strings.
+     *
+     * @return The ANOVA table.
+     */
+    public List&lt;String&gt; getTableAnova(){
+<span class="nc" id="L288">        double SQE = multipleLinearRegression.calculateResidualSumOfSquares();</span>
+<span class="nc" id="L289">        double SQT = multipleLinearRegression.calculateTotalSumOfSquares();</span>
+<span class="nc" id="L290">        double SQR = SQT - SQE;</span>
+<span class="nc" id="L291">        tableAnova.add(fourDecimalCase(SQR));</span>
+<span class="nc" id="L292">        tableAnova.add(fourDecimalCase(SQE));</span>
+<span class="nc" id="L293">        tableAnova.add(fourDecimalCase(SQT));</span>
+<span class="nc" id="L294">        double glR = k;</span>
+<span class="nc" id="L295">        tableAnova.add(fourDecimalCase(glR));</span>
+<span class="nc" id="L296">        double glE = n - (k - 1);</span>
+<span class="nc" id="L297">        tableAnova.add(fourDecimalCase(glE));</span>
+<span class="nc" id="L298">        double glTotal = n -1;</span>
+<span class="nc" id="L299">        tableAnova.add(fourDecimalCase(glTotal));</span>
+<span class="nc" id="L300">        double MQR = SQR/k;</span>
+<span class="nc" id="L301">        tableAnova.add(fourDecimalCase(MQR));</span>
+<span class="nc" id="L302">        double MQE = SQE/glE;</span>
+<span class="nc" id="L303">        tableAnova.add(fourDecimalCase(MQE));</span>
+<span class="nc" id="L304">        double F = MQR/MQE;</span>
+<span class="nc" id="L305">        tableAnova.add(fourDecimalCase(F));</span>
+
+<span class="nc" id="L307">        return tableAnova;</span>
+    }
+
+    /**
+     * Calculates the confidence interval for the specified beta value.
+     *
+     * @param IC   The confidence interval.
+     * @param beta The beta value.
+     * @return The confidence interval for the beta value as a formatted string.
+     */
+    public String calcularIC (double IC , int beta){
+
+<span class="nc" id="L319">       double alfa = (100- IC)/100;</span>
+
+<span class="nc" id="L321">       double tc = getTc(alfa);</span>
+
+<span class="nc" id="L323">        double SQE = multipleLinearRegression.calculateResidualSumOfSquares();</span>
+<span class="nc" id="L324">        double s2 = SQE / (n - (k + 1));</span>
+
+<span class="nc" id="L326">        double befaConfidance = tc * Math.sqrt((s2 * xtx[beta][beta]));</span>
+
+<span class="nc" id="L328">        double interval1 = beta - befaConfidance;</span>
+
+<span class="nc" id="L330">        double interval2 = beta + befaConfidance;</span>
+
+<span class="nc" id="L332">        return (&quot;\nConfidance Interval for β&quot;+ beta + &quot; = [&quot; + fourDecimalCase(interval1) + &quot;, &quot;</span>
+<span class="nc" id="L333">                + fourDecimalCase(interval2) + &quot;]&quot;);</span>
+
+    }
+
+    /**
+     * Performs a hypothesis test for the specified beta value.
+     *
+     * @param IC   The confidence interval.
+     * @param beta The beta value.
+     * @return The result of the hypothesis test as a message.
+     */
+    public String testeHipotese (double IC , int beta){
+<span class="nc" id="L345">        double alfa = (100- IC)/100;</span>
+
+<span class="nc" id="L347">        double tc = getTc(alfa);</span>
+
+<span class="nc" id="L349">        double x0 =(betas[beta])/( Math.sqrt( multipleLinearRegression.estimateErrorVariance() * xtx[beta][beta] ));</span>
+<span class="nc" id="L350">        String symbol = &quot;\u2260&quot;;</span>
+<span class="nc" id="L351">        String mesage = &quot;H0 : β&quot;+ beta + &quot; = 0 v.s H1: β&quot;+ beta +&quot; &quot;+ symbol +&quot; 0&quot;;</span>
+<span class="nc bnc" id="L352" title="All 2 branches missed.">        if (x0 &gt; tc){</span>
+<span class="nc" id="L353">            mesage = mesage + &quot; \nWe reject H0 because &quot; + fourDecimalCase(x0) + &quot; &gt; &quot; + fourDecimalCase(tc);</span>
+        }else {
+<span class="nc" id="L355">            mesage =  mesage + &quot; \nWe reject H1 because &quot; + fourDecimalCase(x0) + &quot; &lt; &quot; + fourDecimalCase(tc);</span>
+        }
+
+<span class="nc" id="L358">        return mesage;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

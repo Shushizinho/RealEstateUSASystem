@@ -1,0 +1,61 @@
+
+
+From: agent@this.app
+Recipient: client@hotmail.com
+Subject: Your visit request was decline
+
+decline
+
+From: diogo@this.app
+Recipient: joao@hotmail.com
+Subject: Email create
+
+Yes
+
+From: diogo@this.app
+Recipient: joao@hotmail.com
+Subject: Email create
+
+Yes
+
+From: diogo@this.app
+Recipient: joao@hotmail.com
+Subject: Email create
+
+Yes
+
+From: diogo@this.app
+Recipient: joao@hotmail.com
+Subject: Email create
+
+Yes
+
+From: diogo@this.app
+Recipient: joao@hotmail.com
+Subject: Email create
+
+Yes
+
+From: diogo@this.app
+Recipient: joao@hotmail.com
+Subject: Email create
+
+Yes
+
+From: diogo@this.app
+Recipient: joao@hotmail.com
+Subject: Email create
+
+Yes
+
+From: diogo@this.app
+Recipient: joao@hotmail.com
+Subject: Email create
+
+Yes
+
+From: diogo@this.app
+Recipient: joao@hotmail.com
+Subject: Email create
+
+Yes

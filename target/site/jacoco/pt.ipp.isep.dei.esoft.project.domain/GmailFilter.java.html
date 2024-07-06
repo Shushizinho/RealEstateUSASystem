@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GmailFilter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.domain</a> &gt; <span class="el_source">GmailFilter.java</span></div><h1>GmailFilter.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.domain;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+/**
+ * The type Gmail filter.
+ */
+public class GmailFilter implements EmailFilter {
+
+    private String filterTerm;
+
+    /**
+     * Instantiates a new Gmail filter.
+     *
+     * @param filter the filter
+     */
+<span class="fc" id="L19">    public GmailFilter(String filter) {</span>
+<span class="fc" id="L20">        this.filterTerm = filter;</span>
+<span class="fc" id="L21">    }</span>
+
+    @Override
+    public void createEmail(String sender, String recipient, String subject, String message) {
+
+//        ApplicationSession appSession = ApplicationSession.getInstance();
+//        Properties props = appSession.getProperties();
+//        if (props.getProperty(ApplicationSession.getEmailSystem()).compareTo(&quot;\&quot;@gmail.com\&quot;&quot;) == 0) {
+
+<span class="fc" id="L30">            String fileName = &quot;Gmail_Service.txt&quot;;</span>
+<span class="fc" id="L31">            String fileContent = &quot;From: &quot; + sender + &quot;\n&quot; + &quot;Recipient: &quot; + recipient + &quot;\n&quot; + &quot;Subject: &quot; + subject + &quot;\n\n&quot; + message;</span>
+
+<span class="fc" id="L33">            String directory = &quot;src\\main\\resources\\passwords\\&quot;;</span>
+
+            try {
+<span class="fc" id="L36">                File file = new File(directory, fileName);</span>
+
+                FileWriter writer;
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">                if (file.exists()) {</span>
+<span class="fc" id="L40">                    writer = new FileWriter(file, true);</span>
+                } else {
+<span class="nc" id="L42">                    writer = new FileWriter(file);</span>
+                }
+
+<span class="fc" id="L45">                writer.append(&quot;\n\n&quot;);</span>
+<span class="fc" id="L46">                writer.write(fileContent);</span>
+<span class="fc" id="L47">                writer.close();</span>
+<span class="fc" id="L48">                System.out.println(&quot;=====================&quot;);</span>
+<span class="fc" id="L49">                System.out.println(&quot;E-mail was sent successfully.&quot;);</span>
+<span class="nc" id="L50">            } catch (IOException e) {</span>
+<span class="nc" id="L51">                System.out.println(&quot;An error occurred while creating the e-mail.&quot;);</span>
+<span class="nc" id="L52">                e.printStackTrace();</span>
+<span class="fc" id="L53">            }</span>
+//        }
+<span class="fc" id="L55">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

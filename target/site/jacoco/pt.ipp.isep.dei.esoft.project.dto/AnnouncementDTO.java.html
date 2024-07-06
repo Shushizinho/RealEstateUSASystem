@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AnnouncementDTO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.dto</a> &gt; <span class="el_source">AnnouncementDTO.java</span></div><h1>AnnouncementDTO.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.dto;
+
+
+/**
+ * A DTO class representing a real estate announcement.
+ */
+public class AnnouncementDTO {
+
+<span class="nc" id="L9">    private double listedPrice = 0;</span>
+<span class="nc" id="L10">    private Integer rentDuration = 0;</span>
+    private AgentDTO agent;
+    private DateTimeDTO date;
+    private double commission;
+    private BusinessTypeDTO businessType;
+    private PropertyDTO property;
+    private AnnouncementRequestDTO announcementRequest;
+
+
+    /**
+     * Instantiates a new Announcement dto.
+     */
+<span class="nc" id="L22">    public AnnouncementDTO() {</span>
+<span class="nc" id="L23">    }</span>
+
+    /**
+     * Instantiates a new Announcement dto.
+     *
+     * @param agent        the agent
+     * @param date         the date
+     * @param commission   the commission
+     * @param businessType the business type
+     * @param property     the property
+     * @param rentDuration the rent duration
+     * @param listedPrice  the listed price
+     */
+<span class="nc" id="L36">    public AnnouncementDTO(AgentDTO agent, DateTimeDTO date, double commission, BusinessTypeDTO businessType, PropertyDTO property, Integer rentDuration, double listedPrice) {</span>
+<span class="nc" id="L37">        this.agent = agent;</span>
+<span class="nc" id="L38">        this.date = date;</span>
+<span class="nc" id="L39">        this.commission = commission;</span>
+<span class="nc" id="L40">        this.businessType = businessType;</span>
+<span class="nc" id="L41">        this.property = property;</span>
+<span class="nc" id="L42">        this.rentDuration = rentDuration;</span>
+<span class="nc" id="L43">        this.listedPrice = listedPrice;</span>
+
+<span class="nc" id="L45">    }</span>
+
+
+    /**
+     * Instantiates a new Announcement dto.
+     *
+     * @param agent        the agent
+     * @param date         the date
+     * @param commission   the commission
+     * @param businessType the business type
+     * @param property     the property
+     * @param listedPrice  the listed price
+     */
+<span class="nc" id="L58">    public AnnouncementDTO(AgentDTO agent, DateTimeDTO date, double commission, BusinessTypeDTO businessType, PropertyDTO property, double listedPrice) {</span>
+<span class="nc" id="L59">        this.agent = agent;</span>
+<span class="nc" id="L60">        this.date = date;</span>
+<span class="nc" id="L61">        this.commission = commission;</span>
+<span class="nc" id="L62">        this.businessType = businessType;</span>
+<span class="nc" id="L63">        this.property = property;</span>
+<span class="nc" id="L64">        this.listedPrice = listedPrice;</span>
+
+
+<span class="nc" id="L67">    }</span>
+
+    /**
+     * Gets listed price.
+     *
+     * @return the listed price
+     */
+    public double getListedPrice() {
+<span class="nc" id="L75">        return listedPrice;</span>
+    }
+
+    /**
+     * Sets listed price.
+     *
+     * @param listedPrice the listed price
+     */
+    public void setListedPrice(double listedPrice) {
+<span class="nc" id="L84">        this.listedPrice = listedPrice;</span>
+<span class="nc" id="L85">    }</span>
+
+    /**
+     * Gets rent duration.
+     *
+     * @return the rent duration
+     */
+    public Integer getRentDuration() {
+<span class="nc" id="L93">        return rentDuration;</span>
+    }
+
+    /**
+     * Sets rent duration.
+     *
+     * @param rentDuration the rent duration
+     */
+    public void setRentDuration(Integer rentDuration) {
+<span class="nc" id="L102">        this.rentDuration = rentDuration;</span>
+<span class="nc" id="L103">    }</span>
+
+    /**
+     * Gets agent.
+     *
+     * @return the agent
+     */
+    public AgentDTO getAgent() {
+<span class="nc" id="L111">        return agent;</span>
+    }
+
+    /**
+     * Sets agent.
+     *
+     * @param agent the agent
+     */
+    public void setAgent(AgentDTO agent) {
+<span class="nc" id="L120">        this.agent = agent;</span>
+<span class="nc" id="L121">    }</span>
+
+    /**
+     * Gets date.
+     *
+     * @return the date
+     */
+    public DateTimeDTO getDate() {
+<span class="nc" id="L129">        return date;</span>
+    }
+
+    /**
+     * Sets date.
+     *
+     * @param date the date
+     */
+    public void setDate(DateTimeDTO date) {
+<span class="nc" id="L138">        this.date = date;</span>
+<span class="nc" id="L139">    }</span>
+
+    /**
+     * Gets commission.
+     *
+     * @return the commission
+     */
+    public double getCommission() {
+<span class="nc" id="L147">        return commission;</span>
+    }
+
+    /**
+     * Sets commission.
+     *
+     * @param commission the commission
+     */
+    public void setCommission(double commission) {
+<span class="nc" id="L156">        this.commission = commission;</span>
+<span class="nc" id="L157">    }</span>
+
+    /**
+     * Gets business type.
+     *
+     * @return the business type
+     */
+    public BusinessTypeDTO getBusinessType() {
+<span class="nc" id="L165">        return businessType;</span>
+    }
+
+    /**
+     * Sets business type.
+     *
+     * @param businessType the business type
+     */
+    public void setBusinessType(BusinessTypeDTO businessType) {
+<span class="nc" id="L174">        this.businessType = businessType;</span>
+<span class="nc" id="L175">    }</span>
+
+    /**
+     * Gets property.
+     *
+     * @return the property
+     */
+    public PropertyDTO getProperty() {
+<span class="nc" id="L183">        return property;</span>
+    }
+
+    /**
+     * Sets property.
+     *
+     * @param property the property
+     */
+    public void setProperty(PropertyDTO property) {
+<span class="nc" id="L192">        this.property = property;</span>
+<span class="nc" id="L193">    }</span>
+
+    /**
+     * Gets announcement request.
+     *
+     * @return the announcement request
+     */
+    public AnnouncementRequestDTO getAnnouncementRequest() {
+<span class="nc" id="L201">        return announcementRequest;</span>
+    }
+
+    /**
+     * Sets announcement request.
+     *
+     * @param announcementRequest the announcement request
+     */
+    public void setAnnouncementRequest(AnnouncementRequestDTO announcementRequest) {
+<span class="nc" id="L210">        this.announcementRequest = announcementRequest;</span>
+<span class="nc" id="L211">    }</span>
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

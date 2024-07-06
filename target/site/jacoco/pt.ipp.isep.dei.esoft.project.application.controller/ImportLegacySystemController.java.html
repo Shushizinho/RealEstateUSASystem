@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ImportLegacySystemController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.application.controller</a> &gt; <span class="el_source">ImportLegacySystemController.java</span></div><h1>ImportLegacySystemController.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.application.controller;
+
+import pt.ipp.isep.dei.esoft.project.domain.*;
+import pt.ipp.isep.dei.esoft.project.repository.*;
+import pt.ipp.isep.dei.esoft.project.service.DataIntegrityChecker;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+
+
+/**
+ * The type Import legacy system controller.
+ */
+public class ImportLegacySystemController {
+
+<span class="pc" id="L19">    private final int CLIENT_VALUES = 5;</span>
+<span class="pc" id="L20">    private final int PROPERTY_VALUES =14;</span>
+<span class="pc" id="L21">    private final int ANNOUNCEMENT_VALUES = 5;</span>
+
+<span class="pc" id="L23">    private final int STORE_VALUES = 5;</span>
+<span class="pc" id="L24">    private ClientRepository clientRepository = null;</span>
+
+<span class="pc" id="L26">    private StoreRepository storeRepository = null;</span>
+
+<span class="pc" id="L28">    private AnnouncementRepository announcementRepository = null;</span>
+<span class="pc" id="L29">    private PropertyRepository propertyRepository = null;</span>
+<span class="pc" id="L30">    private PropertyTypeRepository propertyTypeRepository = null;</span>
+<span class="pc" id="L31">    private BusinessTypeRepository businessTypeRepository = null;</span>
+<span class="pc" id="L32">    private PurchaseOrderRepository purchaseOrderRepository = null;</span>
+<span class="pc" id="L33">    private AuthenticationRepository authenticationRepository = null;</span>
+
+<span class="pc" id="L35">    private DataIntegrityChecker dataIntegrityChecker = new DataIntegrityChecker();</span>
+    /**
+     * The Legacy file.
+     */
+<span class="pc" id="L39">    File legacyFile = new File(&quot;src\\main\\resources\\legacy.properties&quot;);</span>
+<span class="pc" id="L40">    private Scanner scanner = new Scanner(legacyFile);</span>
+<span class="pc" id="L41">    private List&lt;String&gt; arrayComplete = new ArrayList&lt;String&gt;() {{</span>
+<span class="fc" id="L42">        add(scanner.nextLine());</span>
+<span class="fc" id="L43">    }};</span>
+
+
+<span class="pc" id="L46">    private String[] arrayHeaders = arrayComplete.get(0).split(&quot;;&quot;);</span>
+
+    /**
+     * Instantiates a new RegisterStoreController.
+     *
+     * @throws FileNotFoundException the file not found exception
+     */
+<span class="fc" id="L53">    public ImportLegacySystemController() throws FileNotFoundException {</span>
+<span class="fc" id="L54">        getClientRepository();</span>
+<span class="fc" id="L55">        getStoreRepository();</span>
+<span class="fc" id="L56">        getPropertyRepostiroy();</span>
+<span class="fc" id="L57">        getAuthenticationRepository();</span>
+<span class="fc" id="L58">        getAnnouncementRepository();</span>
+<span class="fc" id="L59">        getPurchaseOrderRepository();</span>
+<span class="fc" id="L60">    }</span>
+
+    /**
+     * Instantiates a new RegisterStoreController with the given employee and authentication repositories.
+     *
+     * @param clientRepository         the employee repository
+     * @param authenticationRepository the authentication repository
+     * @throws FileNotFoundException the file not found exception
+     */
+<span class="nc" id="L69">    public ImportLegacySystemController(ClientRepository clientRepository, AuthenticationRepository authenticationRepository) throws FileNotFoundException {</span>
+
+<span class="nc" id="L71">        this.clientRepository = clientRepository;</span>
+<span class="nc" id="L72">        this.authenticationRepository = this.authenticationRepository;</span>
+
+<span class="nc" id="L74">    }</span>
+    /**
+     * Retrieves the ClientRepository instance.
+     * If the repository is not yet initialized, it initializes it using the Repositories singleton.
+     *
+     * @return The ClientRepository instance.
+     */
+
+    private ClientRepository getClientRepository(){
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        if(clientRepository == null){</span>
+<span class="fc" id="L84">            Repositories repositories = Repositories.getInstance();</span>
+<span class="fc" id="L85">            clientRepository = repositories.getClientRepository();</span>
+        }
+<span class="fc" id="L87">        return clientRepository;</span>
+    }
+    /**
+     * Retrieves the StoreRepository instance.
+     * If the repository is not yet initialized, it initializes it using the Repositories singleton.
+     *
+     * @return The StoreRepository instance.
+     */
+
+    private StoreRepository getStoreRepository(){
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">        if(storeRepository == null){</span>
+<span class="fc" id="L98">            Repositories repositories = Repositories.getInstance();</span>
+<span class="fc" id="L99">            storeRepository = repositories.getStoreRepository();</span>
+        }
+<span class="fc" id="L101">        return storeRepository;</span>
+    }
+
+    /**
+     * Retrieves the PropertyTypeRepository instance.
+     * If the repository is not yet initialized, it initializes it using the Repositories singleton.
+     *
+     * @return The PropertyTypeRepository instance.
+     */
+
+
+    private PropertyTypeRepository getPropertyTypeRepository(){
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        if(propertyTypeRepository == null){</span>
+<span class="nc" id="L114">            Repositories repositories = Repositories.getInstance();</span>
+<span class="nc" id="L115">            propertyTypeRepository = repositories.getPropertyTypeRepository();</span>
+        }
+<span class="nc" id="L117">        return propertyTypeRepository;</span>
+    }
+
+    private PurchaseOrderRepository getPurchaseOrderRepository(){
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">        if(purchaseOrderRepository == null){</span>
+<span class="fc" id="L122">            Repositories repositories = Repositories.getInstance();</span>
+<span class="fc" id="L123">            purchaseOrderRepository = repositories.getPurchaseOrderRepository();</span>
+        }
+<span class="fc" id="L125">        return purchaseOrderRepository;</span>
+    }
+
+    /**
+     * Retrieves the BusinessTypeRepository instance.
+     * If the repository is not yet initialized, it initializes it using the Repositories singleton.
+     *
+     * @return The BusinessTypeRepository instance.
+     */
+
+    private BusinessTypeRepository getBusinessTypeRepository(){
+<span class="nc bnc" id="L136" title="All 2 branches missed.">        if(businessTypeRepository == null){</span>
+<span class="nc" id="L137">            Repositories repositories = Repositories.getInstance();</span>
+<span class="nc" id="L138">            businessTypeRepository = repositories.getBusinessTypeRepository();</span>
+        }
+<span class="nc" id="L140">        return businessTypeRepository;</span>
+    }
+
+    /**
+     * Retrieves the PropertyRepository instance.
+     * If the repository is not yet initialized, it initializes it using the Repositories singleton.
+     *
+     * @return The PropertyRepository instance.
+     */
+
+    private PropertyRepository getPropertyRepostiroy(){
+<span class="pc bpc" id="L151" title="1 of 2 branches missed.">        if(propertyRepository == null){</span>
+<span class="fc" id="L152">            Repositories repositories = Repositories.getInstance();</span>
+<span class="fc" id="L153">            propertyRepository = repositories.getPropertyRepository();</span>
+        }
+<span class="fc" id="L155">        return propertyRepository;</span>
+    }
+
+    /**
+     * Retrieves the AnnouncementRepository instance.
+     * If the repository is not yet initialized, it initializes it using the Repositories singleton.
+     *
+     * @return The AnnouncementRepository instance.
+     */
+
+    private AnnouncementRepository getAnnouncementRepository(){
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        if(announcementRepository == null){</span>
+<span class="fc" id="L167">            Repositories repositories = Repositories.getInstance();</span>
+<span class="fc" id="L168">            announcementRepository = repositories.getAnnouncementRepository();</span>
+        }
+<span class="fc" id="L170">        return announcementRepository;</span>
+    }
+    /**
+     * Retrieves the AuthenticationRepository instance.
+     * If the repository is not yet initialized, it initializes it using the Repositories singleton.
+     *
+     * @return The AuthenticationRepository instance.
+     */
+
+    private AuthenticationRepository getAuthenticationRepository() {
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">        if (authenticationRepository == null) {</span>
+<span class="fc" id="L181">            Repositories repositories = Repositories.getInstance();</span>
+<span class="fc" id="L182">            authenticationRepository = repositories.getAuthenticationRepository();</span>
+        }
+<span class="fc" id="L184">        return authenticationRepository;</span>
+    }
+
+    /**
+     * Imports data from a CSV file.
+     *
+     * @param file The CSV file to import.
+     * @return True if the import was successful, false otherwise.
+     */
+    public boolean importFile(File file) {
+<span class="fc" id="L194">        String csvFile = file.getPath();</span>
+
+<span class="nc" id="L196">        try (BufferedReader reader = new BufferedReader(new FileReader(csvFile))) {</span>
+            // Reads the first line that contains the headers
+<span class="nc" id="L198">            String headerLine = reader.readLine();</span>
+<span class="nc" id="L199">            String[] headers = headerLine.split(&quot;;&quot;);</span>
+
+<span class="nc bnc" id="L201" title="All 2 branches missed.">            for (String header: headers) {</span>
+<span class="nc" id="L202">                boolean verify = false;</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">                for (String headerStatic: arrayHeaders) {</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">                    if(header.compareToIgnoreCase(headerStatic) == 0){</span>
+<span class="nc" id="L205">                        verify=true;</span>
+<span class="nc" id="L206">                        break;</span>
+                    }
+                }
+<span class="nc bnc" id="L209" title="All 2 branches missed.">                if(!verify){</span>
+<span class="nc" id="L210">                    return false;</span>
+                }
+
+            }
+
+<span class="nc" id="L215">            Announcement announcement = new Announcement();</span>
+
+            // Store headers in a list
+
+<span class="nc" id="L219">            List&lt;String&gt; headerList = Arrays.asList(headers);</span>
+
+            String line;
+
+<span class="nc bnc" id="L223" title="All 2 branches missed.">            while ((line = reader.readLine()) != null) {</span>
+
+<span class="nc" id="L225">                boolean verifyImport = true;</span>
+                Client owner;
+                Store store;
+                Property property;
+
+
+<span class="nc bnc" id="L231" title="All 2 branches missed.">                if(!validateAllBeforeSubmit()){</span>
+<span class="nc" id="L232">                    return false;</span>
+                }
+                // Step 1 - Read and Validate Client
+<span class="nc" id="L235">                String[] values = line.split(&quot;;&quot;);</span>
+
+
+<span class="nc" id="L238">                String [] clientValues = new String[CLIENT_VALUES];</span>
+<span class="nc" id="L239">                String[] address = dataIntegrityChecker.putInAddressType(returnAddress(&quot;property_location&quot;,headers,values));</span>
+
+<span class="nc bnc" id="L241" title="All 2 branches missed.">                for (int i = 0; i &lt; CLIENT_VALUES; i++) {</span>
+<span class="nc" id="L242">                    clientValues[i] = dataIntegrityChecker.checkAllData(arrayHeaders[i+1],headers,values);</span>
+                }
+
+<span class="nc" id="L245">                clientValues[1] = clientValues[1].replaceAll(&quot;'&quot;,&quot;\'&quot;);</span>
+
+<span class="nc" id="L247">                clientValues[3] = clientValues[3].replaceAll(&quot;\'&quot;,&quot;&quot;);</span>
+
+
+
+
+                //Step 2 - Read and Validate Store
+<span class="nc bnc" id="L253" title="All 4 branches missed.">                if( dataIntegrityChecker.validateExistenceClient(clientValues[3]) &amp;&amp; dataIntegrityChecker.validateClientData(clientValues,address) ){</span>
+
+
+                    //User for test the validation
+<span class="nc" id="L257">                    owner = clientRepository.getLast();</span>
+
+<span class="nc" id="L259">                    int pointer = CLIENT_VALUES + PROPERTY_VALUES + ANNOUNCEMENT_VALUES;</span>
+
+<span class="nc" id="L261">                    String [] storeValues = new String[STORE_VALUES];</span>
+
+<span class="nc bnc" id="L263" title="All 2 branches missed.">                    for (int i = 0; i &lt; STORE_VALUES; i++) {</span>
+<span class="nc" id="L264">                        storeValues[i] = dataIntegrityChecker.checkAllData(arrayHeaders[pointer+i+1],headers,values);</span>
+                    }
+
+<span class="nc" id="L267">                    verifyImport = dataIntegrityChecker.validateStoreData(storeValues,address);</span>
+
+
+                    //Step 3 - Read and Validate Property
+<span class="nc bnc" id="L271" title="All 2 branches missed.">                    if(verifyImport){</span>
+<span class="nc" id="L272">                        int pointer2 = CLIENT_VALUES ;</span>
+
+<span class="nc" id="L274">                        String [] propertyValues = new String[PROPERTY_VALUES];</span>
+
+<span class="nc bnc" id="L276" title="All 2 branches missed.">                        for (int i = 0; i &lt; PROPERTY_VALUES; i++) {</span>
+<span class="nc" id="L277">                            propertyValues[i] = dataIntegrityChecker.checkAllData(arrayHeaders[pointer2+i+1],headers,values);</span>
+
+                        }
+
+<span class="nc" id="L281">                        getPropertyTypeRepository();</span>
+
+<span class="nc" id="L283">                        verifyImport = dataIntegrityChecker.validatePropertyData(propertyValues,address);</span>
+<span class="nc" id="L284">                        property = propertyRepository.getLast();</span>
+
+                        //Step 4 - Read and Validate Announcement
+<span class="nc bnc" id="L287" title="All 2 branches missed.">                        if(verifyImport){</span>
+<span class="nc" id="L288">                            int pointer3 = CLIENT_VALUES + PROPERTY_VALUES ;</span>
+
+<span class="nc" id="L290">                            String [] annoucementValues = new String[ANNOUNCEMENT_VALUES];</span>
+
+<span class="nc bnc" id="L292" title="All 2 branches missed.">                            for (int i = 0; i &lt; ANNOUNCEMENT_VALUES; i++) {</span>
+<span class="nc" id="L293">                                annoucementValues[i] = dataIntegrityChecker.checkAllData(arrayHeaders[pointer3+i+1],headers,values);</span>
+                            }
+
+                            try{
+<span class="nc" id="L297">                                Repositories.getInstance().getStoreRepository().getStoreByDescription(&quot;Legacy Store&quot;);</span>
+                            }
+<span class="nc" id="L299">                            catch(Exception e){</span>
+<span class="nc" id="L300">                                Address addressObj = new Address(address);</span>
+<span class="nc" id="L301">                                addLegacyAgent(addressObj);</span>
+<span class="nc" id="L302">                            }</span>
+
+<span class="nc" id="L304">                            getBusinessTypeRepository();</span>
+
+<span class="nc" id="L306">                            verifyImport = dataIntegrityChecker.validateAnnouncementData(annoucementValues);</span>
+<span class="nc bnc" id="L307" title="All 2 branches missed.">                            if(verifyImport){</span>
+
+                            //Step 5 - Read and Validate Announcement
+<span class="nc" id="L310">                            int pointer4 = CLIENT_VALUES + PROPERTY_VALUES - 1 ;</span>
+
+<span class="nc" id="L312">                            String [] purchaseOrderValues = new String[2];</span>
+
+<span class="nc bnc" id="L314" title="All 2 branches missed.">                            for (int i = 0; i &lt; 1; i++) {</span>
+                            }
+<span class="nc bnc" id="L316" title="All 2 branches missed.">                                for (int i = 0; i &lt; 1; i++) {</span>
+
+                                }
+<span class="nc" id="L319">                                purchaseOrderValues[0] = dataIntegrityChecker.checkAllData(arrayHeaders[pointer4+1],headers,values);</span>
+
+<span class="nc" id="L321">                                purchaseOrderValues[1] = dataIntegrityChecker.checkAllData(arrayHeaders[pointer3+4],headers,values);</span>
+
+
+<span class="nc" id="L324">                            verifyImport = dataIntegrityChecker.validataPurchaseOrderData(purchaseOrderValues);</span>
+
+<span class="nc bnc" id="L326" title="All 2 branches missed.">                                if(verifyImport){</span>
+
+<span class="nc" id="L328">                                dataIntegrityChecker.submitClientData(clientValues,address,clientRepository);</span>
+
+
+<span class="nc bnc" id="L331" title="All 2 branches missed.">                                if(dataIntegrityChecker.validateStoreID(storeValues[0])){</span>
+<span class="nc" id="L332">                                    dataIntegrityChecker.submitStoreData(storeValues,storeRepository);</span>
+<span class="nc" id="L333">                                    store = storeRepository.getLast();</span>
+                                }
+                                else{
+<span class="nc" id="L336">                                    store = storeRepository.getStoreByID(Integer.parseInt(storeValues[0]));</span>
+                                }
+
+<span class="nc" id="L339">                                dataIntegrityChecker.submitPropertyData(propertyValues,address,store,owner, propertyRepository, propertyTypeRepository);</span>
+
+<span class="nc" id="L341">                                property = propertyRepository.getLast();</span>
+
+
+<span class="nc" id="L344">                                dataIntegrityChecker.submitAnnouncementData(annoucementValues,property,announcementRepository,businessTypeRepository);</span>
+
+<span class="nc" id="L346">                                announcement = announcementRepository.getLast();</span>
+
+
+<span class="nc" id="L349">                                dataIntegrityChecker.submitPurchaseOrderData(purchaseOrderValues,purchaseOrderRepository,announcement,address);</span>
+
+//                                dataIntegrityChecker.
+
+                                //TODO:Purchase Order Validation and Submition with announcement
+
+
+
+                                }
+                                else{
+<span class="nc" id="L359">                                    showError(values[0],&quot;Purchase Order&quot;);</span>
+                                }
+<span class="nc" id="L361">                            }</span>
+                            else{
+<span class="nc" id="L363">                                showError(values[0],&quot;Annoucement&quot;);</span>
+                            }
+
+<span class="nc" id="L366">                        }</span>
+                        else{
+<span class="nc" id="L368">                            showError(values[0],&quot;Property&quot;);</span>
+                        }
+<span class="nc" id="L370">                    }</span>
+                    else{
+<span class="nc" id="L372">                        showError(values[0],&quot;Store&quot;);</span>
+                    }
+<span class="nc" id="L374">                }</span>
+                else{
+<span class="nc" id="L376">                    showError(values[0],&quot;Client&quot;);</span>
+                }
+
+//                System.out.println(&quot;-------------------------&quot;);
+
+
+<span class="nc" id="L382">            }</span>
+<span class="nc" id="L383">            return true;</span>
+
+<span class="pc" id="L385">        } catch (IOException e) {</span>
+<span class="fc" id="L386">            e.printStackTrace();</span>
+<span class="fc" id="L387">            return false;</span>
+        }
+
+    }
+
+    private boolean validateAllBeforeSubmit() {
+<span class="nc" id="L393">        return true;</span>
+    }
+
+    private void addLegacyAgent(Address address) {
+<span class="nc" id="L397">        Store legacyStore = new Store(0,&quot;Legacy Store&quot;,&quot;legacystore@realstateUSA.com&quot;,address,000000000);</span>
+//            Store legacyStore = Repositories.getInstance().getStoreRepository().getStoreByID(0);
+
+<span class="nc" id="L400">        List&lt;Role&gt; role = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L401">        role.add(Repositories.getInstance().getRoleRepository().getRoleByDescription(&quot;AGENT&quot;));</span>
+<span class="nc" id="L402">        Employee legacyAgent = new Employee(&quot;Legacy Agent&quot;,&quot;legacy@realstateUSA.com&quot;,000000000,&quot;000000000&quot; ,address,0000000000,legacyStore,role);</span>
+<span class="nc" id="L403">        Repositories.getInstance().getEmployeeRepository().add(legacyAgent);</span>
+<span class="nc" id="L404">    }</span>
+
+    /**
+     * Displays an error message with the provided value and cause.
+     *
+     * @param value The value associated with the error.
+     * @param cause The cause of the error.
+     */
+
+    private void showError(String value, String cause) {
+
+<span class="nc" id="L415">        System.out.println(&quot;\u001B[31m&quot; +value + &quot;. this information is not correct because of the &quot; + cause + &quot;\u001B[0m&quot;);</span>
+<span class="nc" id="L416">        System.out.println(&quot;-------------------------&quot;);</span>
+
+<span class="nc" id="L418">    }</span>
+
+
+    /**
+     * Retrieves the address from the values array based on the specified location header.
+     *
+     * @param location The location header to search for.
+     * @param headers  The array of headers.
+     * @param values   The array of values corresponding to the headers.
+     * @return The address extracted from the values array.
+     */
+    private String[] returnAddress(String location, String[] headers, String[] values){
+
+<span class="nc" id="L431">        String localFromFile= null;</span>
+<span class="nc" id="L432">        int i=0;</span>
+
+<span class="nc bnc" id="L434" title="All 2 branches missed.">        for (String header: headers) {</span>
+<span class="nc" id="L435">            boolean verify = false;</span>
+<span class="nc bnc" id="L436" title="All 2 branches missed.">            if(header.compareToIgnoreCase(location)==0){</span>
+<span class="nc" id="L437">                localFromFile = values[i];</span>
+<span class="nc" id="L438">                break;</span>
+            }
+<span class="nc" id="L440">            i++;</span>
+        }
+
+<span class="nc" id="L443">        return localFromFile.split(&quot;,&quot;);</span>
+    }
+
+
+
+
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

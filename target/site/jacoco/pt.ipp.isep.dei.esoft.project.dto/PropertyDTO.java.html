@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PropertyDTO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.dto</a> &gt; <span class="el_source">PropertyDTO.java</span></div><h1>PropertyDTO.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.dto;
+
+import pt.ipp.isep.dei.esoft.project.domain.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * The type Property dto.
+ */
+public class PropertyDTO {
+
+    private double price;
+    private double area;
+    private AddressDTO address;
+    private double distanceToCentre;
+    private List&lt;PhotographDTO&gt; photographs;
+    private PropertyTypeDTO propertyType;
+    private StoreDTO store;
+    private ClientDTO client;
+
+    private DateTimeDTO date;
+
+    /**
+     * Instantiates a new Property dto.
+     *
+     * @param price            the price
+     * @param area             the area
+     * @param address          the address
+     * @param distanceToCentre the distance to centre
+     * @param photographs      the photographs
+     * @param propertyType     the property type
+     * @param store            the store
+     * @param client           the client
+     * @param date             the date
+     */
+    public PropertyDTO(double price, double area, AddressDTO address, double distanceToCentre,
+<span class="fc" id="L38">                       List&lt;PhotographDTO&gt; photographs, PropertyTypeDTO propertyType, StoreDTO store, ClientDTO client, DateTimeDTO date) {</span>
+<span class="fc" id="L39">        this.price = price;</span>
+<span class="fc" id="L40">        this.area = area;</span>
+<span class="fc" id="L41">        this.address = address;</span>
+<span class="fc" id="L42">        this.distanceToCentre = distanceToCentre;</span>
+<span class="fc" id="L43">        this.photographs = photographs;</span>
+<span class="fc" id="L44">        this.propertyType = propertyType;</span>
+<span class="fc" id="L45">        this.store = store;</span>
+<span class="fc" id="L46">        this.client = client;</span>
+<span class="fc" id="L47">        this.date = date;</span>
+<span class="fc" id="L48">    }</span>
+
+    /**
+     * Instantiates a new Property dto.
+     *
+     * @param property the property
+     */
+<span class="nc" id="L55">    public PropertyDTO(Property property) {</span>
+<span class="nc" id="L56">        this.price = property.getPrice();</span>
+<span class="nc" id="L57">        this.area = property.getArea();</span>
+<span class="nc" id="L58">        this.address = new AddressDTO(property.getAddress().getStreetAddress(),property.getAddress().getCity(),property.getAddress().getState(),property.getAddress().getZipCode());</span>
+<span class="nc" id="L59">        this.distanceToCentre = property.getDistanceToCentre();</span>
+<span class="nc" id="L60">        this.photographs = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L61">        this.propertyType = new PropertyTypeDTO(property.getPropertyType().getDescription());</span>
+<span class="nc" id="L62">        this.store = new StoreDTO((int) property.getStore().getId(),property.getStore().getDesignation(),new AddressDTO(property.getStore().getAddress().getStreetAddress(),</span>
+<span class="nc" id="L63">                property.getStore().getAddress().getCity(), property.getStore().getAddress().getState(), property.getStore().getAddress().getZipCode()),property.getStore().getEmail(),property.getStore().getPhoneNumber());</span>
+<span class="nc" id="L64">        this.client = client;</span>
+<span class="nc" id="L65">        this.date = date;</span>
+<span class="nc" id="L66">    }</span>
+
+    /**
+     * Gets price.
+     *
+     * @return the price
+     */
+    public double getPrice() {
+<span class="fc" id="L74">        return price;</span>
+    }
+
+    /**
+     * Gets area.
+     *
+     * @return the area
+     */
+    public double getArea() {
+<span class="fc" id="L83">        return area;</span>
+    }
+
+    /**
+     * Gets address.
+     *
+     * @return the address
+     */
+    public AddressDTO getAddress() {
+<span class="fc" id="L92">        return address;</span>
+    }
+
+    /**
+     * Gets distance to centre.
+     *
+     * @return the distance to centre
+     */
+    public double getDistanceToCentre() {
+<span class="fc" id="L101">        return distanceToCentre;</span>
+    }
+
+    /**
+     * Gets photographs.
+     *
+     * @return the photographs
+     */
+    public List&lt;PhotographDTO&gt; getPhotographs() {
+<span class="fc" id="L110">        return photographs;</span>
+    }
+
+    /**
+     * Gets property type.
+     *
+     * @return the property type
+     */
+    public PropertyTypeDTO getPropertyType() {
+<span class="fc" id="L119">        return propertyType;</span>
+    }
+
+    /**
+     * Gets store.
+     *
+     * @return the store
+     */
+    public StoreDTO getStore() {
+<span class="fc" id="L128">        return store;</span>
+    }
+
+    /**
+     * Gets client.
+     *
+     * @return the client
+     */
+    public ClientDTO getClient() {
+<span class="fc" id="L137">        return client;</span>
+    }
+
+    /**
+     * Gets date.
+     *
+     * @return the date
+     */
+<span class="fc" id="L145">    public DateTimeDTO getDate() { return date; }</span>
+
+    /**
+     * To string dto string.
+     *
+     * @return the string
+     */
+    public String toStringDTOFull() {
+<span class="nc" id="L153">        return String.format(&quot;\n Price: %.2f;&quot; + &quot;\n Area: %.2f;&quot;+ &quot;\n Address: %s;&quot;+ &quot;\n Distance to Center: %.2f;&quot; +</span>
+<span class="nc" id="L154">                        &quot; %s;&quot; + &quot;\n Store: %s;&quot;+ &quot;\n client: %s;&quot; + &quot;\n Date: %s&quot;,this.price, this.area, address.toString(), this.distanceToCentre,</span>
+<span class="nc" id="L155">                propertyType.toString(), store.toString() , client.toString(), this.date.toStringDTO());</span>
+    }
+
+    /**
+     * This method returns a description of the Property attributes.
+     *
+     * @return A formated string composed of the Property's attributes
+     */
+    public String toStringDTO() {
+<span class="fc" id="L164">        return String.format(&quot;%s - $%.2f - %.2f ft\u00b2 - %s - %s&quot;, this.propertyType.toString(), this.price, this.area, this.address.toString(), this.store.getDesignation());</span>
+    }
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

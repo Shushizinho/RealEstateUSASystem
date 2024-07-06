@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AnnouncementRequestMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.mapper</a> &gt; <span class="el_source">AnnouncementRequestMapper.java</span></div><h1>AnnouncementRequestMapper.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.mapper;
+
+
+import pt.ipp.isep.dei.esoft.project.domain.*;
+import pt.ipp.isep.dei.esoft.project.dto.*;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static pt.ipp.isep.dei.esoft.project.mapper.PropertyMapper.ClientToDTO;
+
+
+/**
+ * The type Announcement request mapper.
+ */
+<span class="nc" id="L17">public class AnnouncementRequestMapper {</span>
+
+    /**
+     * To dto announcement request dto.
+     *
+     * @param announcementRequest the announcement request
+     * @return the announcement request dto
+     */
+    public static AnnouncementRequestDTO toDTO(AnnouncementRequest announcementRequest) {
+
+<span class="nc" id="L27">        BusinessType businessType= announcementRequest.getBusinessTypeObject();</span>
+<span class="nc" id="L28">        Property property= announcementRequest.getProperty();</span>
+<span class="nc" id="L29">        AddressDTO addressDTO = addressToAddressDTO(property.getAddress());</span>
+<span class="nc" id="L30">        DateTimeDTO dateTimeDTO = DateTimeToDateformattedDTO(property.getDate());</span>
+
+
+
+<span class="nc" id="L34">        PropertyDTO propertyDTO= new PropertyDTO(property.getPrice(), property.getArea(), addressDTO, property.getDistanceToCentre(), PhotographToDTO(property.getPhotographs()) ,PropertyTypeToDTO(property.getPropertyType()),StoreToDTO(property.getStore()),ClientToDTO(property.getClient()), dateTimeDTO);</span>
+<span class="nc" id="L35">        ClientDTO clientDTO = clientToClientDTO(announcementRequest.getClient());</span>
+
+<span class="nc" id="L37">        AgentDTO agentDTO= employeeToEmployeeDTO(announcementRequest.getAgent());</span>
+
+<span class="nc" id="L39">        BusinessTypeDTO businessTypeDTO= new BusinessTypeDTO(businessType.getDescriptionProperty(), businessType.getDescriptionAnnoucement());</span>
+
+<span class="nc" id="L41">        DateTimeDTO dateFormattedTimeDTO = convertDateTimeToDateformattedDTO(announcementRequest.getDate());</span>
+
+        AnnouncementRequestDTO dto;
+<span class="nc bnc" id="L44" title="All 2 branches missed.">        if( announcementRequest.getBusinessType().equalsIgnoreCase(&quot;Rent&quot;)){</span>
+
+<span class="nc" id="L46">            dto = new AnnouncementRequestDTO(</span>
+<span class="nc" id="L47">                    announcementRequest.getRentDuration(),announcementRequest.getListedPrice(),</span>
+                    businessTypeDTO,
+                    propertyDTO,
+                    agentDTO,
+                    clientDTO,
+                    dateFormattedTimeDTO
+            );
+
+        }else{
+
+<span class="nc" id="L57">            dto = new AnnouncementRequestDTO(</span>
+<span class="nc" id="L58">                    announcementRequest.getListedPrice(),</span>
+                    businessTypeDTO,
+                    propertyDTO,
+                    agentDTO,
+                    clientDTO,
+                    dateFormattedTimeDTO
+            );
+
+        }
+
+
+<span class="nc" id="L69">        return dto;</span>
+    }
+
+
+    /**
+     * To entity announcement request.
+     *
+     * @param dto the dto
+     * @return the announcement request
+     */
+    public static AnnouncementRequest toEntity(AnnouncementRequestDTO dto) {
+
+<span class="nc" id="L81">        Property property= convertPropertyDTOToProperty(dto.getProperty());</span>
+
+<span class="nc" id="L83">        BusinessType businessType= businessTypeDTOToBusinessType(dto.getBusinessType());</span>
+<span class="nc" id="L84">        Agent employee= employeeDTOToEmployee( dto.getAgent());</span>
+<span class="nc" id="L85">        Client client= clientDTOToClient(dto.getClient());</span>
+
+
+
+<span class="nc" id="L89">        AnnouncementRequest entity = new AnnouncementRequest(dto.getRentDuration(),dto.getListedPrice(),businessType,property,employee,client);</span>
+
+<span class="nc" id="L91">        return entity;</span>
+    }
+
+    /**
+     * Sale to entity sale announcement.
+     *
+     * @param dto         the dto
+     * @param commission  the commission
+     * @param listedPrice the listed price
+     * @return the sale announcement
+     */
+    public static SaleAnnouncement SaleToEntity(AnnouncementRequestDTO dto, double commission, double listedPrice) {
+
+<span class="nc" id="L104">        AnnouncementRequest announcement = toEntity(dto);</span>
+
+<span class="nc" id="L106">        SaleAnnouncement entity = new SaleAnnouncement(announcement.getAgent(),announcement.getDate() ,commission,announcement.getBusinessTypeObject(), announcement.getProperty(),listedPrice);</span>
+
+<span class="nc" id="L108">        return entity;</span>
+    }
+
+    /**
+     * Rent to entity rent announcement.
+     *
+     * @param dto        the dto
+     * @param commission the commission
+     * @return the rent announcement
+     */
+    public static RentAnnouncement RentToEntity(AnnouncementRequestDTO dto, double commission) {
+
+<span class="nc" id="L120">        AnnouncementRequest announcement = toEntity(dto);</span>
+
+<span class="nc" id="L122">        RentAnnouncement entity = new RentAnnouncement(announcement.getAgent(),announcement.getDate() ,commission,announcement.getBusinessTypeObject(), announcement.getProperty(), announcement.getRentDuration());</span>
+
+<span class="nc" id="L124">        return entity;</span>
+    }
+
+    /**
+     * Announcement to entity announcement.
+     *
+     * @param dto        the dto
+     * @param commission the commission
+     * @return the announcement
+     */
+    public static Announcement AnnouncementToEntity(AnnouncementRequestDTO dto, double commission) {
+
+<span class="nc" id="L136">        AnnouncementRequest announcementRequest = toEntity(dto);</span>
+
+<span class="nc" id="L138">        Announcement entity = new Announcement(announcementRequest,commission);</span>
+
+
+<span class="nc" id="L141">        return entity;</span>
+    }
+
+
+    /**
+     * Photograph to entity list.
+     *
+     * @param dto the dto
+     * @return the list
+     */
+    public static List&lt;Photograph&gt; PhotographToEntity(List&lt;PhotographDTO&gt; dto) {
+<span class="nc" id="L152">        List&lt;Photograph&gt; entity = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">        for (PhotographDTO photo: dto) {</span>
+<span class="nc" id="L154">            entity.add(new Photograph(photo.getUri()));</span>
+<span class="nc" id="L155">        }</span>
+
+<span class="nc" id="L157">        return entity;</span>
+    }
+
+    /**
+     * Property type to entity property type.
+     *
+     * @param dto the dto
+     * @return the property type
+     */
+    public static PropertyType PropertyTypeToEntity(PropertyTypeDTO dto) {
+
+<span class="nc" id="L168">        PropertyType entity = new PropertyType(dto.getDescription());</span>
+
+<span class="nc" id="L170">        return entity;</span>
+
+
+    }
+
+    /**
+     * Store to entity store.
+     *
+     * @param dto the dto
+     * @return the store
+     */
+    public static Store StoreToEntity(StoreDTO dto) {
+
+<span class="nc" id="L183">        Store entity = new Store(dto.getId(), dto.getDesignation(), dto.getEmail(), new Address(dto.getAddress().getStreetAddress(), dto.getAddress().getCity(), dto.getAddress().getState(), dto.getAddress().getZipCode()), dto.getPhoneNumber());</span>
+
+<span class="nc" id="L185">        return entity;</span>
+    }
+
+    /**
+     * Client to entity client.
+     *
+     * @param dto the dto
+     * @return the client
+     */
+    public static Client ClientToEntity(ClientDTO dto) {
+
+<span class="nc" id="L196">        Client entity = new Client(dto.getName(), dto.getEmail(), dto.getPassportNumber(), dto.getTaxNumber(), new Address(dto.getAddress().getStreetAddress(), dto.getAddress().getCity(), dto.getAddress().getState(), dto.getAddress().getZipCode()), dto.getPhoneNumber());</span>
+
+<span class="nc" id="L198">        return entity;</span>
+    }
+
+    /**
+     * Photograph to dto list.
+     *
+     * @param entity the entity
+     * @return the list
+     */
+    public static List&lt;PhotographDTO&gt; PhotographToDTO(List&lt;Photograph&gt; entity) {
+<span class="nc" id="L208">        List&lt;PhotographDTO&gt; dto = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L209" title="All 2 branches missed.">        for (Photograph photo: entity) {</span>
+<span class="nc" id="L210">            dto.add(new PhotographDTO(photo.getUri()));</span>
+<span class="nc" id="L211">        }</span>
+
+<span class="nc" id="L213">        return dto;</span>
+    }
+
+    /**
+     * Property type to dto property type dto.
+     *
+     * @param entity the entity
+     * @return the property type dto
+     */
+    public static PropertyTypeDTO PropertyTypeToDTO(PropertyType entity) {
+
+<span class="nc" id="L224">        PropertyTypeDTO dto = new PropertyTypeDTO(entity.getDescription());</span>
+
+<span class="nc" id="L226">        return dto;</span>
+    }
+
+    /**
+     * Store to dto store dto.
+     *
+     * @param entity the entity
+     * @return the store dto
+     */
+    public static StoreDTO StoreToDTO(Store entity) {
+
+<span class="nc" id="L237">        StoreDTO dto = new StoreDTO((int) entity.getId(), entity.getDesignation(), new AddressDTO(entity.getAddress().getStreetAddress(), entity.getAddress().getCity(), entity.getAddress().getState(), entity.getAddress().getZipCode()), entity.getEmail(), entity.getPhoneNumber());</span>
+
+<span class="nc" id="L239">        return dto;</span>
+    }
+
+    /**
+     * Cliento dto client dto.
+     *
+     * @param entity the entity
+     * @return the client dto
+     */
+    public static ClientDTO ClientoDTO(Client entity) {
+
+<span class="nc" id="L250">        ClientDTO dto = new ClientDTO(entity.getName(), entity.getEmail(), entity.getPassportNumber(), entity.getPhoneNumber(), entity.getTaxNumber(), new AddressDTO(entity.getAddress().getStreetAddress(), entity.getAddress().getCity(), entity.getAddress().getState(), entity.getAddress().getZipCode()));</span>
+
+<span class="nc" id="L252">        return dto;</span>
+    }
+
+
+    /**
+     * Convert date time to dateformatted dto date time dto.
+     *
+     * @param dateTime the date time
+     * @return the date time dto
+     */
+    public static DateTimeDTO convertDateTimeToDateformattedDTO (DateTime dateTime) {
+<span class="nc" id="L263">        int day = dateTime.getDayOfMonth();</span>
+<span class="nc" id="L264">        int month = dateTime.getMonth();</span>
+<span class="nc" id="L265">        int year = dateTime.getYear();</span>
+
+<span class="nc" id="L267">        return new DateTimeDTO(day, month, year);</span>
+    }
+
+
+        private static Property convertPropertyDTOToProperty(PropertyDTO propertyDTO) {
+<span class="nc" id="L272">        double price = propertyDTO.getPrice();</span>
+<span class="nc" id="L273">        double area = propertyDTO.getArea();</span>
+<span class="nc" id="L274">        Address address = addressDTOtoAddress(propertyDTO.getAddress());</span>
+<span class="nc" id="L275">        double distanceToCentre = propertyDTO.getDistanceToCentre();</span>
+<span class="nc" id="L276">        List&lt;Photograph&gt; photographs = PhotographToEntity(propertyDTO.getPhotographs());</span>
+<span class="nc" id="L277">        PropertyType propertyType = PropertyTypeToEntity(propertyDTO.getPropertyType());</span>
+<span class="nc" id="L278">        Store store = StoreToEntity(propertyDTO.getStore());</span>
+<span class="nc" id="L279">        Client creator = ClientToEntity(propertyDTO.getClient());</span>
+<span class="nc" id="L280">        DateTime date = DateTimeDTOToDateformatted(propertyDTO.getDate());</span>
+
+
+
+<span class="nc" id="L284">        Property property = new Property(price, area, address , distanceToCentre, photographs, propertyType,store, creator, date);</span>
+
+<span class="nc" id="L286">        return property;</span>
+    }
+
+
+    /**
+     * Address to address dto address dto.
+     *
+     * @param address the address
+     * @return the address dto
+     */
+    public static AddressDTO addressToAddressDTO  (Address address){
+<span class="nc" id="L297">        String street = address.getStreetAddress();</span>
+<span class="nc" id="L298">        String city = address.getCity();</span>
+<span class="nc" id="L299">        String state = address.getState();</span>
+<span class="nc" id="L300">        String zipCode = address.getZipCode();</span>
+<span class="nc" id="L301">        AddressDTO addressDTO = new AddressDTO(street, city, state, zipCode);</span>
+
+<span class="nc" id="L303">        return addressDTO;</span>
+
+    }
+
+
+    /**
+     * Role to role dto list.
+     *
+     * @param roles the roles
+     * @return the list
+     */
+    public static List&lt;RoleDTO&gt; roleToRoleDTO(List&lt;Role&gt; roles) {
+<span class="nc" id="L315">        List&lt;RoleDTO&gt; roleDTOs = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L317" title="All 2 branches missed.">        for (Role role : roles) {</span>
+<span class="nc" id="L318">            Integer id = role.getId();</span>
+<span class="nc" id="L319">            String description = role.getDescription();</span>
+<span class="nc" id="L320">            RoleDTO roleDTO = new RoleDTO(id, description);</span>
+<span class="nc" id="L321">            roleDTOs.add(roleDTO);</span>
+<span class="nc" id="L322">        }</span>
+
+<span class="nc" id="L324">        return roleDTOs;</span>
+    }
+
+
+    /**
+     * Role dto to role list.
+     *
+     * @param roleDTOList the role dto list
+     * @return the list
+     */
+    public static List&lt;Role&gt; roleDTOToRole(List&lt;RoleDTO&gt; roleDTOList) {
+<span class="nc" id="L335">        List&lt;Role&gt; roleList = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L337" title="All 2 branches missed.">        for (RoleDTO roleDTO : roleDTOList) {</span>
+<span class="nc" id="L338">            Integer id = roleDTO.getId();</span>
+<span class="nc" id="L339">            String description = roleDTO.getDescription();</span>
+<span class="nc" id="L340">            Role role = new Role(id, description);</span>
+<span class="nc" id="L341">            roleList.add(role);</span>
+<span class="nc" id="L342">        }</span>
+
+<span class="nc" id="L344">        return roleList;</span>
+    }
+
+
+    /**
+     * Client to client dto client dto.
+     *
+     * @param client the client
+     * @return the client dto
+     */
+    public static  ClientDTO clientToClientDTO (Client client){
+
+<span class="nc" id="L356">        String email= client.getEmail();</span>
+<span class="nc" id="L357">        String name= client.getName();</span>
+<span class="nc" id="L358">        Integer passportNumber= client.getPassportNumber();</span>
+<span class="nc" id="L359">        long phoneNumber= client.getPhoneNumber();</span>
+<span class="nc" id="L360">        String taxNumber= client.getTaxNumber();</span>
+<span class="nc" id="L361">        AddressDTO address= addressToAddressDTO(client.getAddress());</span>
+
+
+
+<span class="nc" id="L365">        return new ClientDTO(email, name, passportNumber, phoneNumber,taxNumber,address);</span>
+    }
+
+
+    /**
+     * Employee to employee dto agent dto.
+     *
+     * @param agent the agent
+     * @return the agent dto
+     */
+    public static AgentDTO employeeToEmployeeDTO (Agent agent){
+<span class="nc" id="L376">        String email= agent.getEmployee().getEmail();</span>
+<span class="nc" id="L377">        String name= agent.getEmployee().getName();</span>
+<span class="nc" id="L378">        Integer passportNumber= agent.getEmployee().getPassportNumber();;</span>
+<span class="nc" id="L379">        long phoneNumber= agent.getEmployee().getPhoneNumber();</span>
+<span class="nc" id="L380">        String taxNumber= agent.getEmployee().getTaxNumber();</span>
+<span class="nc" id="L381">        AddressDTO address= addressToAddressDTO(agent.getEmployee().getAddress());</span>
+<span class="nc" id="L382">        List &lt;RoleDTO&gt; role=roleToRoleDTO(agent.getEmployee().getRole());</span>
+<span class="nc" id="L383">        StoreDTO store=storeToStoreDTO(agent.getEmployee().getStore());</span>
+<span class="nc" id="L384">        EmployeeDTO employeeDTO= new EmployeeDTO(email, name, passportNumber, phoneNumber,taxNumber,address,role,store);</span>
+
+<span class="nc" id="L386">        return new AgentDTO(employeeDTO);</span>
+
+}
+
+    /**
+     * Date time to dateformatted dto date time dto.
+     *
+     * @param dateTime the date time
+     * @return the date time dto
+     */
+    public static DateTimeDTO DateTimeToDateformattedDTO (DateTime dateTime){
+<span class="nc" id="L397">        int day = dateTime.getDayOfMonth();</span>
+<span class="nc" id="L398">        int month = dateTime.getMonth();</span>
+<span class="nc" id="L399">        int year = dateTime.getYear();</span>
+
+<span class="nc" id="L401">        return new DateTimeDTO(day, month, year);</span>
+    }
+
+    /**
+     * Date time dto to dateformatted date time.
+     *
+     * @param dateTimeDTO the date time dto
+     * @return the date time
+     */
+    public static DateTime DateTimeDTOToDateformatted (DateTimeDTO dateTimeDTO){
+<span class="nc" id="L411">        int day = dateTimeDTO.getDayOfMonth();</span>
+<span class="nc" id="L412">        int month = dateTimeDTO.getMonth();</span>
+<span class="nc" id="L413">        int year = dateTimeDTO.getYear();</span>
+
+<span class="nc" id="L415">        DateTime dateTime = new DateTime(day, month, year);</span>
+<span class="nc" id="L416">        return dateTime;</span>
+    }
+
+
+    /**
+     * Store to store dto store dto.
+     *
+     * @param store the store
+     * @return the store dto
+     */
+    public static StoreDTO storeToStoreDTO  (Store store){
+<span class="nc" id="L427">         Integer id= Math.toIntExact(store.getId());</span>
+<span class="nc" id="L428">         String designation= store.getDesignation();</span>
+<span class="nc" id="L429">         String email=store.getEmail();</span>
+<span class="nc" id="L430">         long phoneNumber= store.getPhoneNumber();</span>
+<span class="nc" id="L431">        AddressDTO addressDTO = addressToAddressDTO(store.getAddress());</span>
+
+<span class="nc" id="L433">        return new StoreDTO(id,designation,addressDTO,email,phoneNumber);</span>
+
+    }
+
+    /**
+     * Address dt oto address address.
+     *
+     * @param addressDTO the address dto
+     * @return the address
+     */
+    public static Address addressDTOtoAddress (AddressDTO addressDTO){
+<span class="nc" id="L444">        String street = addressDTO.getStreetAddress();</span>
+<span class="nc" id="L445">        String city = addressDTO.getCity();</span>
+<span class="nc" id="L446">        String state = addressDTO.getState();</span>
+<span class="nc" id="L447">        String zipCode = addressDTO.getZipCode();</span>
+<span class="nc" id="L448">        Address address = new Address(street, city, state, zipCode);</span>
+
+<span class="nc" id="L450">        return address;</span>
+
+    }
+
+    /**
+     * Business type dto to business type business type.
+     *
+     * @param businessTypeDTO the business type dto
+     * @return the business type
+     */
+    public static BusinessType businessTypeDTOToBusinessType( BusinessTypeDTO businessTypeDTO){
+<span class="nc" id="L461">        String descriptionProperty= businessTypeDTO.getDescriptionProperty();</span>
+<span class="nc" id="L462">         String descriptionAnnouncement=businessTypeDTO.getDescriptionAnnouncement();</span>
+
+<span class="nc" id="L464">        return new BusinessType(descriptionProperty,descriptionAnnouncement);</span>
+
+    }
+
+    /**
+     * Employee dto to employee agent.
+     *
+     * @param agentDTO the agent dto
+     * @return the agent
+     */
+    public static Agent employeeDTOToEmployee (AgentDTO agentDTO){
+<span class="nc" id="L475">         String email= agentDTO.getEmployee().getEmail();</span>
+<span class="nc" id="L476">         String name=agentDTO.getEmployee().getName();</span>
+<span class="nc" id="L477">         Integer passportNumber= agentDTO.getEmployee().getPassportNumber();</span>
+<span class="nc" id="L478">         long phoneNumber=agentDTO.getEmployee().getPhoneNumber();</span>
+<span class="nc" id="L479">         String taxNumber=agentDTO.getEmployee().getTaxNumber();</span>
+<span class="nc" id="L480">         Address address= addressDTOtoAddress(agentDTO.getEmployee().getAddress());</span>
+<span class="nc" id="L481">         Store store= storeDTOToStore(agentDTO.getEmployee().getStore());</span>
+<span class="nc" id="L482">         List&lt;Role&gt; role=roleDTOToRole(agentDTO.getEmployee().getRole());</span>
+
+<span class="nc" id="L484">         Employee employee =new Employee(name, email,passportNumber,taxNumber,address,phoneNumber,store,role);</span>
+
+
+<span class="nc" id="L487">         return new Agent(employee);</span>
+    }
+
+
+    /**
+     * Store dto to store store.
+     *
+     * @param storeDTO the store dto
+     * @return the store
+     */
+    public static Store storeDTOToStore (StoreDTO storeDTO){
+<span class="nc" id="L498">        Integer id= storeDTO.getId();</span>
+<span class="nc" id="L499">        String designation= storeDTO.getDesignation();</span>
+<span class="nc" id="L500">        String email=storeDTO.getEmail();</span>
+<span class="nc" id="L501">        long phoneNumber= storeDTO.getPhoneNumber();</span>
+<span class="nc" id="L502">        Address address = addressDTOtoAddress(storeDTO.getAddress());</span>
+
+<span class="nc" id="L504">        return new Store(id,designation,email,address,phoneNumber);</span>
+
+    }
+
+
+    /**
+     * Client dto to client client.
+     *
+     * @param clientDTO the client dto
+     * @return the client
+     */
+    public static  Client clientDTOToClient (ClientDTO clientDTO){
+
+<span class="nc" id="L517">        String email= clientDTO.getEmail();</span>
+<span class="nc" id="L518">        String name= clientDTO.getName();</span>
+<span class="nc" id="L519">        Integer passportNumber= clientDTO.getPassportNumber();</span>
+<span class="nc" id="L520">        long phoneNumber= clientDTO.getPhoneNumber();</span>
+<span class="nc" id="L521">        String taxNumber= clientDTO.getTaxNumber();</span>
+<span class="nc" id="L522">        Address address= addressDTOtoAddress(clientDTO.getAddress());</span>
+
+
+
+<span class="nc" id="L526">        return new Client(email, name, passportNumber, taxNumber, address, phoneNumber);</span>
+    }
+
+    /**
+     * Get announcement requests dto list.
+     *
+     * @param announcementRequests the announcement requests
+     * @return the list
+     */
+    public static List&lt;AnnouncementRequestDTO&gt; getAnnouncementRequestsDTO(List&lt;AnnouncementRequest&gt; announcementRequests ){
+
+<span class="nc" id="L537">        List&lt;AnnouncementRequestDTO&gt; announcementRequestDTOS = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L538" title="All 2 branches missed.">        for (AnnouncementRequest announcementRequest : announcementRequests) {</span>
+<span class="nc" id="L539">            AnnouncementRequestDTO announcementRequestDTO = AnnouncementRequestMapper.toDTO(announcementRequest);</span>
+<span class="nc" id="L540">           announcementRequestDTOS.add(announcementRequestDTO);</span>
+<span class="nc" id="L541">        }</span>
+<span class="nc" id="L542">        return announcementRequestDTOS;</span>
+    }
+
+
+    /**
+     * Get announcement requests list.
+     *
+     * @param announcementRequests the announcement requests
+     * @return the list
+     */
+    public static List&lt;AnnouncementRequest&gt; getAnnouncementRequests(List&lt;AnnouncementRequestDTO&gt; announcementRequests ){
+
+<span class="nc" id="L554">        List&lt;AnnouncementRequest&gt; announcementRequestsEntity = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L556" title="All 2 branches missed.">        for (AnnouncementRequestDTO announcementRequest : announcementRequests) {</span>
+<span class="nc" id="L557">            AnnouncementRequest announcementRequests2 = AnnouncementRequestMapper.toEntity(announcementRequest);</span>
+<span class="nc" id="L558">            announcementRequestsEntity.add(announcementRequests2);</span>
+<span class="nc" id="L559">        }</span>
+<span class="nc" id="L560">        return announcementRequestsEntity;</span>
+    }
+
+
+
+
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

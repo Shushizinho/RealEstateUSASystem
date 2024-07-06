@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Task.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.domain</a> &gt; <span class="el_source">Task.java</span></div><h1>Task.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.domain;
+
+import java.util.Objects;
+
+/**
+ * The type Task.
+ */
+public class Task {
+    private final String reference;
+    private final String description;
+    private final String informalDescription;
+    private final String technicalDescription;
+    private final Integer duration;
+    private final Double cost;
+
+    private final TaskCategory taskCategory;
+
+    private final Employee employee;
+
+    /**
+     * Instantiates a new Task.
+     *
+     * @param reference            the reference
+     * @param description          the description
+     * @param informalDescription  the informal description
+     * @param technicalDescription the technical description
+     * @param duration             the duration
+     * @param cost                 the cost
+     * @param taskCategory         the task category
+     * @param employee             the employee
+     */
+    public Task(String reference, String description, String informalDescription, String technicalDescription,
+<span class="nc" id="L33">                Integer duration, Double cost, TaskCategory taskCategory, Employee employee) {</span>
+
+<span class="nc" id="L35">        validateReference(reference);</span>
+<span class="nc" id="L36">        this.reference = reference;</span>
+<span class="nc" id="L37">        this.description = description;</span>
+<span class="nc" id="L38">        this.informalDescription = informalDescription;</span>
+<span class="nc" id="L39">        this.technicalDescription = technicalDescription;</span>
+<span class="nc" id="L40">        this.duration = duration;</span>
+<span class="nc" id="L41">        this.cost = cost;</span>
+<span class="nc" id="L42">        this.taskCategory = taskCategory;</span>
+<span class="nc" id="L43">        this.employee = employee;</span>
+<span class="nc" id="L44">    }</span>
+
+    private void validateReference(String reference) {
+        //TODO: missing from the diagrams
+<span class="nc bnc" id="L48" title="All 4 branches missed.">        if (reference == null || reference.isEmpty()) {</span>
+<span class="nc" id="L49">            throw new IllegalArgumentException(&quot;Reference cannot be null or empty.&quot;);</span>
+        }
+<span class="nc" id="L51">    }</span>
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        if (this == o) {</span>
+<span class="nc" id="L56">            return true;</span>
+        }
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (!(o instanceof Task)) {</span>
+<span class="nc" id="L59">            return false;</span>
+        }
+<span class="nc" id="L61">        Task task = (Task) o;</span>
+<span class="nc bnc" id="L62" title="All 4 branches missed.">        return reference.equals(task.reference) &amp;&amp; employee.equals(task.employee);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L67">        return Objects.hash(reference, employee);</span>
+    }
+
+
+    /**
+     * Clone method.
+     *
+     * @return A clone of the current instance.
+     */
+    public Task clone() {
+<span class="nc" id="L77">        return new Task(this.reference, this.description, this.informalDescription, this.technicalDescription,</span>
+                this.duration, this.cost, this.taskCategory, this.employee);
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

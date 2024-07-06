@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClientRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.repository</a> &gt; <span class="el_source">ClientRepository.java</span></div><h1>ClientRepository.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.repository;
+
+import pt.ipp.isep.dei.esoft.project.application.controller.authorization.AuthenticationController;
+import pt.ipp.isep.dei.esoft.project.domain.*;
+import pt.ipp.isep.dei.esoft.project.dto.ClientDTO;
+import pt.ipp.isep.dei.esoft.project.mapper.ClientMapper;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * A repository class for managing all Clients.
+ */
+<span class="fc" id="L15">public class ClientRepository {</span>
+
+<span class="fc" id="L17">    private final List&lt;Client&gt; clients = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Retrieves a client from the list of clients by the email address.
+     *
+     * @param email the email address of the client to retrieve
+     * @return the client with the given email address
+     */
+    public Client getClientByEmail(String email){
+<span class="fc" id="L26">        Client client = null;</span>
+
+<span class="fc bfc" id="L28" title="All 2 branches covered.">        for (Client clientCheck : List.copyOf(clients)) {</span>
+<span class="fc bfc" id="L29" title="All 2 branches covered.">            if (clientCheck.hasEmail(email)) {</span>
+<span class="fc" id="L30">                client = clientCheck;</span>
+            }
+<span class="fc" id="L32">        }</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">        if (client == null) {</span>
+<span class="fc" id="L34">            throw new IllegalArgumentException(</span>
+                    &quot;Client requested for [&quot; + email + &quot;] does not exist.&quot;);
+        }
+<span class="fc" id="L37">        return client;</span>
+
+    }
+
+    /**
+     * Adds a new client to the collection of clients managed by this repository.
+     *
+     * @param client the client to be added to the collection.
+     * @return an Optional containing the added client, or an empty Optional if the operation fails
+     */
+
+
+    public Optional&lt;Client&gt; add(Client client) {
+
+<span class="fc" id="L51">        Optional&lt;Client&gt; newClient = Optional.empty();</span>
+<span class="fc" id="L52">        boolean operationSuccess = false;</span>
+
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (validateClient(client)) {</span>
+<span class="fc" id="L55">            newClient = Optional.of(client.clone());</span>
+<span class="fc" id="L56">            operationSuccess = clients.add(newClient.get());</span>
+        }
+
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        if (!operationSuccess) {</span>
+<span class="fc" id="L60">            newClient = Optional.empty();</span>
+        }
+
+<span class="fc" id="L63">        return newClient;</span>
+    }
+
+    /**
+     * Validates if a given client is valid to be added to the repository.
+     *
+     * @param client the client to be validated
+     * @return true if the client is valid for addition, false otherwise
+     */
+    private boolean validateClient(Client client) {
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        boolean isValid = !clients.contains(client);</span>
+<span class="fc" id="L74">        return isValid;</span>
+    }
+
+
+    /**
+     * Returns an immutable list of clients.
+     *
+     * @return an immutable list of clients
+     */
+    public List&lt;Client&gt; getClients(){
+<span class="fc" id="L84">        return List.copyOf(clients);</span>
+
+    }
+
+    /**
+     * Creates a new client with the provided information and adds it to the client repository.
+     * Also adds the client to the authentication repository as a user with the &quot;client&quot; role.
+     *
+     * @param name           the name of the client
+     * @param email          the email of the client
+     * @param passportNumber the passport number of the client
+     * @param taxNumber      the tax number of the client
+     * @param address        the address of the client
+     * @param phoneNumber    the phone number of the client
+     * @param pass           the password of the client's account
+     * @return an Optional containing the new client if the creation was successful, or an empty Optional otherwise
+     */
+    public Optional&lt;Client&gt; create(String name, String email, int passportNumber, String taxNumber, Address address, long phoneNumber, String pass) {
+
+<span class="fc" id="L103">        ClientRepository clientRepository = Repositories.getInstance().getClientRepository();</span>
+
+<span class="fc" id="L105">        Client clientClone = new Client(name,email,passportNumber,taxNumber,address,phoneNumber);</span>
+
+<span class="fc" id="L107">        Optional&lt;Client&gt; newClient = Optional.of(clientClone.clone());</span>
+
+<span class="fc" id="L109">        clientRepository.add(clientClone);</span>
+
+<span class="fc" id="L111">        AuthenticationRepository authenticationRepository = Repositories.getInstance().getAuthenticationRepository();</span>
+
+<span class="fc" id="L113">        authenticationRepository.addUserWithRole(name, email, pass, AuthenticationController.ROLE_CLIENT);</span>
+
+
+<span class="fc" id="L116">        return newClient;</span>
+
+    }
+
+
+    /**
+     * Create optional.
+     *
+     * @param clientDTO the client dto
+     * @param pass      the pass
+     * @return the optional
+     */
+    public Optional&lt;Client&gt; create(ClientDTO clientDTO, String pass) {
+
+<span class="nc" id="L130">        ClientRepository clientRepository = Repositories.getInstance().getClientRepository();</span>
+
+<span class="nc" id="L132">        Client clientClone = ClientMapper.toEntity(clientDTO);</span>
+
+<span class="nc" id="L134">        Optional&lt;Client&gt; newClient = Optional.of(clientClone.clone());</span>
+
+<span class="nc" id="L136">        clientRepository.add(clientClone);</span>
+
+<span class="nc" id="L138">        AuthenticationRepository authenticationRepository = Repositories.getInstance().getAuthenticationRepository();</span>
+
+<span class="nc" id="L140">        authenticationRepository.addUserWithRole(clientClone.getName(), clientClone.getEmail(), pass, AuthenticationController.ROLE_CLIENT);</span>
+
+
+<span class="nc" id="L143">        return newClient;</span>
+
+    }
+
+
+    /**
+     * Retrieves the last client in the list of clients.
+     *
+     * @return The last client in the list.
+     */
+    public Client getLast() {
+
+<span class="nc" id="L155">        return clients.get(clients.size()-1);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

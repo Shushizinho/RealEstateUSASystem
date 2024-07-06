@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrganizationRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.repository</a> &gt; <span class="el_source">OrganizationRepository.java</span></div><h1>OrganizationRepository.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.repository;
+
+import pt.ipp.isep.dei.esoft.project.domain.Employee;
+import pt.ipp.isep.dei.esoft.project.domain.Organization;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * The type Organization repository.
+ */
+<span class="fc" id="L13">public class OrganizationRepository {</span>
+
+    /**
+     * The Organizations.
+     */
+<span class="fc" id="L18">    List&lt;Organization&gt; organizations = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Gets organization by employee.
+     *
+     * @param employee the employee
+     * @return the organization by employee
+     */
+    public Optional&lt;Organization&gt; getOrganizationByEmployee(Employee employee) {
+
+<span class="nc" id="L28">        Optional&lt;Organization&gt; returnOrganization = Optional.empty();</span>
+
+<span class="nc bnc" id="L30" title="All 2 branches missed.">        for (Organization organization : organizations) {</span>
+<span class="nc bnc" id="L31" title="All 2 branches missed.">            if (organization.employs(employee)) {</span>
+<span class="nc" id="L32">                returnOrganization = Optional.of(organization);</span>
+            }
+<span class="nc" id="L34">        }</span>
+
+<span class="nc" id="L36">        return returnOrganization;</span>
+    }
+
+    /**
+     * Gets organization by employee email.
+     *
+     * @param email the email
+     * @return the organization by employee email
+     */
+    public Optional&lt;Organization&gt; getOrganizationByEmployeeEmail(String email) {
+
+<span class="nc" id="L47">        Optional&lt;Organization&gt; returnOrganization = Optional.empty();</span>
+
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        for (Organization organization : organizations) {</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">            if (organization.anyEmployeeHasEmail(email)) {</span>
+<span class="nc" id="L51">                returnOrganization = Optional.of(organization);</span>
+            }
+<span class="nc" id="L53">        }</span>
+
+<span class="nc" id="L55">        return returnOrganization;</span>
+    }
+
+    /**
+     * Add optional.
+     *
+     * @param organization the organization
+     * @return the optional
+     */
+    public Optional&lt;Organization&gt; add(Organization organization) {
+
+<span class="nc" id="L66">        Optional&lt;Organization&gt; newOrganization = Optional.empty();</span>
+<span class="nc" id="L67">        boolean operationSuccess = false;</span>
+
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        if (validateOrganization(organization)) {</span>
+<span class="nc" id="L70">            newOrganization = Optional.of(organization.clone());</span>
+<span class="nc" id="L71">            operationSuccess = organizations.add(newOrganization.get());</span>
+        }
+
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (!operationSuccess) {</span>
+<span class="nc" id="L75">            newOrganization = Optional.empty();</span>
+        }
+
+<span class="nc" id="L78">        return newOrganization;</span>
+
+    }
+
+    private boolean validateOrganization(Organization organization) {
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        boolean isValid = !organizations.contains(organization);</span>
+
+<span class="nc" id="L85">        return isValid;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VisitRequestMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.mapper</a> &gt; <span class="el_source">VisitRequestMapper.java</span></div><h1>VisitRequestMapper.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.mapper;
+
+import pt.ipp.isep.dei.esoft.project.dto.*;
+import pt.ipp.isep.dei.esoft.project.domain.*;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * The type Visit request mapper.
+ */
+<span class="nc" id="L13">public class VisitRequestMapper {</span>
+    /**
+     * To dto visit request dto.
+     *
+     * @param visitRequest the visit request
+     * @return the visit request dto
+     */
+    public static VisitRequestDTO toDTO(VisitRequest visitRequest) {
+<span class="fc" id="L21">        Property property = visitRequest.getProperty();</span>
+<span class="fc" id="L22">        DateTime preferredDate = visitRequest.getPreferredDate();</span>
+<span class="fc" id="L23">        List&lt;DateTime&gt; timeSlot = visitRequest.getTimeSlot();</span>
+
+<span class="fc" id="L25">        String clientName = visitRequest.getClientName();</span>
+<span class="fc" id="L26">        long clientPhoneNumber = visitRequest.getClientPhoneNumber();</span>
+
+<span class="fc" id="L28">        AddressDTO addressDTO = AddressToAddressDTO(property.getAddress());</span>
+
+<span class="fc" id="L30">        DateTimeDTO dateTimeDTO = DateTimeToDateformattedDTO(property.getDate());</span>
+
+<span class="fc" id="L32">        PropertyDTO propertyDTO = new PropertyDTO(property.getPrice(), property.getArea(), addressDTO,</span>
+<span class="fc" id="L33">                property.getDistanceToCentre(), PhotographToDTO(property.getPhotographs()), PropertyTypeToDTO(property.getPropertyType()),</span>
+<span class="fc" id="L34">                StoreToDTO(property.getStore()), ClientToDTO(property.getClient()), dateTimeDTO);</span>
+
+<span class="fc" id="L36">        DateTimeDTO date =DateTimeToDateformattedDTO(preferredDate);</span>
+
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">        if (visitRequest.accepted() == 0){</span>
+<span class="fc" id="L39">            return new VisitRequestDTO(propertyDTO, date, timeSlot, clientName, clientPhoneNumber);</span>
+<span class="nc" id="L40">        }else return new VisitRequestDTO(propertyDTO, date, timeSlot, clientName, clientPhoneNumber, visitRequest.accepted());</span>
+
+
+    }
+
+    /**
+     * To entity visit request.
+     *
+     * @param visitRequestDTO the visit request dto
+     * @return the visit request
+     */
+    public static VisitRequest toEntity(VisitRequestDTO visitRequestDTO) {
+<span class="fc" id="L52">        PropertyDTO propertyDTO = visitRequestDTO.getProperty();</span>
+<span class="fc" id="L53">        DateTimeDTO preferredDate = visitRequestDTO.getPreferredDate();</span>
+<span class="fc" id="L54">        DateTime preferredDate1 = DateTimeDTOToDateformatted(preferredDate);</span>
+
+<span class="fc" id="L56">        List&lt;DateTime&gt; timeSlot = visitRequestDTO.getTimeSlot();</span>
+
+<span class="fc" id="L58">        String clientName = visitRequestDTO.getClientName();</span>
+<span class="fc" id="L59">        long clientPhoneNumber = visitRequestDTO.getClientPhoneNumber();</span>
+
+<span class="fc" id="L61">        Property property = convertPropertyDTOToProperty(propertyDTO);</span>
+
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">        if (visitRequestDTO.accepted() == 0){</span>
+<span class="fc" id="L64">            return new VisitRequest(property, preferredDate1, timeSlot, clientName, clientPhoneNumber);</span>
+<span class="nc" id="L65">        }else return new VisitRequest(property, preferredDate1, timeSlot, clientName, clientPhoneNumber, visitRequestDTO.accepted());</span>
+
+    }
+
+    /**
+     * Photograph to entity list.
+     *
+     * @param dto the dto
+     * @return the list
+     */
+    public static List&lt;Photograph&gt; PhotographToEntity(List&lt;PhotographDTO&gt; dto) {
+<span class="fc" id="L76">        List&lt;Photograph&gt; entity = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        for (PhotographDTO photo: dto) {</span>
+<span class="fc" id="L78">            entity.add(new Photograph(photo.getUri()));</span>
+<span class="fc" id="L79">        }</span>
+
+<span class="fc" id="L81">        return entity;</span>
+    }
+
+    /**
+     * Property type to entity property type.
+     *
+     * @param dto the dto
+     * @return the property type
+     */
+    public static PropertyType PropertyTypeToEntity(PropertyTypeDTO dto) {
+
+<span class="fc" id="L92">        PropertyType entity = new PropertyType(dto.getDescription());</span>
+
+<span class="fc" id="L94">        return entity;</span>
+    }
+
+    /**
+     * Store to entity store.
+     *
+     * @param dto the dto
+     * @return the store
+     */
+    public static Store StoreToEntity(StoreDTO dto) {
+
+<span class="fc" id="L105">        Store entity = new Store(dto.getId(), dto.getDesignation(), dto.getEmail(), new Address(dto.getAddress().getStreetAddress(), dto.getAddress().getCity(), dto.getAddress().getState(), dto.getAddress().getZipCode()), dto.getPhoneNumber());</span>
+
+<span class="fc" id="L107">        return entity;</span>
+    }
+
+    /**
+     * Client to entity client.
+     *
+     * @param dto the dto
+     * @return the client
+     */
+    public static Client ClientToEntity(ClientDTO dto) {
+
+<span class="fc" id="L118">        Client entity = new Client(dto.getName(), dto.getEmail(), dto.getPassportNumber(), dto.getTaxNumber(), new Address(dto.getAddress().getStreetAddress(), dto.getAddress().getCity(), dto.getAddress().getState(), dto.getAddress().getZipCode()), dto.getPhoneNumber());</span>
+
+<span class="fc" id="L120">        return entity;</span>
+    }
+
+    /**
+     * Photograph to dto list.
+     *
+     * @param entity the entity
+     * @return the list
+     */
+    public static List&lt;PhotographDTO&gt; PhotographToDTO(List&lt;Photograph&gt; entity) {
+<span class="fc" id="L130">        List&lt;PhotographDTO&gt; dto = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">        for (Photograph photo: entity) {</span>
+<span class="fc" id="L132">            dto.add(new PhotographDTO(photo.getUri()));</span>
+<span class="fc" id="L133">        }</span>
+
+<span class="fc" id="L135">        return dto;</span>
+    }
+
+    /**
+     * Property type to dto property type dto.
+     *
+     * @param entity the entity
+     * @return the property type dto
+     */
+    public static PropertyTypeDTO PropertyTypeToDTO(PropertyType entity) {
+
+<span class="fc" id="L146">        PropertyTypeDTO dto = new PropertyTypeDTO(entity.getDescription());</span>
+
+<span class="fc" id="L148">        return dto;</span>
+    }
+
+    /**
+     * Store to dto store dto.
+     *
+     * @param entity the entity
+     * @return the store dto
+     */
+    public static StoreDTO StoreToDTO(Store entity) {
+
+<span class="fc" id="L159">        StoreDTO dto = new StoreDTO((int) entity.getId(), entity.getDesignation(), new AddressDTO(entity.getAddress().getStreetAddress(), entity.getAddress().getCity(), entity.getAddress().getState(), entity.getAddress().getZipCode()), entity.getEmail(), entity.getPhoneNumber());</span>
+
+<span class="fc" id="L161">        return dto;</span>
+    }
+
+    /**
+     * Client to dto client dto.
+     *
+     * @param entity the entity
+     * @return the client dto
+     */
+    public static ClientDTO ClientToDTO(Client entity) {
+
+<span class="fc" id="L172">        ClientDTO dto = new ClientDTO(entity.getName(), entity.getEmail(), entity.getPassportNumber(), entity.getPhoneNumber(), entity.getTaxNumber(), new AddressDTO(entity.getAddress().getStreetAddress(), entity.getAddress().getCity(), entity.getAddress().getState(), entity.getAddress().getZipCode()));</span>
+
+<span class="fc" id="L174">        return dto;</span>
+    }
+
+    /**
+     * Convert property dto to property property.
+     *
+     * @param propertyDTO the property dto
+     * @return the property
+     */
+    public static Property convertPropertyDTOToProperty(PropertyDTO propertyDTO) {
+<span class="fc" id="L184">        double price = propertyDTO.getPrice();</span>
+<span class="fc" id="L185">        double area = propertyDTO.getArea();</span>
+<span class="fc" id="L186">        AddressDTO addressDTO = propertyDTO.getAddress();</span>
+<span class="fc" id="L187">        double distanceToCentre = propertyDTO.getDistanceToCentre();</span>
+<span class="fc" id="L188">        List&lt;Photograph&gt; photographs = PhotographToEntity(propertyDTO.getPhotographs());</span>
+<span class="fc" id="L189">        PropertyType propertyType = PropertyTypeToEntity(propertyDTO.getPropertyType());</span>
+<span class="fc" id="L190">        Store store = StoreToEntity(propertyDTO.getStore());</span>
+<span class="fc" id="L191">        Client client = ClientToEntity(propertyDTO.getClient());</span>
+<span class="fc" id="L192">        DateTimeDTO dateFormatted = propertyDTO.getDate();</span>
+
+<span class="fc" id="L194">        DateTime date = DateTimeDTOToDateformatted(dateFormatted);</span>
+
+<span class="fc" id="L196">        Address address = AdressDTOtoAdress(addressDTO);</span>
+
+
+<span class="fc" id="L199">        Property property = new Property(price, area, address , distanceToCentre, photographs, propertyType,store, client, date);</span>
+
+<span class="fc" id="L201">        return property;</span>
+    }
+
+
+    /**
+     * Adress dt oto adress address.
+     *
+     * @param addressDTO the address dto
+     * @return the address
+     */
+    public static Address AdressDTOtoAdress (AddressDTO addressDTO){
+<span class="fc" id="L212">        String street = addressDTO.getStreetAddress();</span>
+<span class="fc" id="L213">        String city = addressDTO.getCity();</span>
+<span class="fc" id="L214">        String state = addressDTO.getState();</span>
+<span class="fc" id="L215">        String zipCode = addressDTO.getZipCode();</span>
+<span class="fc" id="L216">        Address address = new Address(street, city, state, zipCode);</span>
+
+<span class="fc" id="L218">        return address;</span>
+
+    }
+
+    /**
+     * Date time to dateformatted dto date time dto.
+     *
+     * @param dateTime the date time
+     * @return the date time dto
+     */
+    public static DateTimeDTO DateTimeToDateformattedDTO (DateTime dateTime){
+<span class="fc" id="L229">        int day = dateTime.getDayOfMonth();</span>
+<span class="fc" id="L230">        int month = dateTime.getMonth();</span>
+<span class="fc" id="L231">        int year = dateTime.getYear();</span>
+
+<span class="fc" id="L233">        return new DateTimeDTO(day, month, year);</span>
+    }
+
+    /**
+     * Date time dto to dateformatted date time.
+     *
+     * @param dateTimeDTO the date time dto
+     * @return the date time
+     */
+    public static DateTime DateTimeDTOToDateformatted (DateTimeDTO dateTimeDTO){
+<span class="fc" id="L243">        int day = dateTimeDTO.getDayOfMonth();</span>
+<span class="fc" id="L244">        int month = dateTimeDTO.getMonth();</span>
+<span class="fc" id="L245">        int year = dateTimeDTO.getYear();</span>
+
+<span class="fc" id="L247">        return  new DateTime(day, month, year);</span>
+
+    }
+//    public static DateTimeDTO DateTimeTimeToDateformattedDTO (DateTime dateFormatted){
+//        int hour = dateFormatted.getHour();
+//        int min = dateFormatted.getMinute();
+//
+//        return new DateTimeDTO(hour, min);
+//    }
+//    public static DateTime DateTimeDTOTimeToDateformatted (DateTimeDTO dateFormattedDTO){
+//        int hour = dateFormattedDTO.getHour();
+//        int min = dateFormattedDTO.getMinute();
+//
+//        return new DateTime(hour, min);
+//    }
+
+
+    /**
+     * Address to address dto address dto.
+     *
+     * @param address the address
+     * @return the address dto
+     */
+    public static AddressDTO AddressToAddressDTO(Address address) {
+<span class="fc" id="L271">        String street = address.getStreetAddress();</span>
+<span class="fc" id="L272">        String city = address.getCity();</span>
+<span class="fc" id="L273">        String state = address.getState();</span>
+<span class="fc" id="L274">        String zipCode = address.getZipCode();</span>
+
+<span class="fc" id="L276">        AddressDTO addressDTO = new AddressDTO(street, city, state, zipCode);</span>
+
+<span class="fc" id="L278">        return addressDTO;</span>
+    }
+
+    /**
+     * Get visit requests dto list.
+     *
+     * @param visitRequests the visit requests
+     * @return the list
+     */
+    public static List&lt;VisitRequestDTO&gt; getVisitRequestsDTO(List&lt;VisitRequest&gt; visitRequests){
+
+<span class="nc" id="L289">        List&lt;VisitRequestDTO&gt; visitRequestDTOs = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L290" title="All 2 branches missed.">        for (VisitRequest visitRequest : visitRequests) {</span>
+<span class="nc" id="L291">            VisitRequestDTO visitRequestDTO = VisitRequestMapper.toDTO(visitRequest);</span>
+<span class="nc" id="L292">            visitRequestDTOs.add(visitRequestDTO);</span>
+<span class="nc" id="L293">        }</span>
+<span class="nc" id="L294">        return visitRequestDTOs;</span>
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

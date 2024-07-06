@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Apartment.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.domain</a> &gt; <span class="el_source">Apartment.java</span></div><h1>Apartment.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.domain;
+
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * Represents an Apartment-type Inhabitable Property.
+ */
+public class Apartment implements Serializable {
+    private Inhabitable inhabitable;
+    public Apartment(double price, double area, Address address, double distanceToCentre, List&lt;Photograph&gt; photographs, int bedroomNumber, int bathroomNumber, int parkingSpaceNumber, List&lt;String&gt; equipmentList,
+<span class="nc" id="L12">                     PropertyType propertyType, Store store, Client client, DateTime dateTime) {</span>
+<span class="nc" id="L13">        this.inhabitable= new Inhabitable(price, area, address, distanceToCentre, photographs, bedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList, propertyType, store, client, dateTime);</span>
+<span class="nc" id="L14">    }</span>
+<span class="nc" id="L15">    public Apartment(Inhabitable inhabitable) {</span>
+<span class="nc" id="L16">        this.inhabitable = inhabitable;</span>
+<span class="nc" id="L17">    }</span>
+
+    public Inhabitable getInhabitable() {
+<span class="nc" id="L20">        return inhabitable;</span>
+    }
+
+    /**
+     * Clone method.
+     *
+     * @return A clone of the current Apartment Property.
+     */
+    public Apartment clone() {
+<span class="nc" id="L29">        return new Apartment(this.getInhabitable());</span>
+//        this.agent = agent,
+//        this.client = client);
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

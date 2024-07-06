@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Store.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.domain</a> &gt; <span class="el_source">Store.java</span></div><h1>Store.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.domain;
+
+import pt.ipp.isep.dei.esoft.project.repository.Repositories;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * Represents a Store.
+ */
+public class Store implements Serializable {
+
+    private Integer id;
+    private String designation;
+    private Address address;
+    private String email;
+    private long phoneNumber;
+
+
+    /**
+     * Instantiates a new Store.
+     *
+     * @param id          the id
+     * @param designation the designation
+     * @param email       the email
+     * @param address     the address
+     * @param phoneNumber the phone number
+     */
+<span class="fc" id="L30">    public Store(Integer id, String designation, String email, Address address, long phoneNumber) {</span>
+<span class="fc" id="L31">        this.id = id;</span>
+<span class="fc" id="L32">        this.designation = designation;</span>
+<span class="fc" id="L33">        this.address = address;</span>
+<span class="fc" id="L34">        this.email = email;</span>
+<span class="fc" id="L35">        this.phoneNumber = phoneNumber;</span>
+<span class="fc" id="L36">    }</span>
+
+    /**
+     * This method returns the id of the current instance.
+     *
+     * @return the Store's id.
+     */
+    public long getId() {
+<span class="fc" id="L44">        return id;</span>
+    }
+
+    /**
+     * Sets the id for this Store.
+     *
+     * @param id the designation to set
+     */
+    public void setId(Integer id) {
+<span class="nc" id="L53">        this.id = id;</span>
+<span class="nc" id="L54">    }</span>
+
+    /**
+     * Checks if the given designation is equal to this Store's designation
+     *
+     * @param designation the designation to be compared with this Store's designation
+     * @return 0 if the given designation is equal to this Store's designation, any other number otherwise
+     */
+    public Integer compareDescription(String designation) {
+<span class="fc" id="L63">        return this.designation.compareTo(designation);</span>
+    }
+
+    /**
+     * This method returns the designation of the current instance.
+     *
+     * @return the Store's designation.
+     */
+    public String getDesignation() {
+<span class="fc" id="L72">        return designation;</span>
+    }
+
+    /**
+     * Sets the designation for this Store.
+     *
+     * @param designation the designation to set
+     */
+    public void setDesignation(String designation) {
+<span class="nc" id="L81">        this.designation = designation;</span>
+<span class="nc" id="L82">    }</span>
+
+    /**
+     * This method returns the address of the current instance.
+     *
+     * @return address the Store's Address.
+     */
+    public Address getAddress() {
+<span class="fc" id="L90">        return address;</span>
+    }
+
+    /**
+     * Sets the designation for this Store.
+     *
+     * @param address the designation to set
+     */
+    public void setAddress(Address address) {
+<span class="nc" id="L99">        this.address = address;</span>
+<span class="nc" id="L100">    }</span>
+
+    /**
+     * This method checks if the current instance has any associated agents.
+     *
+     * @return true if it has at least one associated agents, otherwise returns false.
+     */
+    public Boolean hasAgents() {
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        if (!Repositories.getInstance().getEmployeeRepository().getAgentsFromStore(this).isEmpty()) return true;</span>
+<span class="nc" id="L109">        return false;</span>
+
+    }
+
+    /**
+     * This method returns the email of the current instance.
+     *
+     * @return email the Store's Email.
+     */
+    public String getEmail() {
+<span class="fc" id="L119">        return email;</span>
+    }
+
+    /**
+     * Sets the email for this Store.
+     *
+     * @param email the email to set
+     */
+    public void setEmail(String email) {
+<span class="nc" id="L128">        this.email = email;</span>
+<span class="nc" id="L129">    }</span>
+
+
+    /**
+     * This method returns the phone number of the current instance.
+     *
+     * @return the Store's phoneNumber.
+     */
+    public long getPhoneNumber() {
+<span class="fc" id="L138">        return phoneNumber;</span>
+    }
+
+    /**
+     * Sets the phone number for this Store.
+     *
+     * @param phoneNumber the phone number to set
+     */
+    public void setPhoneNumber(Integer phoneNumber) {
+<span class="nc" id="L147">        this.phoneNumber = phoneNumber;</span>
+<span class="nc" id="L148">    }</span>
+
+    /**
+     * Checks if the given object is equal to this Store object
+     *
+     * @param o the object to be compared with this Store object
+     * @return true if the given object is equal to this Store object, false otherwise
+     */
+
+    @Override
+    public boolean equals(Object o) {
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">        if (this == o) {</span>
+<span class="nc" id="L160">            return true;</span>
+        }
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">        if (!(o instanceof Store)) {</span>
+<span class="nc" id="L163">            return false;</span>
+        }
+<span class="fc" id="L165">        Store store = (Store) o;</span>
+<span class="fc bfc" id="L166" title="All 2 branches covered.">        return (Objects.equals(id, store.id)</span>
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">                &amp;&amp; Objects.equals(designation, store.designation)</span>
+<span class="pc bpc" id="L168" title="1 of 2 branches missed.">                &amp;&amp; Objects.equals(address, store.address)</span>
+<span class="pc bpc" id="L169" title="2 of 4 branches missed.">                &amp;&amp; Objects.equals(email, store.email)</span>
+                &amp;&amp; phoneNumber == store.phoneNumber);
+    }
+
+    /**
+     * Returns a hash code value for the Property object.
+     * The hash code is based on the values of the id, designation, address, email and phoneNumber fields.
+     *
+     * @return the hash code value for this Property object
+     */
+    @Override
+    public int hashCode() {
+<span class="nc" id="L181">        return Objects.hash(id, designation, address, email, phoneNumber);</span>
+    }
+
+    /**
+     * Returns true if the Store has the specified email address.
+     *
+     * @param email the email address to check
+     * @return true if the Store has the specified email address, false otherwise
+     */
+    public boolean hasEmail(String email) {
+<span class="nc" id="L191">        return this.email.equals(email);</span>
+    }
+
+    /**
+     * Clone method.
+     *
+     * @return A clone of the current instance.
+     */
+    public Store clone() {
+<span class="fc" id="L200">        return new Store(this.id = id, this.designation = designation, this.email = email, this.address = address, this.phoneNumber = phoneNumber);</span>
+    }
+
+//    /**
+//     * This method creates and returns a new Land object.
+//     *
+//     * @param propertyPrice            the Land's price.
+//     * @param propertyArea             the Land's area.
+//     * @param propertyAddress          the Land's address.
+//     * @param propertyDistanceToCentre the Land's distance to the city centre.
+//     * @param propertyPhotographs      the Land's list of photographs.
+//     * @param propertyType             the type of the Property, should always be 'Land' in this case
+//     * @param store                    the Store where the Land will be listed.
+//     * @param creator                  the Person that registered the Land.
+//     * @return a Land object.
+//     */
+//    public Property createProperty(Double propertyPrice, Double propertyArea, Address propertyAddress,
+//                                   Double propertyDistanceToCentre, List&lt;Photograph&gt; propertyPhotographs,
+//                                   PropertyType propertyType, Store store, Person creator, DateTime date) {
+////        throw new NotImplementedException();
+//        Property property = new Land(propertyPrice, propertyArea, propertyAddress, propertyDistanceToCentre, propertyPhotographs, propertyType, store, creator, date);
+//
+//
+////        return ( addProperty(property) ) ? property : Repositories.getInstance().getPropertyRepository().getPropertyByData(property);
+//
+//        return (addProperty(property)) ? property : null;
+//    }
+
+//    /**
+//     * This method creates and returns a new Apartment object.
+//     *
+//     * @param propertyPrice              the Apartment's price.
+//     * @param propertyArea               the Apartment's area.
+//     * @param propertyAddress            the Apartment's address.
+//     * @param propertyDistanceToCentre   the Apartment's distance to the city centre.
+//     * @param propertyPhotographs        the Apartment's list of photographs.
+//     * @param propertyBedroomNumber      the number of bedrooms in the Apartment.
+//     * @param propertyBathroomNumber     the number of bathrooms in the Apartment.
+//     * @param propertyParkingSpaceNumber the number of parking spaces in the Apartment.
+//     * @param propertyEquipmentList      the Apartment's list of available equipment.
+//     * @param propertyType               the type of the Property, should always be 'Apartment' in this case
+//     * @param store                      the Store where the Apartment will be listed.
+//     * @param creator                    the Person that registered the Apartment.
+//     * @param date
+//     * @return a Apartment object.
+//     */
+//    public Property createProperty(Double propertyPrice, Double propertyArea, Address propertyAddress,
+//                                   Double propertyDistanceToCentre, List&lt;Photograph&gt; propertyPhotographs, Integer propertyBedroomNumber, Integer propertyBathroomNumber,
+//                                   Integer propertyParkingSpaceNumber, List&lt;String&gt; propertyEquipmentList,
+//                                   PropertyType propertyType, Store store, Person creator, DateTime date) {
+////        throw new NotImplementedException();
+//        Property property = new Apartment(propertyPrice, propertyArea, propertyAddress, propertyDistanceToCentre, propertyPhotographs, propertyBedroomNumber, propertyBathroomNumber, propertyParkingSpaceNumber, propertyEquipmentList, propertyType, store, creator, new DateTime());
+//
+//
+////        return ( addProperty(property) ) ? property : Repositories.getInstance().getPropertyRepository().getPropertyByData(property);
+//
+//        return (addProperty(property)) ? property : null;
+//    }
+
+//    /**
+//     * This method creates and returns a new House object.
+//     *
+//     * @param propertyPrice              the House's price.
+//     * @param propertyArea               the House's area.
+//     * @param propertyAddress            the House's address.
+//     * @param propertyDistanceToCentre   the House's distance to the city centre.
+//     * @param propertyPhotographs        the House's list of photographs.
+//     * @param propertyBedroomNumber      the number of bedrooms in the House.
+//     * @param propertyBathroomNumber     the number of bathrooms in the House.
+//     * @param propertyParkingSpaceNumber the number of parking spaces in the House.
+//     * @param propertyEquipmentList      the House's list of available equipment.
+//     * @param propertyHasBasement        if the House has a basement.
+//     * @param propertyHasLoft            if the House has a loft.
+//     * @param propertySunExposure        the sun exposure of the house.
+//     * @param propertyType               the type of the Property, should always be 'House' in this case
+//     * @param store                      the Store where the House will be listed.
+//     * @param creator                    the Person that registered the House.
+//     * @return a House object.
+//     */
+//    public Property createProperty(Double propertyPrice, Double propertyArea, Address propertyAddress,
+//                                   Double propertyDistanceToCentre, List&lt;Photograph&gt; propertyPhotographs, Integer propertyBedroomNumber, Integer propertyBathroomNumber,
+//                                   Integer propertyParkingSpaceNumber, List&lt;String&gt; propertyEquipmentList, Boolean propertyHasBasement, Boolean propertyHasLoft, String propertySunExposure,
+//                                   PropertyType propertyType, Store store, Person creator, DateTime date) {
+////        throw new NotImplementedException();
+//        Property property = new House(propertyPrice, propertyArea, propertyAddress, propertyDistanceToCentre, propertyPhotographs, propertyBedroomNumber,
+//                propertyBathroomNumber, propertyParkingSpaceNumber, propertyEquipmentList, propertyHasBasement, propertyHasLoft,
+//                propertySunExposure, propertyType, store, creator, date);
+//
+////        return ( addProperty(property) ) ? property : Repositories.getInstance().getPropertyRepository().getPropertyByData(property);
+//
+//        return (addProperty(property)) ? property : null;
+//    }
+//
+//    /**
+//     * Adds a property to the system through the propertyRepository.
+//     *
+//     * @param property the Property to be added
+//     * @return true if the Property was successfully added to the repository, false otherwise
+//     */
+//    private Boolean addProperty(Property property) {
+////        if ( !validateProperty(property) ) return false;
+//        return Repositories.getInstance().getPropertyRepository().add(property);
+//    }
+//
+//    /**
+//     * Creates an announcement request for a given rent duration, business type, property, agent, and client.
+//     *
+//     * @param rentDuration the duration of the rent in months
+//     * @param businessType the type of business associated with the announcement request
+//     * @param property     the property associated with the announcement request
+//     * @param agent        the agent associated with the announcement request
+//     * @param client       the client associated with the announcement request
+//     * @return the created announcement request if it was successfully added to the announcement request repository, null otherwise
+//     */
+//    public AnnouncementRequest createAnnouncementRequest(Integer rentDuration, BusinessType businessType, Property property, Agent agent, Client client) {
+////        throw new NotImplementedException();
+//        AnnouncementRequest announcementRequest = new AnnouncementRequest(rentDuration, businessType, property, agent, client);
+//        return (addAnnouncementRequest(announcementRequest)) ? announcementRequest : null;
+//    }
+//
+//    /**
+//     * Creates an announcement request for a given business type, property, agent, and client.
+//     *
+//     * @param businessType the type of business associated with the announcement request
+//     * @param property     the property associated with the announcement request
+//     * @param agent        the agent associated with the announcement request
+//     * @param client       the client associated with the announcement request
+//     * @return the created announcement request if it was successfully added to the announcement request repository, null otherwise
+//     */
+//    public AnnouncementRequest createAnnouncementRequest(BusinessType businessType, Property property, Agent agent, Client client) {
+////        throw new NotImplementedException();
+//        AnnouncementRequest announcementRequest = new AnnouncementRequest(businessType, property, agent, client);
+//        return (addAnnouncementRequest(announcementRequest)) ? announcementRequest : null;
+//    }
+//
+//    /**
+//     * Adds a property to the system through the announcementRequestRepository.
+//     *
+//     * @param announcementRequest the announcementRequest to be added
+//     * @return true if the announcementRequest was successfully added to the repository, false otherwise
+//     */
+//    private Boolean addAnnouncementRequest(AnnouncementRequest announcementRequest) {
+//        return Repositories.getInstance().getAnnouncementRequestRepository().add(announcementRequest);
+//    }
+//
+////        private Boolean validateAnnouncementRequest(AnnouncementRequest announcementRequest) {throw new NotImplementedException();}
+
+
+    /**
+     * This method returns a description of the Store attributes.
+     *
+     * @return A formated string composed of the Store's attributes
+     */
+
+    @Override
+    public String toString() {
+<span class="nc" id="L356">        return String.format(&quot;StoreAddress: (%s)  |  StoreEmail: %s; &quot;, address.toString(), this.email);</span>
+    }
+}
+
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

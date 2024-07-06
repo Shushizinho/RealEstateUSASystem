@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReplyToAgentAboutVisitRequestController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.application.controller</a> &gt; <span class="el_source">ReplyToAgentAboutVisitRequestController.java</span></div><h1>ReplyToAgentAboutVisitRequestController.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.application.controller;
+
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import pt.ipp.isep.dei.esoft.project.domain.Client;
+import pt.ipp.isep.dei.esoft.project.domain.EmailFilter;
+import pt.ipp.isep.dei.esoft.project.domain.GmailFilter;
+import pt.ipp.isep.dei.esoft.project.domain.VisitRequest;
+import pt.ipp.isep.dei.esoft.project.repository.ClientRepository;
+import pt.ipp.isep.dei.esoft.project.repository.Repositories;
+import pt.ipp.isep.dei.esoft.project.repository.VisitRequestRepository;
+
+import java.util.List;
+
+/**
+ * The type Reply to agent about visit request controller.
+ */
+public class ReplyToAgentAboutVisitRequestController {
+
+    private static final String filterGmail = &quot;filter.term.gmail&quot;;
+
+<span class="fc" id="L22">    private VisitRequestRepository visitRequestRepository = null;</span>
+
+<span class="fc" id="L24">    private ClientRepository clientRepository = null;</span>
+
+    /**
+     * Instantiates a new Reply to agent about visit request controller.
+     */
+<span class="fc" id="L29">    public ReplyToAgentAboutVisitRequestController() {</span>
+<span class="fc" id="L30">        getvisitRequestRepository();</span>
+<span class="fc" id="L31">        getVisitRequest();</span>
+<span class="fc" id="L32">        getClientList();</span>
+<span class="fc" id="L33">    }</span>
+
+    /**
+     * Retrieves the VisitRequestRepository instance.
+     *
+     * @return the VisitRequestRepository instance.
+     */
+    public VisitRequestRepository getvisitRequestRepository() {
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        if (visitRequestRepository == null) {</span>
+<span class="fc" id="L42">            Repositories repositories = Repositories.getInstance();</span>
+
+            //Get the VisitRequestRepository
+<span class="fc" id="L45">            visitRequestRepository = repositories.getVisitRequestRepository();</span>
+        }
+<span class="fc" id="L47">        return visitRequestRepository;</span>
+    }
+
+
+    /**
+     * Retrieves a list of accepted visit requests.
+     *
+     * @return The list of accepted visit requests.
+     */
+    public List&lt;VisitRequest&gt; getVisitRequest(){
+<span class="fc" id="L57">        return getvisitRequestRepository().getVisitRequestAccepted();</span>
+    }
+
+    /**
+     * Creates and sends an email using the specified Gmail filter.
+     *
+     * @param filterGmail The Gmail filter to be used for creating the email.
+     * @param sender      The email address of the sender.
+     * @param receiver    The email address of the receiver.
+     * @param subject     The subject of the email.
+     * @param message     The content of the email.
+     */
+    public void createEmail (String filterGmail, String sender, String receiver, String subject, String message){
+<span class="fc" id="L70">        EmailFilter gmailFilter = new GmailFilter(filterGmail);</span>
+<span class="fc" id="L71">        gmailFilter.createEmail(sender, receiver, subject, message);</span>
+<span class="fc" id="L72">    }</span>
+
+    /**
+     * Retrieves the client repository instance.
+     *
+     * @return The client repository.
+     */
+    public ClientRepository getClientRepository() {
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        if (clientRepository == null) {</span>
+<span class="fc" id="L81">            Repositories repositories = Repositories.getInstance();</span>
+<span class="fc" id="L82">            clientRepository = repositories.getClientRepository();</span>
+        }
+<span class="fc" id="L84">        return clientRepository;</span>
+    }
+
+    /**
+     * Retrieves the list of clients from the client repository.
+     *
+     * @return The list of clients.
+     */
+    public List&lt;Client&gt; getClientList() {
+<span class="fc" id="L93">        ClientRepository clientRepository = getClientRepository();</span>
+<span class="fc" id="L94">        return clientRepository.getClients();</span>
+    }
+
+    /**
+     * Sets the client reply for the specified visit request.
+     *
+     * @param visitRequest The visit request for which the client reply is to be set.
+     * @param answer       The client's reply.
+     */
+    public void setVisitRequestClientReply(VisitRequest visitRequest, String answer) {
+<span class="nc" id="L104">        visitRequest.setClientReply(answer);</span>
+<span class="nc" id="L105">    }</span>
+
+
+    /**
+     * Lookup element by id t.
+     *
+     * @param &lt;T&gt;    the type parameter
+     * @param parent the parent
+     * @param id     the id
+     * @return the t
+     */
+    public &lt;T extends Node&gt; T lookupElementById(Parent parent, String id) {
+<span class="nc" id="L117">        return (T) parent.lookup(&quot;#&quot; + id);</span>
+    }
+
+    /**
+     * Send email to agent.
+     *
+     * @param visitRequest the visit request
+     */
+    public void sendEmailToAgent(VisitRequest visitRequest) {
+
+<span class="nc" id="L127">        String clientEmail = null;</span>
+<span class="nc" id="L128">        List&lt;Client&gt; clients = getClientList();</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">        for (Client client : clients){</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">            if (client.getPhoneNumber() == visitRequest.getClientPhoneNumber()){</span>
+<span class="nc" id="L131">                clientEmail = client.getEmail();</span>
+            }
+<span class="nc" id="L133">        }</span>
+<span class="nc" id="L134">        String subject = &quot;This visit request was seen by client&quot;;</span>
+
+<span class="nc" id="L136">        String mesage = &quot;This visit request&quot; + visitRequest.toString() + &quot;was displayed for the client&quot;;</span>
+
+<span class="nc" id="L138">        createEmail(filterGmail,visitRequest.getAgent().getEmail(), clientEmail, subject, mesage);</span>
+
+<span class="nc" id="L140">    }</span>
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

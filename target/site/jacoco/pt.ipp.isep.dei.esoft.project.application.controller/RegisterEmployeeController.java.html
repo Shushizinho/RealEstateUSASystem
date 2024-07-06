@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RegisterEmployeeController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.application.controller</a> &gt; <span class="el_source">RegisterEmployeeController.java</span></div><h1>RegisterEmployeeController.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.application.controller;
+
+import pt.ipp.isep.dei.esoft.project.domain.*;
+import pt.ipp.isep.dei.esoft.project.repository.*;
+import pt.isep.lei.esoft.auth.domain.model.Email;
+
+import java.util.List;
+import java.util.Optional;
+
+
+/**
+ * The RegisterEmployeeController class manages the business logic for the RegisterEmployeeUI
+ */
+public class RegisterEmployeeController {
+
+
+<span class="pc" id="L17">    private RoleRepository roleRepository = null;</span>
+<span class="pc" id="L18">    private StoreRepository storeRepository = null;</span>
+<span class="pc" id="L19">    private EmployeeRepository employeeRepository = null;</span>
+
+    /**
+     * Constructs a new RegisterEmployeeController and initializes the necessary repositories.
+     */
+<span class="fc" id="L24">    public RegisterEmployeeController() {</span>
+<span class="fc" id="L25">        getRoleRepository();</span>
+<span class="fc" id="L26">        getStoreRepository();</span>
+<span class="fc" id="L27">        getEmployeeRepository();</span>
+<span class="fc" id="L28">    }</span>
+
+    /**
+     * Constructs a new RegisterEmployeeController with the given repositories.
+     *
+     * @param roleRepository     The repository for managing roles.
+     * @param storeRepository    The repository for managing stores.
+     * @param employeeRepository The repository for managing employees.
+     */
+    public RegisterEmployeeController(RoleRepository roleRepository,
+<span class="nc" id="L38">                                      StoreRepository storeRepository, EmployeeRepository employeeRepository) {</span>
+<span class="nc" id="L39">        this.roleRepository = roleRepository;</span>
+<span class="nc" id="L40">        this.storeRepository = storeRepository;</span>
+<span class="nc" id="L41">        this.employeeRepository = employeeRepository;</span>
+<span class="nc" id="L42">    }</span>
+
+    /**
+     * Returns the StoreRepository instance, initializing it if necessary.
+     *
+     * @return The StoreRepository instance.
+     */
+
+    private StoreRepository getStoreRepository() {
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        if (storeRepository == null) {</span>
+<span class="fc" id="L52">            Repositories repositories = Repositories.getInstance();</span>
+
+            //Get the StoreRepository
+<span class="fc" id="L55">            storeRepository = repositories.getStoreRepository();</span>
+        }
+<span class="fc" id="L57">        return storeRepository;</span>
+    }
+
+    /**
+     * Returns the RoleRepository instance, initializing it if necessary.
+     *
+     * @return The RoleRepository instance.
+     */
+
+    private RoleRepository getRoleRepository() {
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (roleRepository == null) {</span>
+<span class="fc" id="L68">            Repositories repositories = Repositories.getInstance();</span>
+
+            //Get the RoleRepository
+<span class="fc" id="L71">            roleRepository = repositories.getRoleRepository();</span>
+        }
+<span class="fc" id="L73">        return roleRepository;</span>
+
+    }
+
+    /**
+     * Returns the EmployeeRepository instance, initializing it if necessary.
+     *
+     * @return The EmployeeRepository instance.
+     */
+
+    private EmployeeRepository getEmployeeRepository() {
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">        if (employeeRepository == null) {</span>
+<span class="fc" id="L85">            Repositories repositories = Repositories.getInstance();</span>
+
+            //Get the EmployeeRepository
+<span class="fc" id="L88">            employeeRepository = repositories.getEmployeeRepository();</span>
+        }
+<span class="fc" id="L90">        return employeeRepository;</span>
+
+    }
+
+    /**
+     * Creates a new employee with the given information and adds them to the store.
+     *
+     * @param name               The name of the employee.
+     * @param email              The email of the employee.
+     * @param passportNumber     The passport number of the employee.
+     * @param taxNumber          The tax number of the employee.
+     * @param address            The address of the employee.
+     * @param phoneNumber        The phone number of the employee.
+     * @param storeByDescription The description of the store where the employee works.
+     * @param role               The roles of the employee.
+     * @return An Optional containing the created employee, or empty if an employee with the same email already exists.
+     */
+    public Optional&lt;Employee&gt; create(String name, String email, int passportNumber,String taxNumber, Address address, long phoneNumber, String storeByDescription, List&lt;Role&gt; role) {
+
+<span class="fc" id="L109">        Store store = getStoreByDescription(storeByDescription);</span>
+
+<span class="fc" id="L111">        int br = 0;</span>
+
+<span class="fc bfc" id="L113" title="All 2 branches covered.">        for ( Employee empl : employeeRepository.getEmployees()) {</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">            if(empl.hasEmail(email)){</span>
+<span class="fc" id="L115">                br = 1;</span>
+            }
+<span class="fc" id="L117">        }</span>
+
+
+<span class="fc" id="L120">        Optional&lt;Employee&gt; employee = Optional.empty();</span>
+
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        if (br == 0) {   employee = employeeRepository.create( name,  email,  passportNumber, taxNumber, address, phoneNumber, store, role); }</span>
+
+
+
+<span class="fc" id="L126">        return employee;</span>
+    }
+
+
+    /**
+     * Returns the Role with the given description from the RoleRepository.
+     *
+     * @param roleDescription The description of the Role to retrieve.
+     * @return The Role with the given description, or null if no Role is found.
+     */
+    public Role getRoleByDescription(String roleDescription) {
+<span class="fc" id="L137">        RoleRepository roleRepository = getRoleRepository();</span>
+
+<span class="fc" id="L139">        Role roleByDescription = getRoleRepository().getRoleByDescription(roleDescription);</span>
+<span class="fc" id="L140">        return roleByDescription;</span>
+
+    }
+
+    /**
+     * Returns the Store with the given description from the StoreRepository.
+     *
+     * @param storeDescription The description of the Store to retrieve.
+     * @return The Store with the given description, or null if no Store is found.
+     */
+
+    private Store getStoreByDescription(String storeDescription) {
+<span class="fc" id="L152">        StoreRepository storeRepository = getStoreRepository();</span>
+
+<span class="fc" id="L154">        Store storeByDescription = getStoreRepository().getStoreByDescription(storeDescription);</span>
+<span class="fc" id="L155">        return storeByDescription;</span>
+
+    }
+
+    /**
+     * Returns a list of all the roles in the RoleRepository.
+     *
+     * @return A list of all the roles in the RoleRepository.
+     */
+    public List&lt;Role&gt; getRole() {
+<span class="fc" id="L165">        RoleRepository roleRepository = getRoleRepository();</span>
+<span class="fc" id="L166">        return roleRepository.getRoles();</span>
+    }
+
+    /**
+     * Returns a list of all the stores in the StoreRepository.
+     *
+     * @return A list of all the stores in the StoreRepository.
+     */
+    public List&lt;Store&gt; getStore() {
+<span class="fc" id="L175">        StoreRepository storeRepository = getStoreRepository();</span>
+<span class="fc" id="L176">        return storeRepository.getStores();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CreateTaskController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.application.controller</a> &gt; <span class="el_source">CreateTaskController.java</span></div><h1>CreateTaskController.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.application.controller;
+
+import pt.ipp.isep.dei.esoft.project.domain.Employee;
+import pt.ipp.isep.dei.esoft.project.domain.Organization;
+import pt.ipp.isep.dei.esoft.project.domain.Task;
+import pt.ipp.isep.dei.esoft.project.domain.TaskCategory;
+import pt.ipp.isep.dei.esoft.project.repository.AuthenticationRepository;
+import pt.ipp.isep.dei.esoft.project.repository.OrganizationRepository;
+import pt.ipp.isep.dei.esoft.project.repository.Repositories;
+import pt.ipp.isep.dei.esoft.project.repository.TaskCategoryRepository;
+import pt.isep.lei.esoft.auth.domain.model.Email;
+
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * The type Create task controller.
+ */
+public class CreateTaskController {
+
+<span class="nc" id="L21">    private OrganizationRepository organizationRepository = null;</span>
+<span class="nc" id="L22">    private TaskCategoryRepository taskCategoryRepository = null;</span>
+
+<span class="nc" id="L24">    private AuthenticationRepository authenticationRepository = null;</span>
+
+
+    /**
+     * Instantiates a new Create task controller.
+     */
+//Repository instances are obtained from the Repositories class
+<span class="nc" id="L31">    public CreateTaskController() {</span>
+<span class="nc" id="L32">        getOrganizationRepository();</span>
+<span class="nc" id="L33">        getTaskCategoryRepository();</span>
+<span class="nc" id="L34">        getAuthenticationRepository();</span>
+<span class="nc" id="L35">    }</span>
+
+    /**
+     * Instantiates a new Create task controller.
+     *
+     * @param organizationRepository   the organization repository
+     * @param taskCategoryRepository   the task category repository
+     * @param authenticationRepository the authentication repository
+     */
+//Allows receiving the repositories as parameters for testing purposes
+    public CreateTaskController(OrganizationRepository organizationRepository,
+                                TaskCategoryRepository taskCategoryRepository,
+<span class="nc" id="L47">                                AuthenticationRepository authenticationRepository) {</span>
+<span class="nc" id="L48">        this.organizationRepository = organizationRepository;</span>
+<span class="nc" id="L49">        this.taskCategoryRepository = taskCategoryRepository;</span>
+<span class="nc" id="L50">        this.authenticationRepository = this.authenticationRepository;</span>
+<span class="nc" id="L51">    }</span>
+
+    private TaskCategoryRepository getTaskCategoryRepository() {
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        if (taskCategoryRepository == null) {</span>
+<span class="nc" id="L55">            Repositories repositories = Repositories.getInstance();</span>
+
+            //Get the TaskCategoryRepository
+<span class="nc" id="L58">            taskCategoryRepository = repositories.getTaskCategoryRepository();</span>
+        }
+<span class="nc" id="L60">        return taskCategoryRepository;</span>
+    }
+
+
+    private OrganizationRepository getOrganizationRepository() {
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (organizationRepository == null) {</span>
+<span class="nc" id="L66">            Repositories repositories = Repositories.getInstance();</span>
+<span class="nc" id="L67">            organizationRepository = repositories.getOrganizationRepository();</span>
+        }
+<span class="nc" id="L69">        return organizationRepository;</span>
+
+    }
+
+    private AuthenticationRepository getAuthenticationRepository() {
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (authenticationRepository == null) {</span>
+<span class="nc" id="L75">            Repositories repositories = Repositories.getInstance();</span>
+
+            //Get the AuthenticationRepository
+<span class="nc" id="L78">            authenticationRepository = repositories.getAuthenticationRepository();</span>
+        }
+<span class="nc" id="L80">        return authenticationRepository;</span>
+    }
+
+
+    /**
+     * Create task optional.
+     *
+     * @param reference               the reference
+     * @param description             the description
+     * @param informalDescription     the informal description
+     * @param technicalDescription    the technical description
+     * @param duration                the duration
+     * @param cost                    the cost
+     * @param taskCategoryDescription the task category description
+     * @return the optional
+     */
+    public Optional&lt;Task&gt; createTask(String reference, String description, String informalDescription,
+                                     String technicalDescription, Integer duration, Double cost,
+                                     String taskCategoryDescription) {
+
+<span class="nc" id="L100">        TaskCategory taskCategory = getTaskCategoryByDescription(taskCategoryDescription);</span>
+
+<span class="nc" id="L102">        Employee employee = getEmployeeFromSession();</span>
+<span class="nc" id="L103">        Optional&lt;Organization&gt; organization = getOrganizationRepository().getOrganizationByEmployee(employee);</span>
+
+<span class="nc" id="L105">        Optional&lt;Task&gt; newTask = Optional.empty();</span>
+
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        if (organization.isPresent()) {</span>
+<span class="nc" id="L108">            newTask = organization.get()</span>
+<span class="nc" id="L109">                    .createTask(reference, description, informalDescription, technicalDescription, duration, cost,</span>
+                            taskCategory, employee);
+        }
+<span class="nc" id="L112">        return newTask;</span>
+    }
+
+    private Employee getEmployeeFromSession() {
+<span class="nc" id="L116">        Email email = getAuthenticationRepository().getCurrentUserSession().getUserId();</span>
+        //return new Employee(email.getEmail());
+<span class="nc" id="L118">        return null;</span>
+    }
+
+    private TaskCategory getTaskCategoryByDescription(String taskCategoryDescription) {
+<span class="nc" id="L122">        TaskCategoryRepository taskCategoryRepository = getTaskCategoryRepository();</span>
+
+        //Get the TaskCategory by its description
+<span class="nc" id="L125">        TaskCategory taskCategoryByDescription =</span>
+<span class="nc" id="L126">                getTaskCategoryRepository().getTaskCategoryByDescription(taskCategoryDescription);</span>
+<span class="nc" id="L127">        return taskCategoryByDescription;</span>
+
+    }
+
+
+    /**
+     * Gets task categories.
+     *
+     * @return the task categories
+     */
+//return the list of task categories
+    public List&lt;TaskCategory&gt; getTaskCategories() {
+<span class="nc" id="L139">        TaskCategoryRepository taskCategoryRepository = getTaskCategoryRepository();</span>
+<span class="nc" id="L140">        return taskCategoryRepository.getTaskCategories();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

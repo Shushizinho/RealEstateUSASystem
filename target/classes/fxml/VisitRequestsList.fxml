@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="543.0" prefWidth="942.0" styleClass="root" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.esoft.project.ui.gui.ListBookingRequestsUI">
+   <top>
+      <Pane prefHeight="46.0" prefWidth="942.0" styleClass="anchorPane" BorderPane.alignment="CENTER" />
+   </top>
+   <bottom>
+      <ButtonBar prefHeight="68.0" prefWidth="761.0" styleClass="buttonbar" stylesheets="@../styles/Styles.css" BorderPane.alignment="CENTER">
+        <buttons>
+          <Button mnemonicParsing="false" prefHeight="39.0" prefWidth="87.0" styleClass="buttonTeste" text="Teste" textAlignment="CENTER">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <textFill>
+                  <LinearGradient endX="1.0" endY="0.12322274881516587" startX="1.0" startY="0.9383886255924171">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.17105263471603394" green="0.17105263471603394" blue="0.17105263471603394" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="1.0" green="1.0" blue="1.0" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </textFill>
+            </Button>
+            <Button mnemonicParsing="false" styleClass="buttonTeste" text="Button">
+               <textFill>
+                  <LinearGradient endX="1.0" endY="0.12322274881516587" startX="1.0" startY="0.9383886255924171">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.17105263471603394" green="0.17105263471603394" blue="0.17105263471603394" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="1.0" green="1.0" blue="1.0" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </textFill>
+            </Button>
+        </buttons>
+      </ButtonBar>
+   </bottom>
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <DatePicker fx:id="datePicker" layoutX="340.0" layoutY="233.0" onAction="#getDate" promptText="Enter a date..." />
+            <Label fx:id="myLabel" layoutX="393.0" layoutY="188.0" prefHeight="27.0" prefWidth="157.0" text="Date" textAlignment="CENTER">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

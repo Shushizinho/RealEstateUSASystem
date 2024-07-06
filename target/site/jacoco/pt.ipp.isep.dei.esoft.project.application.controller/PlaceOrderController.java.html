@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PlaceOrderController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.application.controller</a> &gt; <span class="el_source">PlaceOrderController.java</span></div><h1>PlaceOrderController.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.application.controller;
+
+import pt.ipp.isep.dei.esoft.project.application.session.ApplicationSession;
+import pt.ipp.isep.dei.esoft.project.application.session.UserSession;
+import pt.ipp.isep.dei.esoft.project.domain.*;
+import pt.ipp.isep.dei.esoft.project.dto.PairDTO;
+import pt.ipp.isep.dei.esoft.project.dto.PropertyDTO;
+import pt.ipp.isep.dei.esoft.project.dto.StoreDTO;
+import pt.ipp.isep.dei.esoft.project.repository.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * The PlaceOrderController class is responsible for managing the process of placing orders for properties.
+ * It handles interactions between the user interface and the domain.
+ */
+public class PlaceOrderController {
+<span class="nc" id="L19">    private PropertyRepository propertyRepository = null;</span>
+<span class="nc" id="L20">    private AnnouncementRepository announcementRepository = null;</span>
+<span class="nc" id="L21">    private PurchaseOrderRepository purchaseOrderRepository = null;</span>
+<span class="nc" id="L22">    private StoreRepository storeRepository = null;</span>
+<span class="nc" id="L23">    private PropertyFiltersRepository propertyFiltersRepository = null;</span>
+<span class="nc" id="L24">    private ClientRepository clientRepository = null;</span>
+<span class="nc" id="L25">    private AuthenticationRepository authenticationRepository = null;</span>
+<span class="nc" id="L26">    private List&lt;Filters&gt; filters = null;</span>
+<span class="nc" id="L27">    private UserSession currentSession = null;</span>
+
+    /**
+     * Constructs a new PlaceOrderController object.
+     * Initializes the required repositories for the controller.
+     */
+<span class="nc" id="L33">    public PlaceOrderController() {</span>
+<span class="nc" id="L34">        getAnnouncementRepository();</span>
+<span class="nc" id="L35">        getStoreRepository();</span>
+<span class="nc" id="L36">        getPropertyFiltersRepository();</span>
+<span class="nc" id="L37">        getPurchaseOrderRepository();</span>
+<span class="nc" id="L38">        getPropertyRepository();</span>
+<span class="nc" id="L39">    }</span>
+
+    /**
+     * Retrieves the list of stores.
+     *
+     * @return The list of stores.
+     */
+    public List&lt;Store&gt; getStores() {
+<span class="nc" id="L47">        return storeRepository.getStores();</span>
+    }
+
+    /**
+     * Retrieves the price ranges.
+     *
+     * @return A Pair os integers representing the floor and roof of the price range.
+     */
+    public List&lt;PairDTO&lt;Integer, Integer&gt;&gt; getPriceRanges() {
+<span class="nc" id="L56">        return propertyFiltersRepository.getPriceRanges();</span>
+    }
+
+    /**
+     * Retrieves the PurchaseOrderRepository instance. If it is not already initialized,
+     * it initializes it by obtaining it from the Repositories singleton.
+     *
+     * @return The PurchaseOrderRepository instance.
+     */
+
+    private PurchaseOrderRepository getPurchaseOrderRepository() {
+<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (purchaseOrderRepository == null) {</span>
+<span class="nc" id="L68">            Repositories repositories = Repositories.getInstance();</span>
+
+            //Get the StoreRepository
+<span class="nc" id="L71">            purchaseOrderRepository = repositories.getPurchaseOrderRepository();</span>
+        }
+<span class="nc" id="L73">        return purchaseOrderRepository;</span>
+    }
+
+    /**
+     * Retrieves the StoreRepository instance. If it is not already initialized,
+     * it initializes it by obtaining it from the Repositories singleton.
+     *
+     * @return The StoreRepository instance.
+     */
+    private StoreRepository getStoreRepository() {
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (storeRepository == null) {</span>
+<span class="nc" id="L84">            Repositories repositories = Repositories.getInstance();</span>
+
+            //Get the StoreRepository
+<span class="nc" id="L87">            storeRepository = repositories.getStoreRepository();</span>
+        }
+<span class="nc" id="L89">        return storeRepository;</span>
+    }
+
+    /**
+     * Retrieves the AnnouncementRepository instance. If it is not already initialized,
+     * it initializes it by obtaining it from the Repositories singleton.
+     *
+     * @return The AnnouncementRepository instance.
+     */
+    AnnouncementRepository getAnnouncementRepository() {
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if (announcementRepository == null) {</span>
+<span class="nc" id="L100">            Repositories repositories = Repositories.getInstance();</span>
+
+            //Get the StoreRepository
+<span class="nc" id="L103">            announcementRepository = repositories.getAnnouncementRepository();</span>
+        }
+<span class="nc" id="L105">        return announcementRepository;</span>
+    }
+    /**
+     * Retrieves the PropertyFiltersRepository instance. If it is not already initialized,
+     * it initializes it by obtaining it from the Repositories singleton.
+     *
+     * @return The PropertyFiltersRepository instance.
+     */
+
+    private PropertyFiltersRepository getPropertyFiltersRepository() {
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        if (propertyFiltersRepository == null) {</span>
+<span class="nc" id="L116">            Repositories repositories = Repositories.getInstance();</span>
+
+            //Get the StoreRepository
+<span class="nc" id="L119">            propertyFiltersRepository = repositories.getPropertyFiltersRepository();</span>
+        }
+<span class="nc" id="L121">        return propertyFiltersRepository;</span>
+    }
+
+    /**
+     * Prints the price range as a string.
+     *
+     * @param priceRange The price range as a Pair of integers.
+     * @return The string representation of the price range.
+     */
+    public String printPriceRange(PairDTO&lt;Integer,Integer&gt; priceRange) {
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        if (priceRange.getRight() &lt; Integer.MAX_VALUE) return priceRange.toStringDTO();</span>
+<span class="nc" id="L132">        else return priceRange.getLeft() + &quot;+&quot;;</span>
+    }
+
+    /**
+     * Retrieves the PropertyRepository instance. If it is not already initialized,
+     * it initializes it by obtaining it from the Repositories singleton.
+     *
+     * @return The PropertyRepository instance.
+     */
+    PropertyRepository getPropertyRepository() {
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        if (propertyRepository == null) {</span>
+<span class="nc" id="L143">            Repositories repositories = Repositories.getInstance();</span>
+
+            //Get the StoreRepository
+<span class="nc" id="L146">            propertyRepository = repositories.getPropertyRepository();</span>
+        }
+<span class="nc" id="L148">        return propertyRepository;</span>
+    }
+
+    /**
+     * Retrieves a list of stores that have associated agents.
+     *
+     * @return A list of stores with agents.
+     */
+    public List&lt;StoreDTO&gt; getStoresWithAgents() {
+<span class="nc" id="L157">        StoreRepository storeRepository = getStoreRepository();</span>
+<span class="nc" id="L158">        return storeRepository.getStoresWithAgentsDTO();</span>
+    }
+
+    /**
+     * Retrieves a list of available properties based on the provided store and price range.
+     *
+     * @param store      The store to filter the properties.
+     * @param priceRange The range of prices to filter the properties.
+     * @return A list of available properties that match the store and price range.
+     */
+    public List&lt;PropertyDTO&gt; getAvailableProperties(Store store, PairDTO&lt;Integer, Integer&gt; priceRange){
+<span class="nc" id="L169">        List&lt;Announcement&gt; announcementList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L170">        List&lt;PropertyDTO&gt; propertyList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L171">        announcementList = announcementRepository.getSaleAnnouncements();</span>
+//        propertyRepository = getPropertyRepository();
+<span class="nc" id="L173">        announcementList = announcementRepository.filterSaleAnnouncements(announcementList, store, priceRange);</span>
+<span class="nc" id="L174">        propertyList = propertyRepository.getPropertiesBySaleAnnoucementList(announcementList);</span>
+<span class="nc" id="L175">        return propertyList;</span>
+    }
+
+    /**
+     * Has active order boolean.
+     *
+     * @param propertyDescription the property description
+     * @return the boolean
+     */
+    public boolean hasActiveOrder(String propertyDescription) {
+<span class="nc" id="L185">        Property property = propertyRepository.getPropertyByDescription(propertyDescription);</span>
+<span class="nc" id="L186">        Announcement announcement = announcementRepository.getAnnouncementByProperty(property);</span>
+<span class="nc bnc" id="L187" title="All 2 branches missed.">        if (currentSession == null) {</span>
+<span class="nc" id="L188">            ApplicationSession appSession = ApplicationSession.getInstance();</span>
+
+            //Get the PropertyTypeRepository
+<span class="nc" id="L191">            currentSession = appSession.getCurrentSession();</span>
+        }
+<span class="nc" id="L193">        String email = currentSession.getUserEmail();</span>
+<span class="nc" id="L194">        ClientRepository clientRepository = getClientRepository();</span>
+<span class="nc" id="L195">        Client client = clientRepository.getClientByEmail(email);</span>
+<span class="nc" id="L196">        List&lt;PurchaseOrder&gt; orders = purchaseOrderRepository.getOrdersByAnnouncement(announcement);</span>
+
+<span class="nc bnc" id="L198" title="All 2 branches missed.">        if (orders.size() &gt; 0) {</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">            for (PurchaseOrder offToCompare : orders) {</span>
+<span class="nc bnc" id="L200" title="All 4 branches missed.">                if (offToCompare.getClient().equals(client) &amp;&amp; offToCompare.accepted() != -1) {</span>
+<span class="nc" id="L201">                    System.out.println(&quot;\u001B[31mYou already have an active order.\u001B[0m&quot;);</span>
+<span class="nc" id="L202">                    return true;</span>
+                }
+<span class="nc" id="L204">            }</span>
+        }
+<span class="nc" id="L206">        return false;</span>
+    }
+
+    /**
+     * Places a purchase order with the specified order amount for specific property.
+     * It retrieves the property, announcement, and client based on the provided information.
+     *
+     * @param orderAmount         The amount of the purchase order.
+     * @param propertyDescription The description of the property.
+     * @return The created PurchaseOrder object.
+     */
+    public PurchaseOrder placeOrder(Double orderAmount, String propertyDescription) {
+<span class="nc" id="L218">        System.out.println(propertyDescription);</span>
+<span class="nc" id="L219">        Property property = propertyRepository.getPropertyByDescription(propertyDescription);</span>
+<span class="nc" id="L220">        Announcement announcement = announcementRepository.getAnnouncementByProperty(property);</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">        if (currentSession == null) {</span>
+<span class="nc" id="L222">            ApplicationSession appSession = ApplicationSession.getInstance();</span>
+
+            //Get the PropertyTypeRepository
+<span class="nc" id="L225">            currentSession = appSession.getCurrentSession();</span>
+        }
+<span class="nc" id="L227">        String email = currentSession.getUserEmail();</span>
+<span class="nc" id="L228">        ClientRepository clientRepository = getClientRepository();</span>
+<span class="nc" id="L229">        Client client = clientRepository.getClientByEmail(email);</span>
+
+<span class="nc" id="L231">        return purchaseOrderRepository.placeOrder(orderAmount, announcement, client);</span>
+    }
+    /**
+     * Retrieves the ClientRepository instance. If it is not already initialized,
+     * it initializes it by obtaining it from the Repositories singleton.
+     *
+     * @return The ClientRepository instance.
+     */
+    private ClientRepository getClientRepository() {
+<span class="nc bnc" id="L240" title="All 2 branches missed.">        if (clientRepository == null) {</span>
+<span class="nc" id="L241">            Repositories repositories = Repositories.getInstance();</span>
+
+            //Get the ClientRepository
+<span class="nc" id="L244">            clientRepository = repositories.getClientRepository();</span>
+        }
+<span class="nc" id="L246">        return clientRepository;</span>
+    }
+
+
+    /**
+     * Returns the AuthenticationRepository instance for this system.
+     * If it hasn't been initialized yet, the method initializes it by retrieving the repository from the global Repositories instance.
+     * @return the AuthenticationRepository instance for this system.
+     */
+
+    private AuthenticationRepository getAuthenticationRepository() {
+<span class="nc bnc" id="L257" title="All 2 branches missed.">        if (authenticationRepository == null) {</span>
+<span class="nc" id="L258">            Repositories repositories = Repositories.getInstance();</span>
+
+            //Get the AuthenticationRepository
+<span class="nc" id="L261">            authenticationRepository = repositories.getAuthenticationRepository();</span>
+        }
+<span class="nc" id="L263">        return authenticationRepository;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AnnouncementRequestController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.application.controller</a> &gt; <span class="el_source">AnnouncementRequestController.java</span></div><h1>AnnouncementRequestController.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.application.controller;
+
+import pt.ipp.isep.dei.esoft.project.dto.AnnouncementRequestDTO;
+import pt.ipp.isep.dei.esoft.project.application.controller.authorization.AuthenticationController;
+import pt.ipp.isep.dei.esoft.project.application.session.ApplicationSession;
+import pt.ipp.isep.dei.esoft.project.application.session.UserSession;
+import pt.ipp.isep.dei.esoft.project.domain.*;
+import pt.ipp.isep.dei.esoft.project.mapper.AnnouncementRequestMapper;
+import pt.ipp.isep.dei.esoft.project.repository.*;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * The type Announcement request controller.
+ */
+public class AnnouncementRequestController {
+
+
+<span class="nc" id="L22">    private AnnouncementRequestRepository announcementRequestRepository=null;</span>
+<span class="nc" id="L23">    private BusinessTypeRepository businessTypeRepository = null;</span>
+
+
+    private  AnnouncementRepository announcementRepository;
+<span class="nc" id="L27">    private UserSession currentSession = null;</span>
+<span class="nc" id="L28">    private EmployeeRepository employeeRepository = null;</span>
+
+    private AnnouncementRequestDTO announcementRequestDTO;
+
+<span class="nc" id="L32">    private PropertyRepository propertyRepository = null;</span>
+
+<span class="nc" id="L34">    private AuthenticationRepository authenticationRepository = null;</span>
+    /**
+     * The Address.
+     */
+<span class="nc" id="L38">    Address address= new Address(&quot;test&quot;,&quot;test&quot;,&quot;teste&quot;,&quot;teste&quot;);</span>
+    /**
+     * The Employee.
+     */
+<span class="nc" id="L42">    Employee employee = new Employee(&quot;Diogo&quot;, &quot;agent@this.app&quot;, 12321, &quot;3213123&quot;, address ,121212, new Store(10, &quot;PPROG&quot;, &quot;pprog@this.app&quot;, new Address(&quot;teste&quot;,&quot;teste&quot;,&quot;teste&quot;,&quot;teste&quot;),  000000000), List.of(new Role(2, AuthenticationController.ROLE_AGENT)));</span>
+
+
+    /**
+     * Constructs an AnnouncementRequestController with the specified AnnouncementRequestRepository.
+     *
+     * @param announcementRequestRepository the AnnouncementRequestRepository to be used by the controller
+     * @param announcementRepository        the announcement repository
+     * @param authenticationRepository      the authentication repository
+     * @param currentSession                the current session
+     */
+<span class="nc" id="L53">    public AnnouncementRequestController(AnnouncementRequestRepository announcementRequestRepository, AnnouncementRepository announcementRepository, AuthenticationRepository authenticationRepository, UserSession currentSession) {</span>
+<span class="nc" id="L54">        this.announcementRequestRepository=announcementRequestRepository;</span>
+<span class="nc" id="L55">        this.announcementRepository=announcementRepository;</span>
+<span class="nc" id="L56">        this.authenticationRepository=authenticationRepository;</span>
+<span class="nc" id="L57">        this.currentSession=currentSession;</span>
+<span class="nc" id="L58">    }</span>
+
+
+    /**
+     * Constructs an AnnouncementRequestController.
+     * This constructor is used to initialize the controller without providing a specific AnnouncementRequestRepository.
+     * It calls the method getAnnouncementRequestRepository() to obtain the repository instance.
+     */
+<span class="nc" id="L66">    public AnnouncementRequestController() {</span>
+
+<span class="nc" id="L68">       getAnnouncementRequestRepository();</span>
+<span class="nc" id="L69">       getAnnouncementRepository();</span>
+<span class="nc" id="L70">        getAuthenticationRepository();</span>
+<span class="nc" id="L71">        getAgentFromSession();</span>
+
+
+<span class="nc" id="L74">    }</span>
+
+
+    /**
+     * Retrieves the AnnouncementRequestRepository instance.
+     * @return The AnnouncementRequestRepository instance.
+     */
+
+    private AnnouncementRequestRepository getAnnouncementRequestRepository() {
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (announcementRequestRepository== null) {</span>
+<span class="nc" id="L84">            Repositories repositories = Repositories.getInstance();</span>
+
+
+<span class="nc" id="L87">            announcementRequestRepository = repositories.getAnnouncementRequestRepository();</span>
+        }
+<span class="nc" id="L89">        return announcementRequestRepository;</span>
+    }
+
+
+    /**
+     * Retrieves the AuthenticationRepository instance.
+     * @return The AuthenticationRepository instance.
+     */
+
+    private AuthenticationRepository getAuthenticationRepository() {
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if (authenticationRepository == null) {</span>
+<span class="nc" id="L100">            Repositories repositories = Repositories.getInstance();</span>
+<span class="nc" id="L101">            authenticationRepository = repositories.getAuthenticationRepository();</span>
+        }
+<span class="nc" id="L103">        return authenticationRepository;</span>
+    }
+
+
+    /**
+     * Retrieves the AnnouncementRepository instance.
+     * @return The AnnouncementRepository instance.
+     */
+    private AnnouncementRepository getAnnouncementRepository() {
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        if (announcementRepository== null) {</span>
+<span class="nc" id="L113">            Repositories repositories = Repositories.getInstance();</span>
+
+
+<span class="nc" id="L116">            announcementRepository = repositories.getAnnouncementRepository();</span>
+        }
+<span class="nc" id="L118">        return announcementRepository;</span>
+    }
+
+    /**
+     * Retrieves and displays all the announcement requests.
+     *
+     * @param email the email
+     * @return the list
+     */
+    public List &lt;AnnouncementRequest&gt; getAnnouncementsRequestsAgent(String email){
+
+
+<span class="nc" id="L130">        return getAnnouncementRequestRepository().getAnnouncementRequestsByAgent(email);</span>
+
+    }
+
+    /**
+     * Get announcements requests by agent list.
+     *
+     * @param announcementRequestsListByAgent the announcement requests list by agent
+     * @return the list
+     */
+    public List&lt;AnnouncementRequestDTO&gt; getAnnouncementsRequestsByAgent(String announcementRequestsListByAgent){
+
+
+<span class="nc" id="L143">        List &lt;AnnouncementRequest&gt; announcementRequests= getAnnouncementsRequestsAgent(announcementRequestsListByAgent);</span>
+
+<span class="nc" id="L145">        return AnnouncementRequestMapper.getAnnouncementRequestsDTO(announcementRequests);</span>
+
+    }
+
+
+    /**
+     * Announcement request dto list to announcement request list list.
+     *
+     * @param announcementRequestsListByAgent the announcement requests list by agent
+     * @return the list
+     */
+    public List&lt;AnnouncementRequest&gt; announcementRequestDTOListToAnnouncementRequestList(String announcementRequestsListByAgent){
+
+<span class="nc" id="L158">        List &lt;AnnouncementRequestDTO&gt; announcementRequests= getAnnouncementsRequestsByAgent(announcementRequestsListByAgent);</span>
+
+<span class="nc" id="L160">        return AnnouncementRequestMapper.getAnnouncementRequests(announcementRequests);</span>
+
+    }
+
+
+    /**
+     * Create announcement optional.
+     *
+     * @param announcementRequestDTO the announcement request dto
+     * @param commission             the commission
+     * @return the optional
+     */
+    public Optional&lt;Announcement&gt; createAnnouncement(AnnouncementRequestDTO announcementRequestDTO, double commission){
+
+
+
+
+
+<span class="nc" id="L178">        return getAnnouncementRepository().createAnnouncement(announcementRequestDTO,commission);</span>
+    }
+
+    /**
+     * Set accepted announcement request.
+     *
+     * @param announcementRequest the announcement request
+     * @param a                   the a
+     */
+    public void setAcceptedAnnouncementRequest(AnnouncementRequestDTO announcementRequest , boolean a){
+<span class="nc" id="L188">        announcementRequest.setAccepted(a);</span>
+<span class="nc" id="L189">    }</span>
+
+
+    /**
+     * Creates a new rent announcement based on the provided announcement request DTO, commission, and rent duration.
+     *
+     * @param announcementRequestDTO The announcement request DTO containing the necessary information for the rent announcement.
+     * @param commission             The commission for the rent announcement.
+     * @return An optional containing the created rent announcement if it is successfully created, or an empty optional if the creation fails.
+     */
+    public Optional&lt;RentAnnouncement&gt; createRentAnnouncement(AnnouncementRequestDTO announcementRequestDTO, double commission){
+
+
+
+
+
+<span class="nc" id="L205">        return getAnnouncementRepository().createRentAnnouncement(announcementRequestDTO,commission);</span>
+    }
+
+    /**
+     * Creates a new sale announcement based on the provided announcement request DTO, commission, and listed price.
+     *
+     * @param announcementRequestDTO The announcement request DTO containing the necessary information for the sale announcement.
+     * @param commission             The commission for the sale announcement.
+     * @param listedPrice            The listed price for the property.
+     * @return An optional containing the created sale announcement if it is successfully created, or an empty optional if the creation fails.
+     */
+    public Optional&lt;SaleAnnouncement&gt; createSaleAnnouncement(AnnouncementRequestDTO announcementRequestDTO,double commission, double listedPrice){
+
+<span class="nc" id="L218">        return getAnnouncementRepository().createSaleAnnouncement(announcementRequestDTO,commission,listedPrice);</span>
+    }
+
+
+    /**
+     * Removes the specified announcement request from the repository.
+     *
+     * @param announcementRequest The announcement request to be removed.
+     * @param email               the email
+     * @return {@code true} if the announcement request is successfully removed, {@code false} otherwise.
+     */
+    public  boolean remove(AnnouncementRequestDTO announcementRequest, String email) {
+<span class="nc" id="L230">        return getAnnouncementRequestRepository().remove(announcementRequest,email);</span>
+    }
+
+
+    /**
+     * Creates an email with the specified sender, recipient, subject, and message.
+     *
+     * @param sender    The email address of the sender.
+     * @param recipient The email address of the recipient.
+     * @param subject   The subject of the email.
+     * @param message   The content of the email.
+     */
+    public void createEmail(String sender, String recipient, String subject, String message){
+<span class="nc" id="L243">     getAnnouncementRequestRepository().createEmail(sender, recipient, subject, message);</span>
+<span class="nc" id="L244">    }</span>
+
+
+    /**
+     * Retrieves the agent (employee) associated with the current session.
+     *
+     * @return The agent retrieved from the current session, or null if no session is available or the agent is not found.
+     */
+    public Agent getAgentFromSession() {
+<span class="nc bnc" id="L253" title="All 2 branches missed.">        if (currentSession == null) {</span>
+<span class="nc" id="L254">            ApplicationSession appSession = ApplicationSession.getInstance();</span>
+
+            //Get the current session
+<span class="nc" id="L257">            currentSession = appSession.getCurrentSession();</span>
+        }
+<span class="nc" id="L259">        String email = currentSession.getUserEmail();</span>
+        //EmployeeRepository employeeRepository =Repositories.getInstance().getEmployeeRepository();
+<span class="nc" id="L261">        return getEmployeeRepository().getEmployeeByEmail(email).getAssociatedAgent();</span>
+
+    }
+
+    private void getAnnouncementRequestsByAgentSorted(List&lt;AnnouncementRequest&gt; announcementRequestsList, AnnouncementRequestComparator announcementRequestComparator){
+<span class="nc" id="L266">        Collections.sort(announcementRequestsList,announcementRequestComparator);</span>
+
+<span class="nc" id="L268">    }</span>
+
+
+
+    private EmployeeRepository getEmployeeRepository(){
+<span class="nc bnc" id="L273" title="All 2 branches missed.">        if(employeeRepository == null){</span>
+<span class="nc" id="L274">            Repositories repositories = Repositories.getInstance();</span>
+<span class="nc" id="L275">            employeeRepository = repositories.getEmployeeRepository();</span>
+        }
+<span class="nc" id="L277">        return employeeRepository;</span>
+    }
+
+    /**
+     * Creates a new SaleAnnouncement with the specified details and adds it to the announcement repository.
+     *
+     * @param date         The formatted date of the announcement.
+     * @param commission   The commission amount for the sale.
+     * @param businessType The type of business associated with the sale.
+     * @param property     The property being sold.
+     * @param listedPrice  The listed price of the property.
+     * @param agent        The employee representing the agent associated with the sale.
+     * @return An Optional containing the newly created SaleAnnouncement, or an empty Optional if the creation failed.
+     */
+
+
+    public Optional&lt;SaleAnnouncement&gt; createSaleAnnouncement2(DateTime date, double commission, BusinessType businessType, Property property, double listedPrice, Agent agent){
+
+
+
+
+<span class="nc" id="L298">        return getAnnouncementRepository().createSaleAnnouncement2(date,commission,businessType,property,listedPrice,agent);</span>
+
+
+    }
+
+    /**
+     * Creates a new RentAnnouncement with the specified details and adds it to the announcement repository.
+     *
+     * @param date         The formatted date of the announcement.
+     * @param commission   The commission amount for the rent.
+     * @param businessType The type of business associated with the rent.
+     * @param property     The property being rented.
+     * @param rentDuration The duration of the rent in months.
+     * @param agent        The employee representing the agent associated with the rent.
+     * @return An Optional containing the newly created RentAnnouncement, or an empty Optional if the creation failed.
+     */
+
+
+    public Optional&lt;RentAnnouncement&gt; createRentAnnouncement2(DateTime date, double commission, BusinessType businessType, Property property, Integer rentDuration, Agent agent){
+
+
+
+<span class="nc" id="L320">        return getAnnouncementRepository().createRentAnnouncement2(date,commission,businessType,property,rentDuration,agent);</span>
+
+
+    }
+
+
+
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

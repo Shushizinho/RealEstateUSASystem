@@ -1,0 +1,569 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DataIntegrityChecker.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.service</a> &gt; <span class="el_source">DataIntegrityChecker.java</span></div><h1>DataIntegrityChecker.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.service;
+
+import pt.ipp.isep.dei.esoft.project.domain.*;
+import pt.ipp.isep.dei.esoft.project.dto.*;
+import pt.ipp.isep.dei.esoft.project.mapper.AnnouncementMapper;
+import pt.ipp.isep.dei.esoft.project.repository.*;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * The type Data integrity checker.
+ */
+<span class="fc" id="L18">public class DataIntegrityChecker {</span>
+
+
+    /**
+     * Modifies the address array to conform to a specific format.
+     *
+     * @param address The address array to modify.
+     * @return The modified address array.
+     */
+    public String[] putInAddressType(String[] address) {
+
+<span class="nc bnc" id="L29" title="All 2 branches missed.">        if (address.length&gt;=7){</span>
+<span class="nc bnc" id="L30" title="All 2 branches missed.">            for (int i = 3; i &gt; 0; i--) {</span>
+<span class="nc" id="L31">                address[i-1]+=address[i];</span>
+<span class="nc" id="L32">                address[i]= &quot;&quot;;</span>
+            }
+
+<span class="nc bnc" id="L35" title="All 2 branches missed.">            for (int i = 0; i &lt; address.length-4; i++) {</span>
+<span class="nc" id="L36">                address[i+1]=address[4+i];</span>
+<span class="nc" id="L37">                address[4+i]=&quot;&quot;;</span>
+            }
+
+        }
+
+<span class="nc bnc" id="L42" title="All 4 branches missed.">        if(address.length&gt;=5 &amp;&amp; address.length!=7){</span>
+<span class="nc" id="L43">            int ko=2;</span>
+<span class="nc" id="L44">            address[ko]+=address[ko+1];</span>
+<span class="nc" id="L45">            address[ko+1]=address[ko+2];</span>
+<span class="nc" id="L46">            address[ko+2]=&quot;&quot;;</span>
+        }
+
+<span class="nc" id="L49">        return address;</span>
+    }
+
+
+    /**
+     * Retrieves the value corresponding to the specified search header from the values array.
+     *
+     * @param search  The header to search for.
+     * @param headers The array of headers.
+     * @param values  The array of values corresponding to the headers.
+     * @return The value associated with the search header.
+     */
+    public String checkAllData(String search, String[] headers, String[] values){
+
+<span class="fc" id="L63">        String value= null;</span>
+<span class="fc" id="L64">        int i=0;</span>
+
+<span class="fc bfc" id="L66" title="All 2 branches covered.">        for (String header: headers) {</span>
+<span class="fc" id="L67">            boolean verify = false;</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">            if(header.compareToIgnoreCase(search)==0){</span>
+<span class="fc" id="L69">                value = values[i];</span>
+<span class="fc" id="L70">                break;</span>
+            }
+<span class="fc" id="L72">            i++;</span>
+        }
+<span class="fc" id="L74">        return value;</span>
+    }
+
+    /**
+     * Submits client data and creates a new client if all the data is valid.
+     *
+     * @param clientData       The array of client data.
+     * @param address          The array of address data.
+     * @param clientRepository the client repository
+     * @return {@code true} if the client data is valid and a client is created, {@code false} otherwise.
+     */
+    public boolean submitClientData(String[] clientData, String[] address, ClientRepository clientRepository) {
+<span class="nc" id="L86">        String password = &quot;legacy&quot;;</span>
+
+<span class="nc" id="L88">            Address addressObj = new Address(address);</span>
+
+<span class="nc" id="L90">            Optional&lt;Client&gt; client = clientRepository.create( clientData[0],  clientData[3] , Integer.parseInt(clientData[1]), clientData[2], addressObj, Long.parseLong(clientData[4].replaceAll(&quot;-&quot;, &quot;&quot;)), password);</span>
+
+<span class="nc bnc" id="L92" title="All 2 branches missed.">            if (client.isPresent()) {</span>
+//                System.out.println(&quot;Client successfully created!&quot;);
+            } else {
+<span class="nc" id="L95">                System.out.println(&quot;Client not created!&quot;);</span>
+            }
+
+<span class="nc" id="L98">        return true;</span>
+    }
+
+
+    /**
+     * Validates all the client data and address for creating a new client.
+     *
+     * @param clientData The array of client data.
+     * @param address    The array of address data.
+     * @return {@code true} if all the client data and address are valid, {@code false} otherwise.
+     */
+    public boolean validateClientData(String[] clientData, String[] address){
+
+
+        //Validate Email
+        try{
+<span class="fc" id="L114">            boolean pointEmail = false;</span>
+<span class="nc" id="L115">            pointEmail = isValidEmail(clientData[3]);</span>
+<span class="nc bnc" id="L116" title="All 2 branches missed.">            if(!pointEmail){</span>
+<span class="nc" id="L117">                return false;</span>
+            }
+        }
+<span class="fc" id="L120">        catch(Exception e){</span>
+<span class="fc" id="L121">            return false;</span>
+<span class="nc" id="L122">        }</span>
+
+
+        //Validate Tax Number
+        try{
+<span class="nc" id="L127">            boolean pointTax = false;</span>
+<span class="nc" id="L128">            pointTax = isValidTax(clientData[2]);</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">            if(!pointTax){</span>
+<span class="nc" id="L130">                return false;</span>
+            }
+        }
+<span class="nc" id="L133">        catch(Exception e){</span>
+<span class="nc" id="L134">            return false;</span>
+<span class="nc" id="L135">        }</span>
+
+
+        //Validate Passport Number
+        try{
+<span class="nc" id="L140">            int passport=countDigits(Integer.parseInt(clientData[1]));</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">            if (passport!=9){</span>
+<span class="nc" id="L142">                return false;</span>
+            }
+        }
+<span class="nc" id="L145">        catch(Exception e){</span>
+<span class="nc" id="L146">            return false;</span>
+<span class="nc" id="L147">        }</span>
+
+        //Validate Phone Number
+        try{
+<span class="nc" id="L151">            clientData[4] = clientData[4].replaceAll(&quot;-&quot;,&quot;&quot;);</span>
+<span class="nc" id="L152">            int num = countDigits(Long.parseLong(clientData[4]));</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">            if (num&lt;9){</span>
+<span class="nc" id="L154">                return false;</span>
+            }
+        }
+<span class="nc" id="L157">        catch(Exception e){</span>
+<span class="nc" id="L158">            return false;</span>
+<span class="nc" id="L159">        }</span>
+
+        //Validate Zip
+        try{
+<span class="nc" id="L163">            boolean pointZip = true;</span>
+<span class="nc" id="L164">            pointZip = isAlpha(address[3]);</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">            if(pointZip){</span>
+<span class="nc" id="L166">                return false;</span>
+            }
+
+        }
+<span class="nc" id="L170">        catch(Exception e){</span>
+<span class="nc" id="L171">            return false;</span>
+<span class="nc" id="L172">        }</span>
+
+
+<span class="nc" id="L175">        return true;</span>
+    }
+
+
+    /**
+     * Submits store data and creates a new store if all the data is valid.
+     *
+     * @param storeValues     The array of store data.
+     * @param storeRepository the store repository
+     * @return {@code true} if the store data is valid and a store is created, {@code false} otherwise.
+     */
+    public boolean submitStoreData(String[] storeValues, StoreRepository storeRepository) {
+<span class="nc" id="L187">        String[] splited = storeValues[2].split(&quot;,&quot;);</span>
+<span class="nc" id="L188">        String[] address = putInAddressType(splited);</span>
+
+<span class="nc" id="L190">            Address addressObj = new Address(address);</span>
+<span class="nc" id="L191">            Optional&lt;Store&gt; store = storeRepository.createStore(Integer.parseInt(storeValues[0]),  storeValues[1], storeValues[4],addressObj  , Long.parseLong(storeValues[3]));</span>
+
+<span class="nc bnc" id="L193" title="All 2 branches missed.">            if (store.isPresent()) {</span>
+//                System.out.println(&quot;Store successfully created!&quot;);
+            } else {
+<span class="nc" id="L196">                System.out.println(&quot;Store not created!&quot;);</span>
+            }
+
+
+<span class="nc" id="L200">        return true;</span>
+
+    }
+
+
+    /**
+     * Validate store id boolean.
+     *
+     * @param storeV the store v
+     * @return the boolean
+     */
+    public boolean validateStoreID (String storeV){
+<span class="nc" id="L212">        StoreRepository storeRepository = Repositories.getInstance().getStoreRepository();</span>
+<span class="nc" id="L213">        Integer id = Integer.parseInt(storeV);</span>
+
+<span class="nc bnc" id="L215" title="All 2 branches missed.">        for(Store store : storeRepository.getStores()){</span>
+<span class="nc bnc" id="L216" title="All 2 branches missed.">            if(id==store.getId()){</span>
+<span class="nc" id="L217">                return false;</span>
+            }
+<span class="nc" id="L219">        }</span>
+
+<span class="nc" id="L221">        return true;</span>
+    }
+
+
+    /**
+     * Submits store data and creates a new store if all the data is valid.
+     *
+     * @param storeValues The array of store data.
+     * @param address     the address
+     * @return {@code true} if the store data is valid and a store is created, {@code false} otherwise.
+     */
+    public boolean validateStoreData(String[] storeValues, String[] address) {
+
+
+        //Validate ID
+
+
+<span class="nc" id="L238">        Integer id = Integer.parseInt(storeValues[0]);</span>
+<span class="nc" id="L239">        boolean validid = false;</span>
+
+
+
+        try{
+
+
+<span class="nc bnc" id="L246" title="All 6 branches missed.">            if (id == 0 || id &lt; 0 || id == null){</span>
+<span class="nc" id="L247">                return false;</span>
+            }else{
+<span class="nc" id="L249">                validid = true;</span>
+            }
+
+<span class="nc" id="L252">        } catch (Exception e) {</span>
+<span class="nc" id="L253">            return false;</span>
+<span class="nc" id="L254">        }</span>
+
+<span class="nc bnc" id="L256" title="All 2 branches missed.">        if (!validid){</span>
+<span class="nc" id="L257">            return false;</span>
+        }
+
+
+        //Validate Email
+        try{
+<span class="nc" id="L263">            boolean pointEmail = false;</span>
+<span class="nc" id="L264">            pointEmail = isValidEmail(storeValues[4]);</span>
+<span class="nc bnc" id="L265" title="All 2 branches missed.">            if(!pointEmail){</span>
+<span class="nc" id="L266">                return false;</span>
+            }
+        }
+<span class="nc" id="L269">        catch(Exception e){</span>
+<span class="nc" id="L270">            return false;</span>
+<span class="nc" id="L271">        }</span>
+
+
+        //Validate Phone Number
+        try{
+<span class="nc" id="L276">            storeValues[3] = storeValues[3].replaceAll(&quot;-&quot;,&quot;&quot;);</span>
+<span class="nc" id="L277">            int num = countDigits(Long.parseLong(storeValues[3]));</span>
+<span class="nc bnc" id="L278" title="All 2 branches missed.">            if (num&lt;9){</span>
+<span class="nc" id="L279">                return false;</span>
+            }
+        }
+<span class="nc" id="L282">        catch(Exception e){</span>
+<span class="nc" id="L283">            return false;</span>
+<span class="nc" id="L284">        }</span>
+
+
+
+        //Validate Zip
+        try{
+<span class="nc" id="L290">            boolean pointZip = true;</span>
+<span class="nc" id="L291">            pointZip = isAlpha(address[3]);</span>
+<span class="nc bnc" id="L292" title="All 2 branches missed.">            if(pointZip){</span>
+<span class="nc" id="L293">                return false;</span>
+            }
+
+        }
+<span class="nc" id="L297">        catch(Exception e){</span>
+<span class="nc" id="L298">            return false;</span>
+<span class="nc" id="L299">        }</span>
+
+
+<span class="nc" id="L302">        return true;</span>
+    }
+
+
+    /**
+     * Submits property data and creates a new property if all the data is valid.
+     *
+     * @param propertyValues         The array of property data.
+     * @param address                the address
+     * @param store                  the store
+     * @param owner                  the owner
+     * @param propertyRepository     the property repository
+     * @param propertyTypeRepository the property type repository
+     * @return {@code true} if the property data is valid and a property is created, {@code false} otherwise.
+     */
+    public boolean submitPropertyData(String[] propertyValues, String[] address, Store store, Client owner, PropertyRepository propertyRepository, PropertyTypeRepository propertyTypeRepository) {
+
+<span class="nc" id="L319">            PropertyType propertyTypeSub = propertyTypeRepository.getPropertyTypeByDescription(propertyValues[0].substring(0, 1).toUpperCase() + propertyValues[0].substring(1)) ;</span>
+<span class="nc" id="L320">            Address addressObj = new Address(address);</span>
+<span class="nc" id="L321">            List&lt;Photograph&gt; photos = new ArrayList&lt;&gt;();</span>
+            Property property;
+<span class="nc" id="L323">            PropertyDTO propertyDTO = null;</span>
+<span class="nc" id="L324">            List&lt;String&gt; equipmentList = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L326" title="All 4 branches missed.">            if (propertyValues[5].compareTo(&quot;NA&quot;) == 0 || propertyValues[5] == &quot;&quot;){</span>
+<span class="nc" id="L327">                propertyRepository.createProperty(Double.parseDouble(propertyValues[12]), Double.parseDouble(propertyValues[1]), addressObj, Double.parseDouble(propertyValues[3])</span>
+                        , photos, propertyTypeSub , store,owner , new DateTime());
+            }
+            else {
+<span class="nc" id="L331">                equipmentList.add(equipmentListAdd(propertyValues, 7,&quot;centralHeating&quot;));</span>
+<span class="nc" id="L332">                equipmentList.add(equipmentListAdd(propertyValues, 8,&quot;airconditioned&quot;));</span>
+<span class="nc" id="L333">                Iterator&lt;String&gt; iterator = equipmentList.iterator();</span>
+<span class="nc bnc" id="L334" title="All 2 branches missed.">                while (iterator.hasNext()) {</span>
+<span class="nc" id="L335">                    String element = iterator.next();</span>
+<span class="nc bnc" id="L336" title="All 2 branches missed.">                    if (element.isEmpty()) {</span>
+<span class="nc" id="L337">                        iterator.remove();</span>
+                    }
+<span class="nc" id="L339">                }</span>
+
+<span class="nc bnc" id="L341" title="All 2 branches missed.">                if(propertyTypeSub.getDescription().compareTo(&quot;House&quot;)==0){</span>
+
+<span class="nc" id="L343">                    propertyRepository.createProperty(Double.parseDouble(propertyValues[12]), Double.parseDouble(propertyValues[1]), addressObj, Double.parseDouble(propertyValues[3])</span>
+<span class="nc" id="L344">                            , photos, Integer.parseInt(propertyValues[4]), Integer.parseInt(propertyValues[5]), Integer.parseInt(propertyValues[6]),equipmentList,validateIfExist(propertyValues,9),</span>
+<span class="nc" id="L345">                            validateIfExist(propertyValues,10), propertyValues[11], propertyTypeSub , store,owner , new DateTime() );</span>
+
+                }
+                else{
+
+<span class="nc" id="L350">                    propertyRepository.createProperty(Double.parseDouble(propertyValues[12]), Double.parseDouble(propertyValues[1]), addressObj, Double.parseDouble(propertyValues[3])</span>
+<span class="nc" id="L351">                            , photos, Integer.parseInt(propertyValues[4]), Integer.parseInt(propertyValues[5]), Integer.parseInt(propertyValues[6]),equipmentList,validateIfExist(propertyValues,9),</span>
+<span class="nc" id="L352">                            validateIfExist(propertyValues,10), propertyValues[11], propertyTypeSub , store,owner , new DateTime() );</span>
+
+                }
+
+
+
+
+            }
+
+
+
+
+<span class="nc" id="L364">        return true;</span>
+    }
+
+
+    /**
+     * Submits announcement data and creates a new announcement if all the data is valid.
+     *
+     * @param announcementValues     The array of property data.
+     * @param property               the property
+     * @param announcementRepository the announcement repository
+     * @param businessTypeRepository the business type repository
+     * @return {@code true} if the announcement data is valid and a announcement is created, {@code false} otherwise.
+     */
+    public boolean submitAnnouncementData(String[] announcementValues, Property property, AnnouncementRepository announcementRepository, BusinessTypeRepository businessTypeRepository) {
+
+<span class="nc" id="L379">            BusinessType bussinessTypeSub = businessTypeRepository.getBusinessTypeByDescription(announcementValues[4].substring(0, 1).toUpperCase() + announcementValues[4].substring(1),false);</span>
+<span class="nc" id="L380">            String[] date = announcementValues[2].replaceAll(&quot;-&quot;,&quot;/&quot;).split(&quot;/&quot;);</span>
+<span class="nc" id="L381">            DateTimeDTO dateTime = new DateTimeDTO(Integer.parseInt(date[0]),Integer.parseInt(date[1]   ),Integer.parseInt(date[2]));</span>
+
+<span class="nc" id="L383">            Employee legacyAgentE = Repositories.getInstance().getEmployeeRepository().getEmployeeByEmail(&quot;legacy@realstateUSA.com&quot;);</span>
+<span class="nc" id="L384">            Agent legacyAgent = Repositories.getInstance().getEmployeeRepository().getAgentObject(legacyAgentE);</span>
+<span class="nc" id="L385">            AgentDTO legacyDTO = AnnouncementMapper.employeeToEmployeeDTO(legacyAgent);;</span>
+<span class="nc" id="L386">            BusinessTypeDTO businessTypeDTO= AnnouncementMapper.businessTypeToBusinessTypeDTO(bussinessTypeSub);</span>
+<span class="nc" id="L387">            PropertyDTO propertyDTO= AnnouncementMapper.propertyToPropertyDTO(property);</span>
+
+<span class="nc bnc" id="L389" title="All 2 branches missed.">            if (announcementValues[1].compareTo(&quot;NA&quot;)==0) announcementValues[1] = &quot;0&quot;;</span>
+
+
+<span class="nc" id="L392">            AnnouncementDTO announcementDTO = new AnnouncementDTO(legacyDTO,dateTime,Double.parseDouble(announcementValues[0]),businessTypeDTO,propertyDTO,Integer.parseInt(announcementValues[1]),property.getPrice());</span>
+
+<span class="nc" id="L394">            Optional&lt;Announcement&gt; announcement =  announcementRepository.createAnnouncement(announcementDTO);</span>
+
+<span class="nc bnc" id="L396" title="All 2 branches missed.">                if (announcement.isPresent()) {</span>
+<span class="nc" id="L397">                    return true;</span>
+                } else {
+<span class="nc" id="L399">                    return false;</span>
+
+                }
+    }
+
+
+    /**
+     * Submit purchase order data boolean.
+     *
+     * @param purchaseOrderValues     the purchase order values
+     * @param purchaseOrderRepository the purchase order repository
+     * @param announcement            the announcement
+     * @param address                 the address
+     * @return the boolean
+     */
+    public boolean submitPurchaseOrderData(String[] purchaseOrderValues, PurchaseOrderRepository purchaseOrderRepository , Announcement announcement, String[] address) {
+
+<span class="nc" id="L416">        String[] date = purchaseOrderValues[1].replaceAll(&quot;-&quot;,&quot;/&quot;).split(&quot;/&quot;);</span>
+<span class="nc" id="L417">        DateTime dateTime = new DateTime(Integer.parseInt(date[0]),Integer.parseInt(date[1]   ),Integer.parseInt(date[2]));</span>
+
+<span class="nc" id="L419">        Address addressObj = new Address(address);</span>
+
+<span class="nc" id="L421">        Client legacyClient = new Client(&quot;legacyClient&quot;,&quot;legacyClient@realstateUSA.com&quot;,00000000,&quot;123-12-3333&quot;,addressObj,912312376);</span>
+
+<span class="nc" id="L423">        PurchaseOrder purchaseOrder = purchaseOrderRepository.placeOrder(Double.parseDouble(purchaseOrderValues[0]),announcement,legacyClient,1,dateTime);</span>
+
+
+<span class="nc" id="L426">        return true;</span>
+    }
+
+
+    /**
+     * Validate announcement data boolean.
+     *
+     * @param announcementValues the announcement values
+     * @return the boolean
+     */
+    public boolean validateAnnouncementData(String[] announcementValues) {
+
+<span class="fc" id="L438">        return true;</span>
+    }
+
+    /**
+     * Validata purchase order data boolean.
+     *
+     * @param purchaseOrderValue the purchase order value
+     * @return the boolean
+     */
+    public boolean validataPurchaseOrderData(String[] purchaseOrderValue) {
+
+<span class="fc" id="L449">        return true;</span>
+    }
+
+    /**
+     * Validate property data boolean.
+     *
+     * @param propertyValues the property values
+     * @param address        the address
+     * @return the boolean
+     */
+    public boolean validatePropertyData(String[] propertyValues, String[] address) {
+
+<span class="fc" id="L461">        return true;</span>
+    }
+
+    /**
+     * Validates if a property value exists based on the provided condition.
+     *
+     * @param propertyValues The array of property values.
+     * @param i              The index of the value to validate.
+     * @return true if the value exists (equals &quot;Y&quot;), false otherwise.
+     */
+    public boolean validateIfExist(String[] propertyValues, int i) {
+<span class="pc bpc" id="L472" title="1 of 2 branches missed.">        if(propertyValues[i].compareTo(&quot;Y&quot;)==0){</span>
+<span class="nc" id="L473">            return true;</span>
+        }
+        else{
+<span class="fc" id="L476">            return false;</span>
+        }
+    }
+    /**
+     * Adds a string to the equipment list based on the value of the property at the given index in the property values array.
+     *
+     * @param propertyValues The array of property values.
+     * @param i              The index of the property value to check.
+     * @param string         The string to add to the equipment list.
+     * @return The updated equipment list if the property value is &quot;Y&quot;, an empty string otherwise.
+     */
+    private String equipmentListAdd(String[] propertyValues, int i, String string) {
+<span class="nc bnc" id="L488" title="All 2 branches missed.">        if(propertyValues[i].compareTo(&quot;Y&quot;) == 0 ){</span>
+<span class="nc" id="L489">            return string;</span>
+        }
+<span class="nc" id="L491">        return &quot;&quot;;</span>
+    }
+
+
+    /**
+     * Counts the number of digits in a given number.
+     *
+     * @param num The number for which to count the digits.
+     * @return The number of digits in the given number.
+     */
+    public static int countDigits(long num) {
+<span class="fc" id="L502">        int count = 0;</span>
+<span class="fc bfc" id="L503" title="All 2 branches covered.">        while (num != 0) {</span>
+<span class="fc" id="L504">            count++;</span>
+<span class="fc" id="L505">            num /= 10;</span>
+        }
+<span class="fc" id="L507">        return count;</span>
+    }
+
+    /**
+     * Checks if a given email address is valid based on a regular expression pattern.
+     *
+     * @param email The email address to validate.
+     * @return true if the email address is valid, false otherwise.
+     */
+    public static boolean isValidEmail(String email) {
+<span class="fc" id="L517">        String emailRegex = &quot;^[a-zA-Z0-9_+&amp;*-]+(?:\\.&quot; +</span>
+                &quot;[a-zA-Z0-9_+&amp;*-]+)*@&quot; +
+                &quot;(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$&quot;;
+<span class="fc" id="L520">        Pattern pattern = Pattern.compile(emailRegex);</span>
+<span class="fc" id="L521">        Matcher matcher = pattern.matcher(email);</span>
+<span class="fc" id="L522">        return matcher.matches();</span>
+    }
+
+    /**
+     * Checks if a given tax number is valid based on a regular expression pattern.
+     *
+     * @param tax The tax number to validate.
+     * @return true if the tax number is valid, false otherwise.
+     */
+    public static boolean isValidTax(String tax) {
+<span class="fc" id="L532">        String regex = &quot;^\\d{3}-\\d{2}-\\d{4}$&quot;;</span>
+<span class="fc" id="L533">        Pattern pattern = Pattern.compile(regex);</span>
+<span class="fc" id="L534">        Matcher matcher = pattern.matcher(tax);</span>
+<span class="fc" id="L535">        return matcher.matches();</span>
+    }
+
+    /**
+     * Checks if a given string consists of alphabetic characters only.
+     *
+     * @param str The string to check.
+     * @return true if the string consists of alphabetic characters only, false otherwise.
+     */
+    public static boolean isAlpha(String str) {
+<span class="fc" id="L545">        String regex = &quot;[a-zA-Z]+&quot;;</span>
+<span class="fc" id="L546">        return str.matches(regex);</span>
+    }
+
+    /**
+     * Validate existence client boolean.
+     *
+     * @param email the email
+     * @return the boolean
+     */
+    public boolean validateExistenceClient(String email) {
+
+<span class="nc" id="L557">        ClientRepository clientRepository = Repositories.getInstance().getClientRepository();</span>
+
+<span class="nc bnc" id="L559" title="All 2 branches missed.">        for (Client client: clientRepository.getClients()) {</span>
+<span class="nc bnc" id="L560" title="All 2 branches missed.">            if(client.hasEmail(email)){</span>
+<span class="nc" id="L561">                return false;</span>
+            }
+<span class="nc" id="L563">        }</span>
+
+
+<span class="nc" id="L566">        return true;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

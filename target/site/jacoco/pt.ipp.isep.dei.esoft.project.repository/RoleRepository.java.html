@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RoleRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.repository</a> &gt; <span class="el_source">RoleRepository.java</span></div><h1>RoleRepository.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.repository;
+
+import pt.ipp.isep.dei.esoft.project.domain.Role;
+import pt.ipp.isep.dei.esoft.project.domain.Store;
+import pt.ipp.isep.dei.esoft.project.domain.TaskCategory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * The type Role repository.
+ */
+<span class="fc" id="L14">public class RoleRepository {</span>
+
+<span class="fc" id="L16">    private final List&lt;Role&gt; roles = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * This method returns an exsiting Task Category by its description.
+     *
+     * @param roleDescription The description of the task category to be created.
+     * @return The task category.
+     * @throws IllegalArgumentException if the task category does not exist, which should never happen.
+     */
+    public Role getRoleByDescription(String roleDescription) {
+        //Role newRole = new Role(roleDescription);
+<span class="fc" id="L27">        Role role = null;</span>
+<span class="fc bfc" id="L28" title="All 2 branches covered.">        for (Role roleCheck : List.copyOf(roles)) {</span>
+<span class="fc bfc" id="L29" title="All 2 branches covered.">            if (roleCheck.compareDescription(roleDescription) == 0) {</span>
+<span class="fc" id="L30">                role = roleCheck;</span>
+            }
+<span class="fc" id="L32">        }</span>
+<span class="pc bpc" id="L33" title="1 of 2 branches missed.">        if (role == null) {</span>
+<span class="nc" id="L34">            throw new IllegalArgumentException(</span>
+                    &quot;Role requested for [&quot; + roleDescription + &quot;] does not exist.&quot;);
+        }
+<span class="fc" id="L37">        return role;</span>
+    }
+
+    /**
+     * Add optional.
+     *
+     * @param role the role
+     * @return the optional
+     */
+    public Optional&lt;Role&gt; add(Role role) {
+
+<span class="fc" id="L48">        Optional&lt;Role&gt; newRole = Optional.empty();</span>
+<span class="fc" id="L49">        boolean operationSuccess = false;</span>
+
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        if (validateRole(role)) {</span>
+<span class="fc" id="L52">            newRole = Optional.of(role.clone());</span>
+<span class="fc" id="L53">            operationSuccess = roles.add(newRole.get());</span>
+        }
+
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (!operationSuccess) {</span>
+<span class="fc" id="L57">            newRole = Optional.empty();</span>
+        }
+
+<span class="fc" id="L60">        return newRole;</span>
+    }
+
+    private boolean validateRole(Role role) {
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        boolean isValid = !roles.contains(role);</span>
+<span class="fc" id="L65">        return isValid;</span>
+    }
+
+    /**
+     * This method returns a defensive (immutable) copy of the list of task categories.
+     *
+     * @return The list of task categories.
+     */
+    public List&lt;Role&gt; getRoles() {
+        //This is a defensive copy, so that the repository cannot be modified from the outside.
+<span class="fc" id="L75">        return List.copyOf(roles);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

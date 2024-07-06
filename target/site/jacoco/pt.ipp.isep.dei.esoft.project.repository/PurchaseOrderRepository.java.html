@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PurchaseOrderRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.repository</a> &gt; <span class="el_source">PurchaseOrderRepository.java</span></div><h1>PurchaseOrderRepository.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.repository;
+
+import org.apache.commons.math.stat.regression.SimpleRegression;
+import pt.ipp.isep.dei.esoft.project.domain.*;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * A repository class for managing all Purchase Orders.
+ */
+<span class="fc" id="L16">public class PurchaseOrderRepository {</span>
+
+//    private final ArrayList&lt;Pair&lt;Announcement, ArrayList&lt;PurchaseOrder&gt;&gt;&gt; ordersByAnnouncement = new ArrayList&lt;&gt;();
+<span class="fc" id="L19">    private final ArrayList&lt;PurchaseOrder&gt; allOrders = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Place order purchase order.
+     *
+     * @param orderAmount  the order amount
+     * @param announcement the announcement
+     * @param cLient       the c lient
+     * @return the purchase order
+     */
+    public PurchaseOrder placeOrder(Double orderAmount, Announcement announcement, Client cLient) {
+<span class="nc" id="L30">        PurchaseOrder order = new PurchaseOrder(orderAmount, announcement, cLient);</span>
+<span class="nc bnc" id="L31" title="All 2 branches missed.">        if (addOrder(order)) return order;</span>
+<span class="nc" id="L32">        return null;</span>
+
+    }
+
+    /**
+     * Place order purchase order.
+     *
+     * @param orderAmount  the order amount
+     * @param announcement the announcement
+     * @param cLient       the c lient
+     * @param wasAccepted  the was accepted
+     * @param date         the date
+     * @return the purchase order
+     */
+    public PurchaseOrder placeOrder(Double orderAmount, Announcement announcement, Client cLient, int wasAccepted, DateTime date) {
+<span class="nc" id="L47">        PurchaseOrder order = new PurchaseOrder(orderAmount, announcement, cLient,wasAccepted,date);</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        if (addOrder(order)) return order;</span>
+<span class="nc" id="L49">        return null;</span>
+
+    }
+
+    /**
+     * Gets all orders.
+     *
+     * @return the all orders
+     */
+    public ArrayList&lt;PurchaseOrder&gt; getAllOrders() {
+<span class="fc" id="L59">        return allOrders;</span>
+    }
+
+    /**
+     * Adds a PurchaseOrder to the ordersByAnnouncement list if it passes the validation.
+     *
+     * @param order The PurchaseOrder to add.
+     * @return true if the order is added successfully, false otherwise.
+     */
+    public Boolean addOrder(PurchaseOrder order) {
+//        int index = getIndexOf(order.getAnnouncement());
+//        if (index != -1) {
+//            if (ordersByAnnouncement.get(index).getRight().add(order)) return true;
+//        }
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        if (!validateOrder(order)) return false;</span>
+//        ArrayList&lt;PurchaseOrder&gt; newList = new ArrayList&lt;PurchaseOrder&gt;();
+//        newList.add(order);
+//        return (ordersByAnnouncement.add(new Pair&lt;&gt;(order.getAnnouncement(), newList)));
+<span class="nc" id="L77">        allOrders.add(order);</span>
+<span class="nc" id="L78">        return true;</span>
+    }
+    /**
+     * Validates a PurchaseOrder by performing various checks.
+     * Checks include:
+     * - Ensuring the order amount is not greater than the property price.
+     * - Checking if the client already has an active order for the same announcement.
+     *
+     * @param order The PurchaseOrder to validate.
+     * @return true if the order is valid, false otherwise.
+     */
+    private Boolean validateOrder(PurchaseOrder order) {
+//        int index = getIndexOf(order.getAnnouncement());
+<span class="nc" id="L91">        List&lt;PurchaseOrder&gt; orders = getOrdersByAnnouncement(order.getAnnouncement());</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        if (order.getOrderAmount() &gt; order.getAnnouncement().getListedPrice()) return false;</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if (orders.size() &gt; 0) {</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">            for (PurchaseOrder offToCompare : orders) {</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">                if (offToCompare.equals(order))</span>
+<span class="nc" id="L96">                    System.out.println(&quot;There are other orders with this value, they will be considered first when selling the property.&quot;);</span>
+<span class="nc" id="L97">            }</span>
+        }
+<span class="nc" id="L99">        return true;</span>
+    }
+    /**
+     * Returns the index of the specified Announcement in the ordersByAnnouncement list.
+     *
+     * @param announcement The Announcement object to find the index of.
+     * @return The index of the Announcement in the ordersByAnnouncement list, or -1 if not found.
+     */
+//    public int getIndexOf(Announcement announcement) {
+//        for (Pair&lt;Announcement, ArrayList&lt;PurchaseOrder&gt;&gt; currPair: ordersByAnnouncement) {
+//            if (currPair.getLeft().equals(announcement)) return ordersByAnnouncement.indexOf(currPair);
+//        }
+//        return -1;
+//    }
+
+    /**
+     * This method returns a defensive (immutable) copy of the list of PurchaseOrders and their respective Announcement.
+     *
+     * @param announcement the announcement
+     * @return The list of PurchaseOrders and their respective Announcement.
+     */
+    public List&lt;PurchaseOrder&gt; getOrdersByAnnouncement(Announcement announcement) {
+        //This is a defensive copy, so that the repository cannot be modified from the outside.
+<span class="nc" id="L122">        ArrayList&lt;PurchaseOrder&gt; ordersByAnnouncement = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        for (PurchaseOrder a:allOrders) {</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">            if (a.getAnnouncement().equals(announcement)) ordersByAnnouncement.add(a);</span>
+<span class="nc" id="L125">        }</span>
+<span class="nc" id="L126">        return List.copyOf(ordersByAnnouncement);</span>
+    }
+
+    /**
+     * This method returns a defensive copy of the list of PurchaseOrders and their respective Announcement.
+     *
+     * @param announcement the announcement
+     * @return The list of PurchaseOrders and their respective Announcement.
+     */
+    public List&lt;PurchaseOrder&gt; getOrderByAnnouncement(Announcement announcement) {
+        //This is a defensive copy, so that the repository cannot be modified from the outside.
+<span class="nc" id="L137">        ArrayList&lt;PurchaseOrder&gt; ordersByAnnouncement = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        for (PurchaseOrder a:allOrders) {</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">            if (a.getAnnouncement().equals(announcement)) ordersByAnnouncement.add(a);</span>
+<span class="nc" id="L140">        }</span>
+<span class="nc" id="L141">        return ordersByAnnouncement;</span>
+    }
+
+    /**
+     * This method get the property associated to the purchase orders that where accepted.
+     *
+     * @return property of the purchase orders accepted.
+     */
+    public List&lt;Property&gt; getDealsFromOrder(){
+<span class="fc" id="L150">        List&lt;Property&gt; properties= new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L151" title="1 of 2 branches missed.">        for (PurchaseOrder order: allOrders){</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">            if (order.accepted() == 1){</span>
+<span class="nc" id="L153">                properties.add(order.getAnnouncement().getProperty());</span>
+            }
+<span class="nc" id="L155">       }</span>
+<span class="fc" id="L156">        return properties;</span>
+    }
+
+    /**
+     * This method saves in a list all the purchase orders that were accepted.
+     *
+     * @return accepted purchase orders.
+     */
+    public List&lt;PurchaseOrder&gt; getDealsPropertiesAndApartments(){
+<span class="fc" id="L165">        List&lt;PurchaseOrder&gt; p = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        for (PurchaseOrder a : allOrders) {</span>
+<span class="nc bnc" id="L167" title="All 4 branches missed.">            if(a.accepted() == 1 &amp;&amp; ((a.getAnnouncement().getProperty().getPropertyType().getDescription().equals(&quot;House&quot;)) ||</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">                    (a.getAnnouncement().getProperty().getPropertyType().getDescription().equals(&quot;Apartment&quot;)) ) ){</span>
+<span class="nc" id="L169">                p.add(a);</span>
+            }
+<span class="nc" id="L171">        }</span>
+<span class="fc" id="L172">        return p;</span>
+    }
+
+//    public List&lt;String&gt; getBedroomNumberFromDeals(){
+//        List&lt;String&gt; a = new ArrayList&lt;&gt;();
+//        List&lt;PurchaseOrder&gt; p = getDealsPropertiesAndApartments();
+//        for (PurchaseOrder order: p) {
+//            if (PropertyRepository.getInhabitableByProperty(order.getAnnouncement().getProperty()) != null){
+//                a.add(String.valueOf(PropertyRepository.getInhabitableByProperty(order.getAnnouncement().getProperty()).getBedroomNumber()));
+//            }
+//        }
+//        return a;
+//    }
+
+    /**
+     * This method creates a SimpleRegression with the area data the listed price of all deals.
+     *
+     * @return SimpleRegression based on area and listed prices.
+     */
+    public SimpleRegression getSimpleRegressionByArea(){
+<span class="nc" id="L192">        SimpleRegression s = new SimpleRegression();</span>
+<span class="nc" id="L193">        List&lt;PurchaseOrder&gt; p = getDealsPropertiesAndApartments();</span>
+<span class="nc bnc" id="L194" title="All 2 branches missed.">        for (PurchaseOrder order: p){</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">            if (PropertyRepository.getInhabitableByProperty(order.getAnnouncement().getProperty()) != null) {</span>
+<span class="nc" id="L196">                s.addData(order.getAnnouncement().getProperty().getArea(), order.getAnnouncement().getListedPrice());</span>
+            }
+<span class="nc" id="L198">        }</span>
+
+<span class="nc" id="L200">        return s;</span>
+    }
+
+    /**
+     * Get simple regression by distance to center simple regression.
+     *
+     * @return the simple regression
+     */
+    public SimpleRegression getSimpleRegressionByDistanceToCenter(){
+<span class="nc" id="L209">        SimpleRegression s = new SimpleRegression();</span>
+<span class="nc" id="L210">        List&lt;PurchaseOrder&gt; p = getDealsPropertiesAndApartments();</span>
+<span class="nc bnc" id="L211" title="All 2 branches missed.">        for (PurchaseOrder order: p){</span>
+<span class="nc bnc" id="L212" title="All 2 branches missed.">            if (PropertyRepository.getInhabitableByProperty(order.getAnnouncement().getProperty()) != null) {</span>
+<span class="nc" id="L213">                s.addData(order.getAnnouncement().getProperty().getDistanceToCentre(), order.getAnnouncement().getListedPrice());</span>
+            }
+<span class="nc" id="L215">        }</span>
+
+<span class="nc" id="L217">        return s;</span>
+    }
+
+
+    /**
+     * Get simple regression by number of bedrooms simple regression.
+     *
+     * @return the simple regression
+     */
+    public SimpleRegression getSimpleRegressionByNumberOfBedrooms(){
+<span class="nc" id="L227">        SimpleRegression s = new SimpleRegression();</span>
+<span class="nc" id="L228">        List&lt;PurchaseOrder&gt; p = getDealsPropertiesAndApartments();</span>
+<span class="nc bnc" id="L229" title="All 2 branches missed.">        for (PurchaseOrder order: p) {</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">            if (PropertyRepository.getInhabitableByProperty(order.getAnnouncement().getProperty()) != null) {</span>
+<span class="nc" id="L231">                s.addData(Objects.requireNonNull(PropertyRepository.getInhabitableByProperty(order.getAnnouncement().getProperty())).getBedroomNumber(), order.getAnnouncement().getListedPrice());</span>
+            }
+<span class="nc" id="L233">        }</span>
+
+<span class="nc" id="L235">        return s;</span>
+    }
+
+    /**
+     * Get simple regression by number of bathrooms simple regression.
+     *
+     * @return the simple regression
+     */
+    public SimpleRegression getSimpleRegressionByNumberOfBathrooms(){
+<span class="nc" id="L244">        SimpleRegression s = new SimpleRegression();</span>
+<span class="nc" id="L245">        List&lt;PurchaseOrder&gt; p = getDealsPropertiesAndApartments();</span>
+<span class="nc bnc" id="L246" title="All 2 branches missed.">        for (PurchaseOrder order: p){</span>
+<span class="nc bnc" id="L247" title="All 2 branches missed.">            if (PropertyRepository.getInhabitableByProperty(order.getAnnouncement().getProperty()) != null) {</span>
+<span class="nc" id="L248">                s.addData(Objects.requireNonNull(PropertyRepository.getInhabitableByProperty(order.getAnnouncement().getProperty())).getBathroomNumber(), order.getAnnouncement().getListedPrice());</span>
+            }
+<span class="nc" id="L250">        }</span>
+<span class="nc" id="L251">        return s;</span>
+    }
+
+    /**
+     * Get simple regression by number of parking spaces simple regression.
+     *
+     * @return the simple regression
+     */
+    public SimpleRegression getSimpleRegressionByNumberOfParkingSpaces(){
+<span class="nc" id="L260">        SimpleRegression s = new SimpleRegression();</span>
+<span class="nc" id="L261">        List&lt;PurchaseOrder&gt; p = getDealsPropertiesAndApartments();</span>
+<span class="nc bnc" id="L262" title="All 2 branches missed.">        for (PurchaseOrder order: p) {</span>
+<span class="nc bnc" id="L263" title="All 2 branches missed.">            if (PropertyRepository.getInhabitableByProperty(order.getAnnouncement().getProperty()) != null) {</span>
+<span class="nc" id="L264">                s.addData(Objects.requireNonNull(PropertyRepository.getInhabitableByProperty(order.getAnnouncement().getProperty())).getParkingSpaceNumber(), order.getAnnouncement().getListedPrice());</span>
+            }
+<span class="nc" id="L266">        }</span>
+<span class="nc" id="L267">        return s;</span>
+    }
+
+
+    /**
+     * Create email.
+     *
+     * @param sender    the sender
+     * @param recipient the recipient
+     * @param subject   the subject
+     * @param message   the message
+     */
+    public void createEmail(String sender, String recipient, String subject, String message) {
+<span class="nc" id="L280">        String fileName = sender + &quot;_&quot; + recipient + &quot;.txt&quot;;</span>
+<span class="nc" id="L281">        String fileContent = &quot;From: &quot; + sender + &quot;\n&quot; + &quot;Recipient: &quot; + recipient + &quot;\n&quot; + &quot;Subject: &quot; + subject + &quot;\n\n&quot; + message;</span>
+
+<span class="nc" id="L283">        String directory = &quot;src\\main\\resources\\passwords\\&quot;;</span>
+
+        try {
+<span class="nc" id="L286">            File file = new File(directory, fileName);</span>
+
+            FileWriter writer;
+<span class="nc bnc" id="L289" title="All 2 branches missed.">            if (file.exists()) {</span>
+<span class="nc" id="L290">                writer = new FileWriter(file, true);</span>
+            } else {
+<span class="nc" id="L292">                writer = new FileWriter(file);</span>
+            }
+
+<span class="nc" id="L295">            writer.append(&quot;\n\n&quot;);</span>
+<span class="nc" id="L296">            writer.write(fileContent);</span>
+<span class="nc" id="L297">            writer.close();</span>
+<span class="nc" id="L298">            System.out.println(&quot;=====================&quot;);</span>
+<span class="nc" id="L299">            System.out.println(&quot;E-mail was sent successfully.&quot;);</span>
+<span class="nc" id="L300">        } catch (IOException e) {</span>
+<span class="nc" id="L301">            System.out.println(&quot;An error occurred while creating the e-mail.&quot;);</span>
+<span class="nc" id="L302">            e.printStackTrace();</span>
+<span class="nc" id="L303">        }</span>
+<span class="nc" id="L304">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

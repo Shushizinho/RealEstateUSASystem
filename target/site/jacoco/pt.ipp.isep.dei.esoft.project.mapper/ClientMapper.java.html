@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClientMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.mapper</a> &gt; <span class="el_source">ClientMapper.java</span></div><h1>ClientMapper.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.mapper;
+
+import pt.ipp.isep.dei.esoft.project.domain.*;
+import pt.ipp.isep.dei.esoft.project.dto.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * The type Client mapper.
+ */
+<span class="nc" id="L12">public class ClientMapper {</span>
+    /**
+     * To dto client dto.
+     *
+     * @param client the client
+     * @return the client dto
+     */
+    public static ClientDTO toDTO(Client client) {
+<span class="nc" id="L20">        Address address = client.getAddress();</span>
+<span class="nc" id="L21">        AddressDTO addressDTO = AddressToAddressDTO(address);</span>
+
+<span class="nc" id="L23">        return new ClientDTO(client.getName(),client.getEmail(),client.getPassportNumber(),client.getPhoneNumber(),client.getTaxNumber(),addressDTO);</span>
+    }
+
+    /**
+     * To entity client.
+     *
+     * @param clientDTO the client dto
+     * @return the client
+     */
+    public static Client toEntity(ClientDTO clientDTO) {
+<span class="nc" id="L33">        AddressDTO addressDTO = clientDTO.getAddress();</span>
+
+<span class="nc" id="L35">        Address address = AdressDTOtoAdress(addressDTO);</span>
+
+<span class="nc" id="L37">        return new Client(clientDTO.getName(),clientDTO.getEmail(),clientDTO.getPassportNumber(),clientDTO.getTaxNumber(),address,clientDTO.getPhoneNumber());</span>
+    }
+
+    /**
+     * Adress dt oto adress address.
+     *
+     * @param addressDTO the address dto
+     * @return the address
+     */
+    public static Address AdressDTOtoAdress (AddressDTO addressDTO){
+<span class="nc" id="L47">        String street = addressDTO.getStreetAddress();</span>
+<span class="nc" id="L48">        String city = addressDTO.getCity();</span>
+<span class="nc" id="L49">        String state = addressDTO.getState();</span>
+<span class="nc" id="L50">        String zipCode = addressDTO.getZipCode();</span>
+<span class="nc" id="L51">        Address address = new Address(street, city, state, zipCode);</span>
+
+<span class="nc" id="L53">        return address;</span>
+
+    }
+
+    /**
+     * Address to address dto address dto.
+     *
+     * @param address the address
+     * @return the address dto
+     */
+    public static AddressDTO AddressToAddressDTO(Address address) {
+<span class="nc" id="L64">        String street = address.getStreetAddress();</span>
+<span class="nc" id="L65">        String city = address.getCity();</span>
+<span class="nc" id="L66">        String state = address.getState();</span>
+<span class="nc" id="L67">        String zipCode = address.getZipCode();</span>
+
+<span class="nc" id="L69">        AddressDTO addressDTO = new AddressDTO(street, city, state, zipCode);</span>
+
+<span class="nc" id="L71">        return addressDTO;</span>
+    }
+
+    /**
+     * Get clients dto list.
+     *
+     * @param clients the clients
+     * @return the list
+     */
+    public static List&lt;ClientDTO&gt; getClientsDTO(List&lt;Client&gt; clients){
+
+<span class="nc" id="L82">        List&lt;ClientDTO&gt; clientDTOs = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        for (Client client : clients) {</span>
+<span class="nc" id="L84">            ClientDTO clientDTO = ClientMapper.toDTO(client);</span>
+<span class="nc" id="L85">            clientDTOs.add(clientDTO);</span>
+<span class="nc" id="L86">        }</span>
+<span class="nc" id="L87">        return clientDTOs;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

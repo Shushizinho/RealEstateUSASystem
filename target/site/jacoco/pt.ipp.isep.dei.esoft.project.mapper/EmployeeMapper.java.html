@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EmployeeMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.mapper</a> &gt; <span class="el_source">EmployeeMapper.java</span></div><h1>EmployeeMapper.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.mapper;
+
+import pt.ipp.isep.dei.esoft.project.domain.*;
+import pt.ipp.isep.dei.esoft.project.dto.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * The type Employee mapper.
+ */
+<span class="nc" id="L12">public class EmployeeMapper {</span>
+
+    /**
+     * To entity employee.
+     *
+     * @param employeeDTO the employee dto
+     * @return the employee
+     */
+    public static Employee toEntity (EmployeeDTO employeeDTO){
+<span class="nc" id="L21">        String email= employeeDTO.getEmail();</span>
+<span class="nc" id="L22">        String name=employeeDTO.getName();</span>
+<span class="nc" id="L23">        Integer passportNumber= employeeDTO.getPassportNumber();</span>
+<span class="nc" id="L24">        long phoneNumber=employeeDTO.getPhoneNumber();</span>
+<span class="nc" id="L25">        String taxNumber=employeeDTO.getTaxNumber();</span>
+<span class="nc" id="L26">        Address address= addressDTOtoAddress(employeeDTO.getAddress());</span>
+<span class="nc" id="L27">        Store store= storeDTOToStore(employeeDTO.getStore());</span>
+<span class="nc" id="L28">        List&lt;Role&gt; role=roleDTOToRole(employeeDTO.getRole());</span>
+
+<span class="nc" id="L30">        return new  Employee(name, email,passportNumber,taxNumber,address,phoneNumber,store,role);</span>
+    }
+
+    /**
+     * To dto employee dto.
+     *
+     * @param employee the employee
+     * @return the employee dto
+     */
+    public static EmployeeDTO toDTO (Employee employee){
+<span class="nc" id="L40">        String email= employee.getEmail();</span>
+<span class="nc" id="L41">        String name= employee.getName();</span>
+<span class="nc" id="L42">        Integer passportNumber= employee.getPassportNumber();;</span>
+<span class="nc" id="L43">        long phoneNumber= employee.getPhoneNumber();</span>
+<span class="nc" id="L44">        String taxNumber= employee.getTaxNumber();</span>
+<span class="nc" id="L45">        AddressDTO address= addressToAddressDTO(employee.getAddress());</span>
+<span class="nc" id="L46">        List&lt;RoleDTO&gt; role=roleToRoleDTO(employee.getRole());</span>
+<span class="nc" id="L47">        StoreDTO store=storeToStoreDTO(employee.getStore());</span>
+
+<span class="nc" id="L49">        return new EmployeeDTO(email, name, passportNumber, phoneNumber,taxNumber,address,role,store);</span>
+
+    }
+
+    /**
+     * Address to address dto address dto.
+     *
+     * @param address the address
+     * @return the address dto
+     */
+    public static AddressDTO addressToAddressDTO  (Address address){
+<span class="nc" id="L60">        String street = address.getStreetAddress();</span>
+<span class="nc" id="L61">        String city = address.getCity();</span>
+<span class="nc" id="L62">        String state = address.getState();</span>
+<span class="nc" id="L63">        String zipCode = address.getZipCode();</span>
+<span class="nc" id="L64">        AddressDTO addressDTO = new AddressDTO(street, city, state, zipCode);</span>
+
+<span class="nc" id="L66">        return addressDTO;</span>
+
+    }
+
+    /**
+     * Store to store dto store dto.
+     *
+     * @param store the store
+     * @return the store dto
+     */
+    public static StoreDTO storeToStoreDTO  (Store store){
+<span class="nc" id="L77">        Integer id= Math.toIntExact(store.getId());</span>
+<span class="nc" id="L78">        String designation= store.getDesignation();</span>
+<span class="nc" id="L79">        String email=store.getEmail();</span>
+<span class="nc" id="L80">        long phoneNumber= store.getPhoneNumber();</span>
+<span class="nc" id="L81">        AddressDTO addressDTO = addressToAddressDTO(store.getAddress());</span>
+
+<span class="nc" id="L83">        return new StoreDTO(id,designation,addressDTO,email,phoneNumber);</span>
+
+    }
+
+    /**
+     * Address dt oto address address.
+     *
+     * @param addressDTO the address dto
+     * @return the address
+     */
+    public static Address addressDTOtoAddress (AddressDTO addressDTO){
+<span class="nc" id="L94">        String street = addressDTO.getStreetAddress();</span>
+<span class="nc" id="L95">        String city = addressDTO.getCity();</span>
+<span class="nc" id="L96">        String state = addressDTO.getState();</span>
+<span class="nc" id="L97">        String zipCode = addressDTO.getZipCode();</span>
+<span class="nc" id="L98">        Address address = new Address(street, city, state, zipCode);</span>
+
+<span class="nc" id="L100">        return address;</span>
+
+    }
+
+    /**
+     * Addressto address dto address dto.
+     *
+     * @param address the address
+     * @return the address dto
+     */
+    public static AddressDTO addresstoAddressDTO(Address address) {
+<span class="nc" id="L111">        String street = address.getStreetAddress();</span>
+<span class="nc" id="L112">        String city = address.getCity();</span>
+<span class="nc" id="L113">        String state = address.getState();</span>
+<span class="nc" id="L114">        String zipCode = address.getZipCode();</span>
+
+<span class="nc" id="L116">        AddressDTO addressDTO = new AddressDTO(street, city, state, zipCode);</span>
+
+<span class="nc" id="L118">        return addressDTO;</span>
+    }
+
+
+    /**
+     * Store dto to store store.
+     *
+     * @param storeDTO the store dto
+     * @return the store
+     */
+    public static Store storeDTOToStore (StoreDTO storeDTO){
+<span class="nc" id="L129">        Integer id= storeDTO.getId();</span>
+<span class="nc" id="L130">        String designation= storeDTO.getDesignation();</span>
+<span class="nc" id="L131">        String email=storeDTO.getEmail();</span>
+<span class="nc" id="L132">        long phoneNumber= storeDTO.getPhoneNumber();</span>
+<span class="nc" id="L133">        Address address = addressDTOtoAddress(storeDTO.getAddress());</span>
+
+<span class="nc" id="L135">        return new Store(id,designation,email,address,phoneNumber);</span>
+
+    }
+
+    /**
+     * Role to role dto list.
+     *
+     * @param roles the roles
+     * @return the list
+     */
+    public static List&lt;RoleDTO&gt; roleToRoleDTO(List&lt;Role&gt; roles) {
+<span class="nc" id="L146">        List&lt;RoleDTO&gt; roleDTOs = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        for (Role role : roles) {</span>
+<span class="nc" id="L149">            Integer id = role.getId();</span>
+<span class="nc" id="L150">            String description = role.getDescription();</span>
+<span class="nc" id="L151">            RoleDTO roleDTO = new RoleDTO(id, description);</span>
+<span class="nc" id="L152">            roleDTOs.add(roleDTO);</span>
+<span class="nc" id="L153">        }</span>
+
+<span class="nc" id="L155">        return roleDTOs;</span>
+    }
+
+    /**
+     * Role dto to role list.
+     *
+     * @param roleDTOList the role dto list
+     * @return the list
+     */
+    public static List&lt;Role&gt; roleDTOToRole(List&lt;RoleDTO&gt; roleDTOList) {
+<span class="nc" id="L165">        List&lt;Role&gt; roleList = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L167" title="All 2 branches missed.">        for (RoleDTO roleDTO : roleDTOList) {</span>
+<span class="nc" id="L168">            Integer id = roleDTO.getId();</span>
+<span class="nc" id="L169">            String description = roleDTO.getDescription();</span>
+<span class="nc" id="L170">            Role role = new Role(id, description);</span>
+<span class="nc" id="L171">            roleList.add(role);</span>
+<span class="nc" id="L172">        }</span>
+
+<span class="nc" id="L174">        return roleList;</span>
+    }
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

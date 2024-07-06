@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Employee.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.domain</a> &gt; <span class="el_source">Employee.java</span></div><h1>Employee.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.domain;
+
+import pt.ipp.isep.dei.esoft.project.application.controller.authorization.AuthenticationController;
+import pt.ipp.isep.dei.esoft.project.repository.*;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+/**
+ * Represents an employee in the company.
+ */
+public class Employee implements Serializable {
+
+    private Person person;
+    private List&lt;Role&gt; role;
+    private Store store;
+
+    /**
+     * The Employee repository.
+     */
+<span class="pc" id="L24">    EmployeeRepository employeeRepository = Repositories.getInstance().getEmployeeRepository();</span>
+
+
+    /**
+     * Returns a list of roles associated with this object.
+     *
+     * @return a list of roles
+     */
+    public List&lt;Role&gt; getRole() {
+<span class="nc" id="L33">        return role;</span>
+    }
+
+    /**
+     * Returns whether a role with the specified description exists in the list of roles associated with this object.
+     *
+     * @param description the description of the role to search for
+     * @return true if a role with the specified description exists, false otherwise
+     */
+    public boolean getRolesbyDescription(String description) {
+
+<span class="nc bnc" id="L44" title="All 2 branches missed.">        for (Role role : this.role) {</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">            if(role.getDescription().equals(description)){</span>
+<span class="nc" id="L46">                return true;</span>
+            };
+<span class="nc" id="L48">        }</span>
+<span class="nc" id="L49">        return false;</span>
+    }
+
+    /**
+     * Constructs a new Employee object with the specified properties.
+     *
+     * @param name           the name of the employee
+     * @param email          the email address of the employee
+     * @param passportNumber the passport number of the employee
+     * @param taxNumber      the tax number of the employee
+     * @param address        the address of the employee
+     * @param phoneNumber    the phone number of the employee
+     * @param store          the store that the employee works in
+     * @param role           a list of roles associated with the employee
+     */
+<span class="fc" id="L64">    public Employee(String name, String email, Integer passportNumber, String taxNumber,Address address, long  phoneNumber, Store store, List&lt;Role&gt; role ) {</span>
+<span class="fc" id="L65">        this.person = new Person(name,email,passportNumber,taxNumber,address,phoneNumber);</span>
+<span class="fc" id="L66">        this.store = store;</span>
+<span class="fc" id="L67">        this.role = role;</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (role.contains(new Role(2,AuthenticationController.ROLE_AGENT))) {</span>
+<span class="fc" id="L69">            Agent agent = new Agent(this);</span>
+<span class="fc" id="L70">            employeeRepository.addAgent(agent);</span>
+        }
+<span class="fc" id="L72">    }</span>
+
+    /**
+     * Instantiates a new Employee.
+     */
+<span class="nc" id="L77">    public Employee() {</span>
+
+        // Construtor sem argumentos
+<span class="nc" id="L80">    }</span>
+
+    /**
+     * Returns the Agent object associated with this instance.
+     *
+     * @return the Agent object.
+     */
+    public Agent getAssociatedAgent() {
+<span class="fc" id="L88">        return employeeRepository.getAgentObject(this);</span>
+    }
+
+    /**
+     * Compares the specified Role object with the Role objects associated with this Employee object for equality.
+     *
+     * @param role the Role object to compare
+     * @return true if the Role object is equal to any of the Role objects associated with this Employee object, false otherwise
+     */
+    public boolean compareRole(Role role) {
+<span class="nc" id="L98">        return this.role.contains(role);</span>
+    }
+
+    /**
+     * Compares the specified Store object with the Store object associated with this Employee object for equality.
+     *
+     * @param store the Store object to compare
+     * @return true if the Store object is equal to the Store object associated with this Employee object, false otherwise
+     */
+    public boolean compareStore(Store store) {
+<span class="nc" id="L108">        return this.store.equals(store);</span>
+    }
+
+    /**
+     * Compares this Employee object with the specified Object for equality. Returns true if the specified object is an
+     * instance of the Employee class and has the same email address as this Employee object.
+     *
+     * @param o the object to compare with this Employee object
+     * @return true if the specified object is equal to this Employee object, false otherwise
+     */
+
+    @Override
+    public boolean equals(Object o) {
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        if (this == o) {</span>
+<span class="fc" id="L122">            return true;</span>
+        }
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">        if (!(o instanceof Employee)) {</span>
+<span class="nc" id="L125">            return false;</span>
+        }
+<span class="fc" id="L127">        Employee employee = (Employee) o;</span>
+<span class="fc" id="L128">        return this.getEmail().equals(employee.getEmail());</span>
+    }
+
+    /**
+     * Returns a hash code value for this Employee object. The hash code is based on the email address of the Employee.
+     *
+     * @return a hash code value for this Employee object
+     */
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L139">        return Objects.hash(this.getEmail());</span>
+    }
+
+    /**
+     * Checks whether this Employee object has the specified email address.
+     *
+     * @param email the email address to check
+     * @return true if this Employee object has the specified email address, false otherwise
+     */
+    public boolean hasEmail(String email) {
+<span class="fc" id="L149">        return this.getEmail().equals(email);</span>
+    }
+
+    /**
+     * Creates and returns a new Employee object that is a copy of this Employee object. The new object has the same name,
+     * email address, passport number, tax number, address, phone number, store, and roles as this Employee object.
+     *
+     * @return a new Employee object that is a copy of this Employee object
+     */
+
+    public Employee clone() {
+<span class="fc" id="L160">        return new Employee(this.getName(),this.getEmail(),this.getPassportNumber(),this.getTaxNumber(),this.getAddress(),this.getPhoneNumber(),this.store,this.role);</span>
+    }
+
+
+    @Override
+    public String toString() {
+<span class="nc" id="L166">        return &quot; Name: &quot;+ getName() + &quot; - Email: &quot;+ getEmail();</span>
+    }
+
+    /**
+     * Sets the role(s) for this object.
+     *
+     * @param role The list of Role objects to be assigned.
+     */
+    public void setRole(List&lt;Role&gt; role) {
+<span class="nc" id="L175">        this.role = role;</span>
+<span class="nc" id="L176">    }</span>
+
+    /**
+     * Retrieves the Store associated with this object.*
+     *
+     * @return The Store associated with this object.
+     */
+    public Store getStore() {
+<span class="nc" id="L184">        return store;</span>
+    }
+
+    /**
+     * Sets the Store associated with this object.*
+     *
+     * @param store The Store to be associated with this object.
+     */
+    public void setStore(Store store) {
+<span class="nc" id="L193">        this.store = store;</span>
+<span class="nc" id="L194">    }</span>
+
+    /**
+     * This method returns the name of the current instance.
+     *
+     * @return the Employee's name.
+     */
+    public String getName() {
+<span class="fc" id="L202">        return this.person.getName();</span>
+    }
+
+    /**
+     * This method returns the email of the current instance.
+     *
+     * @return the Employee's email.
+     */
+    public String getEmail(){
+<span class="fc" id="L211">        return this.person.getEmail();</span>
+    }
+
+    /**
+     * This method returns the passport number of the current instance.
+     *
+     * @return the Employee's passport number.
+     */
+    public Integer getPassportNumber() {
+<span class="fc" id="L220">        return this.person.getPassportNumber();</span>
+    }
+
+    /**
+     * This method returns the phone number of the current instance.
+     *
+     * @return the Employee's phone number.
+     */
+    public long getPhoneNumber() {
+<span class="fc" id="L229">        return this.person.getPhoneNumber();</span>
+    }
+
+    /**
+     * This method returns the Address of the current instance.
+     *
+     * @return the Employee's address.
+     */
+    public Address getAddress() {
+<span class="fc" id="L238">        return this.person.getAddress();</span>
+    }
+
+    /**
+     * This method returns the tax number of the current instance.
+     *
+     * @return the Employee's tax number.
+     */
+    public String getTaxNumber() {
+<span class="fc" id="L247">        return this.person.getTaxNumber();</span>
+    }
+
+    /**
+     * Gets person.
+     *
+     * @return the person
+     */
+    public Person getPerson() {
+<span class="nc" id="L256">        return person;</span>
+    }
+
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RegisterStoreController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.application.controller</a> &gt; <span class="el_source">RegisterStoreController.java</span></div><h1>RegisterStoreController.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.application.controller;
+
+import pt.ipp.isep.dei.esoft.project.application.session.ApplicationSession;
+import pt.ipp.isep.dei.esoft.project.application.session.UserSession;
+import pt.ipp.isep.dei.esoft.project.domain.*;
+import pt.ipp.isep.dei.esoft.project.repository.*;
+
+import java.util.List;
+import java.util.Optional;
+
+
+/**
+ * The type Register store controller.
+ */
+public class RegisterStoreController {
+
+<span class="pc" id="L17">    private EmployeeRepository employeeRepository = null;</span>
+<span class="pc" id="L18">    private StoreRepository storeRepository = null;</span>
+<span class="pc" id="L19">    private AuthenticationRepository authenticationRepository = null;</span>
+<span class="pc" id="L20">    private UserSession currentSession = null;</span>
+
+    /**
+     * Instantiates a new RegisterStoreController.
+     */
+<span class="fc" id="L25">    public RegisterStoreController(){</span>
+<span class="fc" id="L26">        getEmployeeRepository();</span>
+<span class="fc" id="L27">        getStoreRepository();</span>
+<span class="fc" id="L28">        getAuthenticationRepository();</span>
+<span class="fc" id="L29">    }</span>
+
+    /**
+     * Instantiates a new RegisterStoreController with the given employee and authentication repositories.
+     *
+     * @param employeeRepository       the employee repository
+     * @param authenticationRepository the authentication repository
+     */
+<span class="nc" id="L37">    public RegisterStoreController(EmployeeRepository employeeRepository, AuthenticationRepository authenticationRepository){</span>
+
+<span class="nc" id="L39">        this.employeeRepository = employeeRepository;</span>
+<span class="nc" id="L40">        this.authenticationRepository = this.authenticationRepository;</span>
+
+<span class="nc" id="L42">    }</span>
+
+    /**
+     * Retrieves the EmployeeRepository instance.
+     * If the repository is not yet initialized, it initializes it using the Repositories singleton.
+     *
+     * @return The EmployeeRepository instance.
+     */
+    private EmployeeRepository getEmployeeRepository(){
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        if(employeeRepository == null){</span>
+<span class="fc" id="L52">            Repositories repositories = Repositories.getInstance();</span>
+<span class="fc" id="L53">            employeeRepository = repositories.getEmployeeRepository();</span>
+        }
+<span class="fc" id="L55">        return employeeRepository;</span>
+    }
+
+    /**
+     * Retrieves the StoreRepository instance.
+     * If the repository is not yet initialized, it initializes it using the Repositories singleton.
+     *
+     * @return The StoreRepository instance.
+     */
+    private StoreRepository getStoreRepository(){
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        if(storeRepository == null){</span>
+<span class="fc" id="L66">            Repositories repositories = Repositories.getInstance();</span>
+<span class="fc" id="L67">            storeRepository = repositories.getStoreRepository();</span>
+        }
+<span class="fc" id="L69">        return storeRepository;</span>
+    }
+    /**
+     * Retrieves the AuthenticationRepository instance.
+     * If the repository is not yet initialized, it initializes it using the Repositories singleton.
+     *
+     * @return The AuthenticationRepository instance.
+     */
+
+    private AuthenticationRepository getAuthenticationRepository() {
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">        if (authenticationRepository == null) {</span>
+<span class="fc" id="L80">            Repositories repositories = Repositories.getInstance();</span>
+<span class="fc" id="L81">            authenticationRepository = repositories.getAuthenticationRepository();</span>
+        }
+<span class="fc" id="L83">        return authenticationRepository;</span>
+    }
+
+    /**
+     * Registers a new Store with the provided information.
+     *
+     * @param id                  the id of the Store
+     * @param designation         the designation of the Store
+     * @param email               the email of the Store
+     * @param storeAddress        the address of the store
+     * @param phoneNumber         the phone number of the Store
+     * @param emailToStoreManager the role of the Store Manager (email que será do novo Store Manager)
+     * @return an Optional containing the new Store, or empty if the registration fails
+     */
+    public Optional&lt;Store&gt; registerStore(int id, String designation, String email, Address storeAddress, long phoneNumber, String emailToStoreManager){
+
+//        Employee employee = getEmployeByEmail(email);
+<span class="fc" id="L100">        int br = 0;</span>
+//
+//        for ( Store store2 : storeRepository.getStores()) {
+//            if(store2.hasEmail(email)){
+//                br = 1;
+//            }
+//        }
+
+<span class="fc" id="L108">        Optional&lt;Store&gt; store = Optional.empty();</span>
+
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        if (br == 0) {   store = storeRepository.createStore( id,  designation,  email, storeAddress, phoneNumber); }</span>
+
+//        employee.setStore(store);
+
+
+<span class="fc" id="L115">        return store;</span>
+    }
+
+    /**
+     * Gets a list of employees without the store manager role.
+     *
+     * @return the list of employees without the store manager role.
+     */
+    public List&lt;Employee&gt; getEmployeeToStoreManager() {
+<span class="nc" id="L124">        EmployeeRepository employeeRepository = getEmployeeRepository();</span>
+
+<span class="nc" id="L126">        return employeeRepository.getEmployeeToStoreManagers();</span>
+    }
+
+    /**
+     * Gets a list of employees with the store manager role.
+     *
+     * @param email the email
+     * @return the list of employees with the store manager role.
+     */
+//    public List&lt;Employee&gt; getStoreManagers() {
+//        EmployeeRepository employeeRepository = getEmployeeRepository();
+//        List&lt;Employee&gt; storeManagers = getEmployeeRepository().getStoreManagers();
+//        return storeManagers;
+//    }
+    public Employee getEmployeByEmail(String email) {
+<span class="fc" id="L141">        EmployeeRepository employeeRepository = getEmployeeRepository();</span>
+
+<span class="fc" id="L143">        return employeeRepository.getEmployeeByEmail(email);</span>
+    }
+
+
+
+    /**
+     * Gets the Employee associated with the current session.
+     *
+     * @return the Employee associated with the current session
+     */
+    private Employee getEmployeeFromSession() {
+<span class="nc bnc" id="L154" title="All 2 branches missed.">        if (currentSession == null) {</span>
+<span class="nc" id="L155">            ApplicationSession appSession = ApplicationSession.getInstance();</span>
+
+<span class="nc" id="L157">            currentSession = appSession.getCurrentSession();</span>
+        }
+<span class="nc" id="L159">        String email = currentSession.getUserEmail();</span>
+<span class="nc" id="L160">        EmployeeRepository employeeRepository = getEmployeeRepository();</span>
+<span class="nc" id="L161">        return employeeRepository.getEmployeeByEmail(email);</span>
+    }
+
+    /**
+     * Returns a list of all the stores in the StoreRepository.
+     *
+     * @return A list of all the stores in the StoreRepository.
+     */
+    public List&lt;Store&gt; getStore() {
+<span class="nc" id="L170">        StoreRepository storeRepository = getStoreRepository();</span>
+<span class="nc" id="L171">        return storeRepository.getStores();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

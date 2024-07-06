@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Property.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.domain</a> &gt; <span class="el_source">Property.java</span></div><h1>Property.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.domain;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * The type Property.
+ */
+/* Represents a general Property.
+ */
+public class Property implements Serializable {
+    private double price;
+    private double area;
+    private Address address;
+    private double distanceToCentre;
+    private List&lt;Photograph&gt; photographs;
+    private PropertyType propertyType;
+    private Store store;
+    private DateTime date;
+
+    private Client client;
+
+//    private Agent agent;
+//    private Client client;
+
+
+    /**
+     * Instantiates a new Property.
+     *
+     * @param price            the price
+     * @param area             the area
+     * @param address          the address
+     * @param distanceToCentre the distance to centre
+     * @param photographs      the photographs
+     * @param propertyType     the property type
+     * @param store            the store
+     * @param client           the client
+     * @param date             the date
+     */
+    public Property (double price, double area, Address address, double distanceToCentre, List&lt;Photograph&gt; photographs,
+<span class="fc" id="L42">                     PropertyType propertyType, Store store, Client client, DateTime date) {</span>
+<span class="fc" id="L43">        this.price = price;</span>
+<span class="fc" id="L44">        this.area = area;</span>
+<span class="fc" id="L45">        this.address = address;</span>
+<span class="fc" id="L46">        this.distanceToCentre = distanceToCentre;</span>
+<span class="fc" id="L47">        this.photographs = photographs;</span>
+<span class="fc" id="L48">        this.propertyType = propertyType;</span>
+<span class="fc" id="L49">        this.store = store;</span>
+<span class="fc" id="L50">        this.client = client;</span>
+<span class="fc" id="L51">        this.date = date;</span>
+//        this.agent = agent;
+//        this.client = client;
+<span class="fc" id="L54">    }</span>
+
+    /**
+     * Instantiates a new Property.
+     *
+     * @param price            the price
+     * @param area             the area
+     * @param address          the address
+     * @param distanceToCentre the distance to centre
+     * @param photographs      the photographs
+     * @param propertyType     the property type
+     * @param client           the client
+     * @param date             the date
+     */
+    public Property(float price, float area, Address address, float distanceToCentre, List&lt;Photograph&gt; photographs,
+<span class="fc" id="L69">                    PropertyType propertyType, Client client, DateTime date) {</span>
+<span class="fc" id="L70">        this.price = price;</span>
+<span class="fc" id="L71">        this.area = area;</span>
+<span class="fc" id="L72">        this.address = address;</span>
+<span class="fc" id="L73">        this.distanceToCentre = distanceToCentre;</span>
+<span class="fc" id="L74">        this.photographs = photographs;</span>
+<span class="fc" id="L75">        this.propertyType = propertyType;</span>
+<span class="fc" id="L76">        this.client = client;</span>
+<span class="fc" id="L77">        this.date = date;</span>
+<span class="fc" id="L78">    }</span>
+
+
+    /**
+     * Instantiates a new Property.
+     *
+     * @param price            the price
+     * @param area             the area
+     * @param address          the address
+     * @param distanceToCentre the distance to centre
+     * @param photographs      the photographs
+     * @param propertyType     the property type
+     * @param store            the store
+     * @param date             the date
+     * @param client           the client
+     */
+<span class="nc" id="L94">    public Property(double price, double area, Address address, double distanceToCentre, List&lt;Photograph&gt; photographs, PropertyType propertyType, Store store, DateTime date, Client client) {</span>
+<span class="nc" id="L95">        this.price = price;</span>
+<span class="nc" id="L96">        this.area = area;</span>
+<span class="nc" id="L97">        this.address = address;</span>
+<span class="nc" id="L98">        this.distanceToCentre = distanceToCentre;</span>
+<span class="nc" id="L99">        this.photographs = photographs;</span>
+<span class="nc" id="L100">        this.propertyType = propertyType;</span>
+<span class="nc" id="L101">        this.store = store;</span>
+<span class="nc" id="L102">        this.date = date;</span>
+<span class="nc" id="L103">        this.client = client;</span>
+<span class="nc" id="L104">    }</span>
+
+    /**
+     * This method returns the State property of the Address associated with the current Property.
+     *
+     * @return the Property's Address's State.
+     */
+    public String getState(){
+<span class="nc" id="L112">        return this.address.getState();</span>
+    }
+
+    /**
+     * This method returns the City property of the Address associated with the current Property.
+     *
+     * @return the Property's Address's City.
+     */
+    public String getCity(){
+<span class="fc" id="L121">        return this.address.getCity();</span>
+    }
+
+    /**
+     * This method returns the date property of the created date with the current Property.
+     *
+     * @return the Property's date.
+     */
+    public DateTime getDate(){
+<span class="fc" id="L130">         return date;</span>
+     }
+
+
+
+
+     /**
+    /**
+     * This method returns the Price of the current Property.
+     *
+     * @return      the Property's Price.
+     */
+
+    public double getPrice() {
+<span class="fc" id="L144">        return price;</span>
+    }
+
+    /**
+     * This method returns the Area of the current Property.
+     *
+     * @return      the Property's Area.
+     */
+
+    public double getArea() {
+<span class="fc" id="L154">        return area;</span>
+    }
+
+    /**
+     * This method returns the complete Address of the current Property.
+     *
+     * @return      the Property's Address.
+     */
+
+    public Address getAddress() {
+<span class="fc" id="L164">        return address;</span>
+    }
+
+    /**
+     * This method returns the distance of the current Property to the City Centre.
+     *
+     * @return      the Property's Distance to the City Centre.
+     */
+
+    public double getDistanceToCentre() {
+<span class="fc" id="L174">        return distanceToCentre;</span>
+    }
+
+    /**
+     * This method returns the list of Photographs associated with the current Property.
+     *
+     * @return      the Property's List of Photographs.
+     */
+
+    public List&lt;Photograph&gt; getPhotographs() {
+<span class="fc" id="L184">        return photographs;</span>
+    }
+
+    /**
+     * This method returns the type of the current Property.
+     *
+     * @return      the Property's Property Type.
+     */
+
+    public PropertyType getPropertyType() {
+<span class="fc" id="L194">        return propertyType;</span>
+    }
+
+    /**
+     * This method returns the Store in which the current Property is listed.
+     *
+     * @return      the Property's Store.
+     */
+
+    public Store getStore() {
+<span class="fc" id="L204">        return store;</span>
+    }
+
+    /**
+     * This method returns the client of the current Property.
+     *
+     * @return      the Property's client.
+     */
+
+    public Client getClient() {
+<span class="fc" id="L214">        return client;</span>
+    }
+
+    /**
+     * This method compares the Store in which the current Property is listed with a specific Store object.
+     *
+     * @param store a Store Object to be compared with the Property's Store
+     * @return      the result of the comparison between the Property's Store and the wanted Store
+     */
+    public boolean compareStore(Store store) {
+<span class="fc" id="L224">        return this.store.equals(store);</span>
+    }
+
+    public Boolean priceInRange(Pair&lt;Integer,Integer&gt; priceRange) {
+<span class="nc bnc" id="L228" title="All 2 branches missed.">        if (priceRange == null) {</span>
+<span class="nc" id="L229">            return false;</span>
+        }
+<span class="nc bnc" id="L231" title="All 4 branches missed.">        return (this.price &gt; priceRange.getLeft() &amp;&amp; this.price &lt; priceRange.getRight());</span>
+    }
+
+
+
+
+
+    /**
+     * Checks if the given object is equal to this Property object
+     * @param o the object to be compared with this Property object
+     * @return true if the given object is equal to this Property object, false otherwise
+     */
+    public boolean equals(Object o) {
+<span class="fc bfc" id="L244" title="All 2 branches covered.">        if (this == o) {</span>
+<span class="fc" id="L245">            return true;</span>
+        }
+<span class="pc bpc" id="L247" title="1 of 2 branches missed.">        if (!(o instanceof Property)) {</span>
+<span class="nc" id="L248">            return false;</span>
+        }
+<span class="fc" id="L250">        Property property = (Property) o;</span>
+<span class="fc bfc" id="L251" title="All 2 branches covered.">        Boolean areaEqual = area == property.area;</span>
+<span class="fc" id="L252">        Boolean addressEqual = property.address.equals(address);</span>
+<span class="fc bfc" id="L253" title="All 2 branches covered.">        Boolean distanceToCentreEqual = distanceToCentre == property.distanceToCentre;</span>
+<span class="fc" id="L254">        Boolean propertyTypeEqual = property.propertyType.equals(propertyType);</span>
+//        Boolean dateEqual = date.equalsDate(property.date);
+<span class="pc bpc" id="L256" title="1 of 8 branches missed.">        return ( areaEqual &amp;&amp; addressEqual &amp;&amp; distanceToCentreEqual &amp;&amp; propertyTypeEqual);</span>
+    }
+    /**
+     * Returns a hash code value for the Property object.
+     *  The hash code is based on the values of the area, address, distanceToCentre and propertyType fields.
+     *
+     * @return the hash code value for this Property object
+     */
+    @Override
+    public int hashCode() {
+<span class="fc" id="L266">        return Objects.hash(area, address, distanceToCentre, propertyType);</span>
+    }
+    /**
+     * Clone method.
+     *
+     * @return A clone of the current Property.
+     */
+    public Property clone() {
+<span class="fc" id="L274">        return new Property(</span>
+        this.price,
+        this.area,
+        this.address,
+        this.distanceToCentre,
+        this.photographs,
+        this.propertyType,
+        this.store,
+        this.client,
+        this.date);
+//        this.agent = agent,
+//        this.client = client);
+    }
+
+    /**
+     * This method returns a description of the Property attributes.
+     *
+     * @return A formated string composed of the Property's attributes
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L295">         return String.format(&quot;%s - $%.2f - %.2f ft\u00b2 - %s - %s&quot;, this.propertyType.toString(), this.price, this.area, this.address.toString(), this.store.getDesignation());</span>
+    }
+
+    public String toStringAll() {
+<span class="nc" id="L299">        return String.format(&quot;\n Price: %.2f;&quot; + &quot;\n Area: %.2f;&quot;+ &quot;\n Address: %s;&quot;+ &quot;\n Distance to Center: %.2f;&quot; +</span>
+<span class="nc" id="L300">                        &quot; %s;&quot; + &quot;\n Store: %s&quot;+ &quot;\n Client: %s&quot; + &quot;\n Date: %s&quot;,this.price, this.area, address.toString(), this.distanceToCentre,</span>
+<span class="nc" id="L301">                propertyType.toString(), store.toString() , client.toString(), this.date.toString());</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

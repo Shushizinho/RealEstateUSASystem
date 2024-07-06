@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApartmentDTO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.dto</a> &gt; <span class="el_source">ApartmentDTO.java</span></div><h1>ApartmentDTO.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.dto;
+
+import java.util.List;
+
+/**
+ * The type Apartment dto.
+ */
+public class ApartmentDTO {
+
+
+    private InhabitableDTO inhabitable;
+
+
+    /**
+     * Instantiates a new Apartment dto.
+     *
+     * @param price              the price
+     * @param area               the area
+     * @param address            the address
+     * @param distanceToCentre   the distance to centre
+     * @param photographs        the photographs
+     * @param bedroomNumber      the bedroom number
+     * @param bathroomNumber     the bathroom number
+     * @param parkingSpaceNumber the parking space number
+     * @param equipmentList      the equipment list
+     * @param propertyType       the property type
+     * @param store              the store
+     * @param client             the client
+     * @param dateFormatted      the date formatted
+     */
+    public ApartmentDTO(double price, double area, AddressDTO address, double distanceToCentre, List&lt;PhotographDTO&gt; photographs,int bedroomNumber, int bathroomNumber, int parkingSpaceNumber, List&lt;String&gt; equipmentList,
+<span class="nc" id="L32">                     PropertyTypeDTO propertyType, StoreDTO store, ClientDTO client, DateTimeDTO dateFormatted) {</span>
+<span class="nc" id="L33">        this.inhabitable= new InhabitableDTO(price, area, address, distanceToCentre, photographs, bedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList, propertyType, store, client, dateFormatted);</span>
+<span class="nc" id="L34">    }</span>
+
+    /**
+     * Instantiates a new Apartment dto.
+     *
+     * @param inhabitable the inhabitable
+     */
+<span class="nc" id="L41">    public ApartmentDTO(InhabitableDTO inhabitable) {</span>
+<span class="nc" id="L42">        this.inhabitable = inhabitable;</span>
+<span class="nc" id="L43">    }</span>
+
+    /**
+     * Gets inhabitable.
+     *
+     * @return the inhabitable
+     */
+    public InhabitableDTO getInhabitable() {
+<span class="nc" id="L51">        return inhabitable;</span>
+    }
+
+
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

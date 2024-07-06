@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClientDTO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.dto</a> &gt; <span class="el_source">ClientDTO.java</span></div><h1>ClientDTO.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.dto;
+
+import pt.ipp.isep.dei.esoft.project.domain.Person;
+import pt.ipp.isep.dei.esoft.project.dto.AddressDTO;
+import pt.ipp.isep.dei.esoft.project.domain.Address;
+import pt.ipp.isep.dei.esoft.project.dto.PersonDTO;
+
+/**
+ * The type Client dto.
+ */
+public class ClientDTO  {
+
+    private PersonDTO personDTO;
+
+    /**
+     * Constructor for creating a public ClientDTO object.
+     *
+     * @param email          The email address of the client.
+     * @param name           The name of the client.
+     * @param passportNumber The passport number of the client.
+     * @param phoneNumber    The phone number of the client.
+     * @param taxNumber      The tax number of the client.
+     * @param address        The address of the client.
+     */
+
+
+<span class="fc" id="L27">    public ClientDTO(String name, String email, Integer passportNumber, long phoneNumber, String taxNumber, AddressDTO address) {</span>
+<span class="fc" id="L28">        this.personDTO = new PersonDTO(name,email,passportNumber,phoneNumber,taxNumber,address);</span>
+<span class="fc" id="L29">    }</span>
+
+    /**
+     * Gets name.
+     *
+     * @return the name
+     */
+    public String getName() {
+<span class="fc" id="L37">        return this.personDTO.getName();</span>
+    }
+
+    /**
+     * This method returns the email of the current instance.
+     *
+     * @return the Client's email.
+     */
+    public String getEmail(){
+<span class="fc" id="L46">        return this.personDTO.getEmail();</span>
+    }
+
+    /**
+     * This method returns the passport number of the current instance.
+     *
+     * @return the Client's passport number.
+     */
+    public Integer getPassportNumber() {
+<span class="fc" id="L55">        return this.personDTO.getPassportNumber();</span>
+    }
+
+    /**
+     * This method returns the phone number of the current instance.
+     *
+     * @return the Client's phone number.
+     */
+    public long getPhoneNumber() {
+<span class="fc" id="L64">        return this.personDTO.getPhoneNumber();</span>
+    }
+
+    /**
+     * This method returns the Address of the current instance.
+     *
+     * @return the Client's address.
+     */
+    public AddressDTO getAddress() {
+<span class="fc" id="L73">        return this.personDTO.getAddress();</span>
+    }
+
+    /**
+     * This method returns the tax number of the current instance.
+     *
+     * @return the Client's tax number.
+     */
+    public String getTaxNumber() {
+<span class="fc" id="L82">        return this.personDTO.getTaxNumber();</span>
+    }
+
+    /**
+     * Gets personDTO.
+     *
+     * @return the personDTO
+     */
+    public PersonDTO getPerson() {
+<span class="nc" id="L91">        return personDTO;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L96">        return &quot; Name: &quot;+ getName() + &quot; - Email: &quot;+ getEmail();</span>
+    }
+
+
+
+
+
+
+
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SignController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.application.controller</a> &gt; <span class="el_source">SignController.java</span></div><h1>SignController.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.application.controller;
+
+import pt.ipp.isep.dei.esoft.project.domain.*;
+import pt.ipp.isep.dei.esoft.project.repository.*;
+
+import java.util.List;
+import java.util.Optional;
+
+
+/**
+ * The SignController provides methods for signing a new client.
+ */
+public class SignController {
+
+
+<span class="pc" id="L16">    private ClientRepository clientRepository = null;</span>
+
+    /**
+     * Constructs a new SignController and initializes the necessary repositories.
+     */
+<span class="fc" id="L21">    public SignController() {</span>
+<span class="fc" id="L22">        getClientRepository();</span>
+<span class="fc" id="L23">    }</span>
+
+    /**
+     * Constructs a new SignController with the given repository.
+     *
+     * @param clientRepository The repository for managing clients.
+     */
+<span class="nc" id="L30">    public SignController(ClientRepository clientRepository) {</span>
+
+<span class="nc" id="L32">        this.clientRepository = clientRepository;</span>
+<span class="nc" id="L33">    }</span>
+
+
+    /**
+     * Returns the EmployeeRepository instance, initializing it if necessary.
+     *
+     * @return The EmployeeRepository instance.
+     */
+
+    private ClientRepository getClientRepository() {
+<span class="pc bpc" id="L43" title="1 of 2 branches missed.">        if (clientRepository == null) {</span>
+<span class="fc" id="L44">            Repositories repositories = Repositories.getInstance();</span>
+
+            //Get the EmployeeRepository
+<span class="fc" id="L47">            clientRepository = repositories.getClientRepository();</span>
+        }
+<span class="fc" id="L49">        return clientRepository;</span>
+
+    }
+
+
+    /**
+     * Creates a new client with the given name, email, passport number, tax number, address, phone number,
+     * and password, and adds it to the client repository. If a client with the same email address already exists
+     * in the repository, no client is created and an empty optional is returned instead.
+     *
+     * @param name           the name of the client
+     * @param email          the email address of the client
+     * @param passportNumber the passport number of the client
+     * @param taxNumber      the tax number of the client
+     * @param address        the address of the client
+     * @param phoneNumber    the phone number of the client
+     * @param password       the password of the client
+     * @return an optional containing the newly created client, or an empty optional if a client with the same         email address already exists in the repository
+     */
+    public Optional&lt;Client&gt; create(String name, String email, int passportNumber, String taxNumber, Address address, long phoneNumber, String password) {
+
+<span class="fc" id="L70">        int br = 0;</span>
+
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        for ( Client cl : clientRepository.getClients()) {</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">            if(cl.hasEmail(email)){</span>
+<span class="fc" id="L74">                br = 1;</span>
+            }
+
+<span class="fc" id="L77">        }</span>
+
+
+<span class="fc" id="L80">        Optional&lt;Client&gt; client = Optional.empty();</span>
+
+<span class="fc bfc" id="L82" title="All 2 branches covered.">    if (br == 0) {   client = clientRepository.create( name,  email,  passportNumber, taxNumber, address, phoneNumber, password); }</span>
+
+
+
+<span class="fc" id="L86">        return client;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

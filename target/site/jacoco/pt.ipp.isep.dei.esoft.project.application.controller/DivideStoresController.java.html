@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DivideStoresController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.application.controller</a> &gt; <span class="el_source">DivideStoresController.java</span></div><h1>DivideStoresController.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.application.controller;
+
+import org.apache.commons.lang3.NotImplementedException;
+import pt.ipp.isep.dei.esoft.project.domain.AnnouncementRequest;
+import pt.ipp.isep.dei.esoft.project.domain.Pair;
+import pt.ipp.isep.dei.esoft.project.domain.Store;
+import pt.ipp.isep.dei.esoft.project.dto.AnnouncementRequestDTO;
+import pt.ipp.isep.dei.esoft.project.dto.StoreDTO;
+import pt.ipp.isep.dei.esoft.project.mapper.AnnouncementRequestMapper;
+import pt.ipp.isep.dei.esoft.project.mapper.StoreMapper;
+import pt.ipp.isep.dei.esoft.project.repository.AnnouncementRepository;
+import pt.ipp.isep.dei.esoft.project.repository.StoreRepository;
+import pt.ipp.isep.dei.esoft.project.repository.Repositories;
+import pt.ipp.isep.dei.esoft.project.service.DivideStoresAlgorithm;
+
+import java.util.List;
+
+/**
+ * The type Divide stores controller.
+ */
+public class DivideStoresController {
+    private DivideStoresAlgorithm bruteForce;
+<span class="nc" id="L23">    private StoreRepository storeRepository = null;</span>
+
+    /**
+     * Instantiates a new Divide stores controller.
+     */
+<span class="nc" id="L28">    public DivideStoresController() {</span>
+<span class="nc" id="L29">        getStoreRepository();</span>
+<span class="nc" id="L30">    }</span>
+
+    private StoreRepository getStoreRepository() {
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        if (storeRepository== null) {</span>
+<span class="nc" id="L34">            Repositories repositories = Repositories.getInstance();</span>
+
+<span class="nc" id="L36">            storeRepository = repositories.getStoreRepository();</span>
+        }
+<span class="nc" id="L38">        return storeRepository;</span>
+    }
+
+    /**
+     * Gets store i ds list.
+     *
+     * @param selectedStoresList the selected stores list
+     * @return the store i ds list
+     */
+    public List&lt;Integer&gt; getStoreIDsList(List&lt;StoreDTO&gt; selectedStoresList) {
+<span class="nc" id="L48">        return getStoreRepository().getStoreIDsList(selectedStoresList);</span>
+    }
+
+    /**
+     * Get store list.
+     *
+     * @return the list
+     */
+    public  List&lt;Store&gt; getStore(){
+<span class="nc" id="L57">        return getStoreRepository().getStore();</span>
+    }
+
+    /**
+     * Gets property number in each.
+     *
+     * @param selectedStoresList the selected stores list
+     * @return the property number in each
+     */
+    public List&lt;Integer&gt; getPropertyNumberInEach(List&lt;StoreDTO&gt; selectedStoresList) {
+<span class="nc" id="L67">        return getStoreRepository().getPropertyNumberInEach(selectedStoresList);</span>
+//        throw new NotImplementedException(&quot;&quot;);
+    }
+
+    /**
+     * Divide stores pair.
+     *
+     * @param selectedStoresList   the selected stores list
+     * @param numberPropertiesList the number properties list
+     * @return the pair
+     */
+    public Pair&lt;List&lt;Pair&lt;Integer, Integer&gt;&gt;, List&lt;Pair&lt;Integer, Integer&gt;&gt;&gt; divideStoresConsole(List&lt;StoreDTO&gt; selectedStoresList, List&lt;Integer&gt; numberPropertiesList){
+<span class="nc" id="L79">        Integer[] selectedStoresIDArray = getStoreIDsList(selectedStoresList).toArray(new Integer[selectedStoresList.size()]);</span>
+<span class="nc" id="L80">        Integer[] numberPropertiesArray = numberPropertiesList.toArray(new Integer[numberPropertiesList.size()]);</span>
+<span class="nc" id="L81">        return bruteForce.divideStoresConsole(selectedStoresIDArray, numberPropertiesArray);</span>
+    }
+
+    /**
+     * Divide stores string.
+     *
+     * @param selectedStoresList   the selected stores list
+     * @param numberPropertiesList the number properties list
+     * @return the string
+     */
+    public String divideStores(List&lt;StoreDTO&gt; selectedStoresList, List&lt;Integer&gt; numberPropertiesList){
+<span class="nc" id="L92">        Integer[] selectedStoresIDArray = getStoreIDsList(selectedStoresList).toArray(new Integer[selectedStoresList.size()]);</span>
+<span class="nc" id="L93">        Integer[] numberPropertiesArray = numberPropertiesList.toArray(new Integer[numberPropertiesList.size()]);</span>
+<span class="nc" id="L94">        return bruteForce.divideStores(selectedStoresIDArray, numberPropertiesArray);</span>
+    }
+
+    /**
+     * Get stores list.
+     *
+     * @return the list
+     */
+    public List&lt;StoreDTO&gt; getStores(){
+
+<span class="nc" id="L104">        List &lt;Store&gt; stores= getStore();</span>
+
+<span class="nc" id="L106">        return StoreMapper.getStoresDTO(stores);</span>
+
+    }
+
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AnnouncementRequestRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.repository</a> &gt; <span class="el_source">AnnouncementRequestRepository.java</span></div><h1>AnnouncementRequestRepository.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.repository;
+
+import pt.ipp.isep.dei.esoft.project.domain.*;
+import pt.ipp.isep.dei.esoft.project.dto.AnnouncementRequestDTO;
+import pt.ipp.isep.dei.esoft.project.mapper.AnnouncementRequestMapper;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+
+/**
+ * A repository class for managing all Announcement Requests.
+ */
+<span class="fc" id="L19">public class AnnouncementRequestRepository {</span>
+
+<span class="fc" id="L21">    private final List &lt;AnnouncementRequest&gt; announcementRequests =new ArrayList&lt;&gt;();</span>
+
+
+    /**
+     * Adds a new announcementRequest to the collection of announcementRequests managed by this repository.
+     *
+     * @param announcementRequest the announcementRequest to be added to the collection..
+     * @return true if the property was successfully added, false otherwise.
+     */
+    public boolean add(AnnouncementRequest announcementRequest){
+
+<span class="nc" id="L32">        Optional&lt;AnnouncementRequest&gt;  newSaleAnnouncement = Optional.empty();</span>
+
+<span class="nc" id="L34">        boolean operationSuccess = false;</span>
+
+<span class="nc bnc" id="L36" title="All 2 branches missed.">        if (validateAnnouncementRequest(announcementRequest)) {</span>
+<span class="nc" id="L37">            newSaleAnnouncement = Optional.of(announcementRequest.clone());</span>
+<span class="nc" id="L38">            operationSuccess = announcementRequests.add(newSaleAnnouncement.get());</span>
+        }
+
+<span class="nc" id="L41">        return operationSuccess;</span>
+    }
+    /**
+     * Validates if a given announcementRequest is valid to be added to the repository.
+     *
+     * @param announcementRequest The announcementRequest to be validated.
+     * @return Returns true if the announcementRequest is valid to be added, false otherwise.
+     */
+
+    private boolean validateAnnouncementRequest(AnnouncementRequest announcementRequest) {
+<span class="nc bnc" id="L51" title="All 2 branches missed.">      for(AnnouncementRequest sa : announcementRequests){</span>
+
+<span class="nc bnc" id="L53" title="All 2 branches missed.">          if(sa.equals(announcementRequest)){</span>
+<span class="nc" id="L54">              return false;</span>
+          }
+
+<span class="nc" id="L57">      }</span>
+<span class="nc" id="L58">      return true;</span>
+    }
+
+    /**
+     * This method returns a defensive (immutable) copy of the list of announcementRequests.
+     *
+     * @return The list of announcementRequests Types.
+     */
+
+
+    public List&lt;AnnouncementRequest&gt; getAnnouncementRequests(){
+<span class="fc" id="L69">        return List.copyOf(announcementRequests);</span>
+    }
+
+/*
+    */
+
+    /**
+     * Lists all the announcement requests.
+     * If there are no announcement requests available, an exception is thrown.
+     * Otherwise, the announcement requests are printed to the console.
+     *
+     * @param email the email
+     * @return the announcement requests by agent
+     */
+/*
+
+    public List &lt;AnnouncementRequest&gt; getAnnouncementRequestsByAgent(String email) {
+
+
+        try {
+
+            if (announcementRequests.isEmpty()) {
+                throw new IllegalStateException(&quot;There are no announcement requests available&quot;);
+            }
+            Collections.sort(announcementRequests,new AnnouncementRequestComparator());
+            Collections.reverse(announcementRequests);
+
+            int index =1;
+            for (AnnouncementRequest announcementRequest : announcementRequests) {
+                System.out.println(&quot;[&quot; + index + &quot;] &quot; +announcementRequest );
+                System.out.println(&quot;------------------&quot;);
+                index++;
+            }
+        } catch (IllegalStateException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return announcementRequests;
+    }
+*/
+
+public List&lt;AnnouncementRequest&gt; getAnnouncementRequestsByAgent(String email) {
+<span class="nc" id="L111">    EmployeeRepository employeeRepository = Repositories.getInstance().getEmployeeRepository();</span>
+    Employee employee;
+    Agent agent;
+
+    try {
+<span class="nc" id="L116">        employee = employeeRepository.getEmployeeByEmail(email);</span>
+<span class="nc" id="L117">        agent = employeeRepository.getAgentObject(employee);</span>
+
+<span class="nc" id="L119">    } catch (Exception e) {</span>
+<span class="nc" id="L120">        throw new IllegalArgumentException(&quot;Error getting agent information: &quot; + e.getMessage());</span>
+<span class="nc" id="L121">    }</span>
+
+   try {
+<span class="nc bnc" id="L124" title="All 2 branches missed.">       if (announcementRequests.isEmpty()){</span>
+
+<span class="nc" id="L126">           throw new IllegalStateException(&quot;There are no announcement requests available.&quot;);</span>
+       }
+<span class="nc" id="L128">   } catch (IllegalStateException e) {</span>
+
+<span class="nc" id="L130">        System.out.println (e.getMessage());</span>
+
+<span class="nc" id="L132">    }</span>
+
+
+<span class="nc" id="L135">    List&lt;AnnouncementRequest&gt; agentAnnouncementRequests = new ArrayList&lt;&gt;();</span>
+        try {
+<span class="nc bnc" id="L137" title="All 2 branches missed.">            for (AnnouncementRequest announcementRequest : announcementRequests) {</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">                if (announcementRequest.getAgent().equals(agent)) {</span>
+<span class="nc" id="L139">                    agentAnnouncementRequests.add(announcementRequest);</span>
+                }
+<span class="nc" id="L141">            }</span>
+<span class="nc" id="L142">            Collections.sort(agentAnnouncementRequests, new AnnouncementRequestComparator());</span>
+<span class="nc" id="L143">            Collections.reverse(agentAnnouncementRequests);</span>
+
+        }
+<span class="nc" id="L146">        catch (Exception e) {</span>
+<span class="nc" id="L147">            throw new IllegalStateException(&quot;Error processing announcement requests: &quot; + e.getMessage());</span>
+<span class="nc" id="L148">        }</span>
+
+
+
+
+<span class="nc" id="L153">    return agentAnnouncementRequests;</span>
+}
+
+
+    /**
+     * Create email.
+     *
+     * @param sender    the sender
+     * @param recipient the recipient
+     * @param subject   the subject
+     * @param message   the message
+     */
+    public void createEmail(String sender, String recipient, String subject, String message) {
+<span class="nc" id="L166">        String fileName = sender + &quot;_&quot; + recipient + &quot;.txt&quot;;</span>
+<span class="nc" id="L167">        String fileContent = &quot;From: &quot; + sender + &quot;\n&quot; + &quot;Recipient: &quot; + recipient + &quot;\n&quot; + &quot;Subject: &quot; + subject + &quot;\n\n&quot; + message;</span>
+
+<span class="nc" id="L169">        String directory = &quot;src\\main\\resources\\passwords\\&quot;;</span>
+
+        try {
+<span class="nc" id="L172">            File file = new File(directory, fileName);</span>
+
+            FileWriter writer;
+<span class="nc bnc" id="L175" title="All 2 branches missed.">            if (file.exists()) {</span>
+<span class="nc" id="L176">                writer = new FileWriter(file, true);</span>
+            } else {
+<span class="nc" id="L178">                writer = new FileWriter(file);</span>
+            }
+
+<span class="nc" id="L181">            writer.append(&quot;\n\n&quot;);</span>
+<span class="nc" id="L182">            writer.write(fileContent);</span>
+<span class="nc" id="L183">            writer.close();</span>
+<span class="nc" id="L184">            System.out.println(&quot;=====================&quot;);</span>
+<span class="nc" id="L185">            System.out.println(&quot;E-mail was sent successfully.&quot;);</span>
+<span class="nc" id="L186">        } catch (IOException e) {</span>
+<span class="nc" id="L187">            System.out.println(&quot;An error occurred while creating the e-mail.&quot;);</span>
+<span class="nc" id="L188">            e.printStackTrace();</span>
+<span class="nc" id="L189">        }</span>
+<span class="nc" id="L190">    }</span>
+
+
+    /**
+     * Create announcement request announcement request.
+     *
+     * @param rentDuration the rent duration
+     * @param businessType the business type
+     * @param property     the property
+     * @param agent        the agent
+     * @param client       the client
+     * @return the announcement request
+     */
+    public AnnouncementRequest createAnnouncementRequest(Integer rentDuration, BusinessType businessType, Property property, Agent agent, Client client) {
+<span class="nc" id="L204">        AnnouncementRequest announcementRequest = new AnnouncementRequest(rentDuration, businessType,property,agent,client);</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">        return (addAnnouncementRequest(announcementRequest)) ? announcementRequest : null;</span>
+}
+
+    private boolean addAnnouncementRequest(AnnouncementRequest announcementRequest) {
+<span class="nc" id="L209">        return announcementRequests.add(announcementRequest);</span>
+}
+
+    /**
+     * Create announcement request announcement request.
+     *
+     * @param businessType the business type
+     * @param property     the property
+     * @param agent        the agent
+     * @param client       the client
+     * @return the announcement request
+     */
+    public AnnouncementRequest createAnnouncementRequest(BusinessType businessType, Property property, Agent agent, Client client) {
+<span class="nc" id="L222">        AnnouncementRequest announcementRequest = new AnnouncementRequest( businessType,property,agent,client);</span>
+<span class="nc bnc" id="L223" title="All 2 branches missed.">        return (addAnnouncementRequest(announcementRequest)) ? announcementRequest : null;</span>
+}
+
+
+    /**
+     * Remove boolean.
+     *
+     * @param announcementRequest the announcement request
+     * @param email               the email
+     * @return the boolean
+     */
+    public  boolean remove(AnnouncementRequestDTO announcementRequest, String email) {
+
+<span class="nc" id="L236">      AnnouncementRequest announcementRequest1=  AnnouncementRequestMapper.toEntity(announcementRequest);</span>
+
+<span class="nc" id="L238">      List&lt;AnnouncementRequest&gt; announcementRequestList = getAnnouncementRequestsByAgent(email);</span>
+<span class="nc" id="L239">        return announcementRequestList.remove(announcementRequest1);</span>
+
+
+    }
+
+
+
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

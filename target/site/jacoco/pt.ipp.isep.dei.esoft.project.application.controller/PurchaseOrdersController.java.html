@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PurchaseOrdersController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.application.controller</a> &gt; <span class="el_source">PurchaseOrdersController.java</span></div><h1>PurchaseOrdersController.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.application.controller;
+
+import pt.ipp.isep.dei.esoft.project.application.controller.authorization.AuthenticationController;
+import pt.ipp.isep.dei.esoft.project.domain.*;
+import pt.ipp.isep.dei.esoft.project.repository.*;
+
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * The type Purchase orders controller.
+ */
+public class PurchaseOrdersController {
+
+<span class="nc" id="L15">    private PropertyRepository propertyRepository = null;</span>
+<span class="nc" id="L16">    private AnnouncementRepository announcementRepository = null;</span>
+<span class="nc" id="L17">    private PurchaseOrderRepository purchaseOrderRepository = null;</span>
+<span class="nc" id="L18">    private AuthenticationRepository authenticationRepository = null;</span>
+
+<span class="nc" id="L20">    private PurchaseOrder purchaseOrder = null;</span>
+
+    /**
+     * The Address.
+     */
+<span class="nc" id="L25">    Address address= new Address(&quot;test&quot;,&quot;test&quot;,&quot;teste&quot;,&quot;teste&quot;);</span>
+    /**
+     * The Employee.
+     */
+<span class="nc" id="L29">    Employee employee = new Employee(&quot;Diogo&quot;, &quot;agent@this.app&quot;, 12321, &quot;3213123&quot;, address ,121212, new Store(10, &quot;PPROG&quot;, &quot;pprog@this.app&quot;, new Address(&quot;teste&quot;,&quot;teste&quot;,&quot;teste&quot;,&quot;teste&quot;),  000000000), List.of(new Role(2, AuthenticationController.ROLE_AGENT)));</span>
+    /**
+     * The Agent.
+     */
+//Agent agent = employee.getAssociatedAgent();
+<span class="nc" id="L34">    Agent agent = new Agent(employee);</span>
+
+
+    /**
+     * Instantiates a new Purchase orders controller.
+     */
+<span class="nc" id="L40">    public PurchaseOrdersController() {</span>
+<span class="nc" id="L41">        getAnnouncementRepository();</span>
+<span class="nc" id="L42">        getPurchaseOrderRepository();</span>
+<span class="nc" id="L43">        getAuthenticationRepository();</span>
+<span class="nc" id="L44">    }</span>
+    /**
+     * Retrieves the AnnouncementRepository instance.
+     * If the repository is not yet initialized, it initializes it using the Repositories singleton.
+     *
+     * @return The AnnouncementRepository instance.
+     */
+    private AnnouncementRepository getAnnouncementRepository() {
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        if (announcementRepository == null) {</span>
+<span class="nc" id="L53">            Repositories repositories = Repositories.getInstance();</span>
+<span class="nc" id="L54">            announcementRepository = repositories.getAnnouncementRepository();</span>
+        }
+<span class="nc" id="L56">        return announcementRepository;</span>
+    }
+    /**
+     * Retrieves the PurchaseOrderRepository instance.
+     * If the repository is not yet initialized, it initializes it using the Repositories singleton.
+     *
+     * @return The PurchaseOrderRepository instance.
+     */
+    private PurchaseOrderRepository getPurchaseOrderRepository() {
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (purchaseOrderRepository == null) {</span>
+<span class="nc" id="L66">            Repositories repositories = Repositories.getInstance();</span>
+<span class="nc" id="L67">            purchaseOrderRepository = repositories.getPurchaseOrderRepository();</span>
+        }
+<span class="nc" id="L69">        return purchaseOrderRepository;</span>
+    }
+    /**
+     * Retrieves the AuthenticationRepository instance.
+     * If the repository is not yet initialized, it initializes it using the Repositories singleton.
+     *
+     * @return The AuthenticationRepository instance.
+     */
+    private AuthenticationRepository getAuthenticationRepository() {
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        if (authenticationRepository == null) {</span>
+<span class="nc" id="L79">            Repositories repositories = Repositories.getInstance();</span>
+<span class="nc" id="L80">            authenticationRepository = repositories.getAuthenticationRepository();</span>
+        }
+<span class="nc" id="L82">        return authenticationRepository;</span>
+    }
+
+    /**
+     * Retrieves the list of SaleAnnouncements from the AnnouncementRepository.
+     *
+     * @return The list of SaleAnnouncements.
+     */
+    public List&lt;Announcement&gt; getSaleAnnouncemets() {
+<span class="nc" id="L91">        AnnouncementRepository announcementRepository = getAnnouncementRepository();</span>
+<span class="nc" id="L92">        return announcementRepository.getSaleAnnouncements();</span>
+    }
+
+    /**
+     * Removes the specified SaleAnnouncement from the AnnouncementRepository.
+     *
+     * @param saleAnnouncement The SaleAnnouncement to be removed.
+     * @return True if the SaleAnnouncement was successfully removed, false otherwise.
+     */
+    public boolean removeSaleAnnouncement(SaleAnnouncement saleAnnouncement) {
+<span class="nc" id="L102">        AnnouncementRepository announcementRepository = getAnnouncementRepository();</span>
+<span class="nc" id="L103">        return announcementRepository.removeSaleAnnouncement(saleAnnouncement);</span>
+    }
+
+    /**
+     * Retrieves a list of PurchaseOrders associated with the specified SaleAnnouncement.
+     *
+     * @param saleAnnouncement The SaleAnnouncement for which to retrieve the PurchaseOrders.
+     * @return A list of PurchaseOrders associated with the SaleAnnouncement.
+     */
+    public List&lt;PurchaseOrder&gt; getPurchas(Announcement saleAnnouncement) {
+<span class="nc" id="L113">        PurchaseOrderRepository purchaseOrderRepository = getPurchaseOrderRepository();</span>
+<span class="nc" id="L114">        return purchaseOrderRepository.getOrdersByAnnouncement(saleAnnouncement);</span>
+    }
+
+    /**
+     * Retrieves the index of the specified SaleAnnouncement in the PurchaseOrderRepository.
+     *
+     * @param saleAnnouncement The SaleAnnouncement for which to retrieve the index.
+     * @return The index of the SaleAnnouncement in the PurchaseOrderRepository, or -1 if not found.
+     */
+    public List&lt;PurchaseOrder&gt; getOrdersByAnnouncement(Announcement saleAnnouncement) {
+<span class="nc" id="L124">        return purchaseOrderRepository.getOrderByAnnouncement(saleAnnouncement);</span>
+    }
+
+    /**
+     * Creates and sends an email using the specified details.
+     *
+     * @param sender   The email address of the sender.
+     * @param receiver The email address of the recipient.
+     * @param subject  The subject of the email.
+     * @param message  The content of the email.
+     */
+    public void createEmail(String sender, String receiver, String subject, String message){
+<span class="nc" id="L136">        getPurchaseOrderRepository().createEmail(sender, receiver, subject, message);</span>
+<span class="nc" id="L137">    }</span>
+//    AuthenticationRepository authentication = Repositories.getInstance().getAuthenticationRepository();
+//    String CurrentUser = String.valueOf(getAuthenticationRepository().getCurrentUserSession().getUserId());
+
+    /**
+     * Set accepted purchase order.
+     *
+     * @param purchaseOrder the purchase order
+     */
+    public void setAcceptedPurchaseOrder(PurchaseOrder purchaseOrder){
+<span class="nc" id="L147">        purchaseOrder.acceptOrder();</span>
+<span class="nc" id="L148">    }</span>
+
+    /**
+     * Set decline purchase order.
+     *
+     * @param purchaseOrder the purchase order
+     */
+    public void setDeclinePurchaseOrder(PurchaseOrder purchaseOrder){
+<span class="nc" id="L156">        purchaseOrder.declineOrder();</span>
+<span class="nc" id="L157">    }</span>
+
+    /**
+     * Gets list oldest to newest.
+     *
+     * @param announcements          the announcements
+     * @param announcementComparator the announcement comparator
+     */
+    public void getListOldestToNewest(List&lt;Announcement&gt; announcements, AnnouncementComparator announcementComparator) {
+<span class="nc" id="L166">        Collections.sort(announcements, announcementComparator);</span>
+<span class="nc" id="L167">    }</span>
+
+    /**
+     * Gets list highest to lowest.
+     *
+     * @param orders                  the orders
+     * @param purchaseOrderComparator the purchase order comparator
+     */
+    public void getListHighestToLowest(List&lt;PurchaseOrder&gt; orders, PurchaseOrderComparator purchaseOrderComparator) {
+<span class="nc" id="L176">        Collections.sort(orders, purchaseOrderComparator);</span>
+<span class="nc" id="L177">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

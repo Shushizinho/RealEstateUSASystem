@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RegressionAnalysis.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.service</a> &gt; <span class="el_source">RegressionAnalysis.java</span></div><h1>RegressionAnalysis.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.service;
+
+import org.apache.commons.math.MathException;
+import org.apache.commons.math.distribution.TDistribution;
+import org.apache.commons.math.distribution.TDistributionImpl;
+import org.apache.commons.math.stat.regression.SimpleRegression;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * The type Regression analysis.
+ */
+public class RegressionAnalysis  {
+
+    private TDistribution distribution;
+
+    private SimpleRegression simpleRegression;
+
+    private double tc;
+
+    private double n;
+
+<span class="nc" id="L25">    private List&lt;String&gt; tableAnova = new ArrayList&lt;&gt;();</span>
+
+
+    /**
+     * Initializes a RegressionAnalysis object with the provided SimpleRegression instance.
+     * The degrees of freedom (n) for the t-distribution are set based on the number of data points in the SimpleRegression.
+     *
+     * @param s The SimpleRegression instance containing the regression analysis results.
+     */
+<span class="nc" id="L34">    public RegressionAnalysis(SimpleRegression s){</span>
+<span class="nc" id="L35">        this.simpleRegression = s;</span>
+<span class="nc" id="L36">        this.distribution = new TDistributionImpl((s.getN() -2) );</span>
+<span class="nc" id="L37">        n = s.getN();</span>
+<span class="nc" id="L38">    }</span>
+
+    /**
+     * Calculates the critical value (tc) for the t-distribution with the given significance level (alfa).
+     *
+     * @param alfa The significance level.
+     * @return The critical value for the t-distribution.
+     */
+    public double getTc (double alfa){
+        try {
+<span class="nc" id="L48">             this.tc  =distribution.inverseCumulativeProbability(1.0 - (alfa/2.0) );</span>
+<span class="nc" id="L49">        } catch (MathException e) {</span>
+<span class="nc" id="L50">            throw new RuntimeException(e);</span>
+<span class="nc" id="L51">        }</span>
+<span class="nc" id="L52">        return this.tc;</span>
+    }
+
+    /**
+     * Calculates the confidence intervals for the regression parameters (a and b) based on the given confidence level (IC).
+     *
+     * @param IC The confidence level.
+     * @return The confidence intervals for the regression parameters (a and b).
+     */
+    public String calcularIC (double IC){
+<span class="nc" id="L62">        List&lt;Double&gt; intervaloConfiança = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L63">        double alfa = (100- IC)/100;</span>
+
+<span class="nc" id="L65">        double funcion = simpleRegression.getInterceptStdErr();</span>
+        double f;
+        try {
+<span class="nc" id="L68">           f = simpleRegression.getSlopeConfidenceInterval(alfa);</span>
+<span class="nc" id="L69">        } catch (MathException e) {</span>
+<span class="nc" id="L70">            throw new RuntimeException(e);</span>
+<span class="nc" id="L71">        }</span>
+
+<span class="nc" id="L73">       return (&quot;Confidance Interval for a = [&quot; + fourDecimalCase((getA() - (getTc(alfa)* funcion)) )+ &quot;, &quot;</span>
+<span class="nc" id="L74">                +fourDecimalCase ((getA() + (getTc(alfa)* funcion)) )+ &quot;]&quot; + &quot;\nConfidance Interval for b = [&quot;+</span>
+<span class="nc" id="L75">               fourDecimalCase( (getB() - f) )+ &quot;, &quot; + fourDecimalCase(getB() + f) + &quot;]&quot;);</span>
+
+    }
+
+    /**
+     * Retrieves the slope (b) of the regression line.
+     *
+     * @return The slope of the regression line.
+     */
+    public double getB(){
+<span class="nc" id="L85">         return simpleRegression.getSlope();</span>
+    }
+
+    /**
+     * Retrieves the intercept (a) of the regression line.
+     *
+     * @return The intercept of the regression line.
+     */
+    public double getA(){
+<span class="nc" id="L94">        return simpleRegression.getIntercept();</span>
+    }
+
+    /**
+     * Retrieves the intercept (a) of the regression line as a string formatted with four decimal places.
+     *
+     * @return The intercept of the regression line as a formatted string.
+     */
+    public String getAString(){
+<span class="nc" id="L103">        return fourDecimalCase(getA());</span>
+    }
+
+    /**
+     * Retrieves the slope (b) of the regression line as a string formatted with four decimal places.
+     *
+     * @return The slope of the regression line as a formatted string.
+     */
+    public String getBString(){
+<span class="nc" id="L112">        return fourDecimalCase(getB());</span>
+    }
+
+    /**
+     * Predicts the price based on the regression line for the given value.
+     *
+     * @param value The value for which the price prediction is calculated.
+     * @return The predicted price.
+     */
+    public String getPricePrediceted(double value){
+<span class="nc" id="L122">        return (&quot;The price prediction is &quot; + fourDecimalCase(simpleRegression.predict(value)) + &quot;$.&quot;);</span>
+    }
+
+    /**
+     * Formats a Double value to a string representation with four decimal places.
+     *
+     * @param flota The Double value to be formatted.
+     * @return The formatted string representation of the value.
+     */
+    public String fourDecimalCase(Double flota){
+<span class="nc" id="L132">        DecimalFormat decimalFormat = new DecimalFormat(&quot;#.0000&quot;);</span>
+<span class="nc bnc" id="L133" title="All 4 branches missed.">        if(flota&lt;0 &amp;&amp; flota &gt; -1){</span>
+<span class="nc" id="L134">            return decimalFormat.format(flota).replace(&quot;-&quot;, &quot;-0&quot;);</span>
+
+<span class="nc bnc" id="L136" title="All 4 branches missed.">        } else if( flota &gt; 0 &amp;&amp; flota &lt;1){</span>
+<span class="nc" id="L137">            return &quot;0&quot; + decimalFormat.format(flota);</span>
+        }
+<span class="nc" id="L139">        return decimalFormat.format(flota);</span>
+    }
+
+    /**
+     * Retrieves the equation of the regression line in the form &quot;y = a + bx&quot;.
+     *
+     * @return The equation of the regression line.
+     */
+    public String getEquation(){
+<span class="nc" id="L148">        return (&quot;y =&quot;+ fourDecimalCase(getA()) + &quot;+&quot; + fourDecimalCase(getB()) + &quot;x&quot;);</span>
+    }
+
+    /**
+     * Retrieves the correlation coefficient (R) of the regression analysis.
+     *
+     * @return The correlation coefficient.
+     */
+    public String getR(){
+<span class="nc" id="L157">        return (&quot;Correlation coefficient = &quot; +fourDecimalCase(simpleRegression.getR()));</span>
+    }
+
+    /**
+     * Retrieves the determination coefficient (R^2) of the regression analysis.
+     *
+     * @return The determination coefficient.
+     */
+    public String getR2(){
+<span class="nc" id="L166">        return (&quot;Determination coefficient = &quot; + fourDecimalCase(simpleRegression.getRSquare()));</span>
+    }
+
+    /**
+     * Performs a hypothesis test for the regression parameters (a and b) with the given null hypotheses (a0 and b0).
+     * Calculates the t-values for the null hypotheses and determines whether to reject or accept them.
+     *
+     * @param a0 The null hypothesis for the intercept (a).
+     * @param b0 The null hypothesis for the slope (b).
+     * @return The results of the hypothesis test.
+     */
+    public String testeHipotese( double a0, double b0){
+<span class="nc" id="L178">        double Ta = (getA() - a0)/simpleRegression.getInterceptStdErr();</span>
+<span class="nc" id="L179">        double tb = (getB() - b0)/simpleRegression.getInterceptStdErr();</span>
+        String finalMesage;
+<span class="nc" id="L181">        String symbol = &quot;\u2260&quot;;</span>
+<span class="nc" id="L182">        String mesageA = &quot;H0 : a = &quot; + a0 + &quot; v.s H1: a &quot;+ symbol +&quot; &quot;+ a0;</span>
+<span class="nc bnc" id="L183" title="All 2 branches missed.">        if (Ta &gt; this.tc){</span>
+<span class="nc" id="L184">            mesageA = mesageA +  &quot;\nThe hypothesis H0 is rejected, because &quot; + fourDecimalCase(Ta) + &quot; &gt; &quot;+ fourDecimalCase(this.tc);</span>
+        }else {
+<span class="nc" id="L186">            mesageA =  mesageA + &quot;\nThe hypothesis H1 is rejected, because &quot;+ fourDecimalCase(Ta) + &quot; &lt; &quot;+ fourDecimalCase(this.tc);</span>
+        }
+<span class="nc" id="L188">        String mesageB = &quot;\nH0 : b = &quot; + b0 + &quot; v.s H1: b &quot;+ symbol +&quot; &quot; + b0;</span>
+<span class="nc bnc" id="L189" title="All 2 branches missed.">        if (tb &gt; this.tc){</span>
+<span class="nc" id="L190">            mesageB  = mesageB + &quot;\nThe hypothesis H0 is rejected, because &quot; + fourDecimalCase(tb) + &quot; &gt; &quot;+ fourDecimalCase(this.tc) ;</span>
+        }else {
+<span class="nc" id="L192">            mesageB = mesageB + &quot;\nThe hypothesis H1 is rejected, because &quot;  + fourDecimalCase(tb) + &quot; &lt; &quot;+ fourDecimalCase(this.tc) ;</span>
+        }
+<span class="nc" id="L194">        finalMesage = mesageA + mesageB;</span>
+<span class="nc" id="L195">        return finalMesage;</span>
+    }
+
+    /**
+     * Retrieves the ANOVA table for the regression analysis.
+     *
+     * @return The ANOVA table as a list of strings.
+     */
+    public List&lt;String&gt; getTableAnova(){
+
+<span class="nc" id="L205">        double SR = simpleRegression.getRegressionSumSquares();</span>
+<span class="nc" id="L206">        tableAnova.add(fourDecimalCase(SR));</span>
+<span class="nc" id="L207">        double SE = simpleRegression.getSumSquaredErrors();</span>
+<span class="nc" id="L208">        tableAnova.add(fourDecimalCase(SE));</span>
+<span class="nc" id="L209">        double ST = simpleRegression.getTotalSumSquares();</span>
+<span class="nc" id="L210">        tableAnova.add(fourDecimalCase(ST));</span>
+<span class="nc" id="L211">        double Gliberdade = 1d;</span>
+<span class="nc" id="L212">        tableAnova.add(fourDecimalCase(Gliberdade));</span>
+<span class="nc" id="L213">        double GliberdadeErro = (simpleRegression.getN() - 2);</span>
+<span class="nc" id="L214">        tableAnova.add(fourDecimalCase(GliberdadeErro));</span>
+<span class="nc" id="L215">        double GliberdadeTotal = (simpleRegression.getN() - 1);</span>
+<span class="nc" id="L216">        tableAnova.add(fourDecimalCase(GliberdadeTotal));</span>
+<span class="nc" id="L217">        double MSR = SR;</span>
+<span class="nc" id="L218">        tableAnova.add(fourDecimalCase(MSR));</span>
+<span class="nc" id="L219">        double MSE = SE/(n-2);</span>
+<span class="nc" id="L220">        tableAnova.add(fourDecimalCase(MSE));</span>
+<span class="nc" id="L221">        double F = MSR/MSE;</span>
+<span class="nc" id="L222">        tableAnova.add(fourDecimalCase(F));</span>
+
+<span class="nc" id="L224">        return tableAnova;</span>
+    }
+
+    /**
+     * Determines the significance of the regression based on the F-test from the ANOVA table.
+     *
+     * @return A message indicating whether the regression is significant or not.
+     */
+    public String tableAnovaSignificancia(){
+
+        double FSignificancia;
+<span class="nc" id="L235">        double SR = simpleRegression.getRegressionSumSquares();</span>
+<span class="nc" id="L236">        double SE = simpleRegression.getSumSquaredErrors();</span>
+<span class="nc" id="L237">        double MSR = SR;</span>
+<span class="nc" id="L238">        tableAnova.add(fourDecimalCase(MSR));</span>
+<span class="nc" id="L239">        double MSE = SE/(n-2);</span>
+<span class="nc" id="L240">        double F = MSR/MSE;</span>
+
+        try{
+<span class="nc" id="L243">            FSignificancia = simpleRegression.getSignificance();</span>
+<span class="nc" id="L244">        } catch (MathException e) {</span>
+<span class="nc" id="L245">            throw new RuntimeException(e);</span>
+<span class="nc" id="L246">        }</span>
+
+<span class="nc bnc" id="L248" title="All 2 branches missed.">        if (F &gt; FSignificancia) {</span>
+<span class="nc" id="L249">            return (&quot;The regression is significant.&quot;);</span>
+        }else {
+<span class="nc" id="L251">            return (&quot;The regression isn't significant.&quot;);</span>
+        }
+    }
+
+    /**
+     * Retrieves the significance level (p-value) from the F-test in the ANOVA table.
+     *
+     * @return The significance level as a formatted string.
+     */
+    public String FSignificancia(){
+        double FSignificancia;
+
+        try{
+<span class="nc" id="L264">            FSignificancia = simpleRegression.getSignificance();</span>
+<span class="nc" id="L265">        } catch (MathException e) {</span>
+<span class="nc" id="L266">            throw new RuntimeException(e);</span>
+<span class="nc" id="L267">        }</span>
+
+<span class="nc" id="L269">        return fourDecimalCase(FSignificancia);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,61 @@
+
+
+From: agent@this.app
+Recipient: client@yahoo.com
+Subject: Your visit request was accepted
+
+accept
+
+From: diogo@this.app
+Recipient: joao@yahoo.com
+Subject: Email create
+
+Yes
+
+From: diogo@this.app
+Recipient: joao@yahoo.com
+Subject: Email create
+
+Yes
+
+From: diogo@this.app
+Recipient: joao@yahoo.com
+Subject: Email create
+
+Yes
+
+From: diogo@this.app
+Recipient: joao@yahoo.com
+Subject: Email create
+
+Yes
+
+From: diogo@this.app
+Recipient: joao@yahoo.com
+Subject: Email create
+
+Yes
+
+From: diogo@this.app
+Recipient: joao@yahoo.com
+Subject: Email create
+
+Yes
+
+From: diogo@this.app
+Recipient: joao@yahoo.com
+Subject: Email create
+
+Yes
+
+From: diogo@this.app
+Recipient: joao@yahoo.com
+Subject: Email create
+
+Yes
+
+From: diogo@this.app
+Recipient: joao@yahoo.com
+Subject: Email create
+
+Yes

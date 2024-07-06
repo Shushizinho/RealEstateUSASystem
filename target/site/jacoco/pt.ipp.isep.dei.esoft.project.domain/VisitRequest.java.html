@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VisitRequest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.domain</a> &gt; <span class="el_source">VisitRequest.java</span></div><h1>VisitRequest.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.domain;
+
+import pt.ipp.isep.dei.esoft.project.dto.VisitRequestDTO;
+import pt.ipp.isep.dei.esoft.project.mapper.VisitRequestMapper;
+import pt.ipp.isep.dei.esoft.project.repository.Repositories;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Objects;
+
+public class VisitRequest implements Serializable {
+
+    private Property property;
+
+    private DateTime preferredDate;
+
+    private List&lt;DateTime&gt; timeSlot;
+
+    private String clientName;
+
+    private long clientPhoneNumber;
+
+    private String clientReply;
+    private Agent agent;
+
+    private int wasAccepted;
+
+    /**
+     * Constructs a new VisitRequest object with the provided parameters.
+     *
+     * @param property           The property for the visit request.
+     * @param preferredDate      The preferred date for the visit request.
+     * @param timeSlot           The time slots available for the visit request.
+     * @param clientName         The name of the client making the visit request.
+     * @param clientPhoneNumber The phone number of the client making the visit request.
+     */
+<span class="fc" id="L37">    public VisitRequest(Property property, DateTime preferredDate, List&lt;DateTime&gt; timeSlot, String clientName, long clientPhoneNumber) {</span>
+<span class="fc" id="L38">        this.property = property;</span>
+<span class="fc" id="L39">        this.preferredDate = preferredDate;</span>
+<span class="fc" id="L40">        this.timeSlot = timeSlot;</span>
+<span class="fc" id="L41">        this.clientName = clientName;</span>
+<span class="fc" id="L42">        this.clientPhoneNumber = clientPhoneNumber;</span>
+<span class="fc" id="L43">        this.clientReply = &quot;&quot;;</span>
+<span class="fc" id="L44">        this.wasAccepted = 0;</span>
+<span class="fc" id="L45">        Announcement p = Repositories.getInstance().getAnnouncementRepository().getAnnouncementByProperty((property));</span>
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">        if (p != null){</span>
+<span class="nc" id="L47">            this.agent = p.getAgent();</span>
+        }
+<span class="fc" id="L49">    }</span>
+<span class="fc" id="L50">    public VisitRequest(Property property, DateTime preferredDate, List&lt;DateTime&gt; timeSlot, String clientName, long clientPhoneNumber, int wasAccepted) {</span>
+<span class="fc" id="L51">        this.property = property;</span>
+<span class="fc" id="L52">        this.preferredDate = preferredDate;</span>
+<span class="fc" id="L53">        this.timeSlot = timeSlot;</span>
+<span class="fc" id="L54">        this.clientName = clientName;</span>
+<span class="fc" id="L55">        this.clientPhoneNumber = clientPhoneNumber;</span>
+<span class="fc" id="L56">        this.clientReply = &quot;&quot;;</span>
+<span class="fc" id="L57">        this.wasAccepted = wasAccepted;</span>
+<span class="fc" id="L58">        Announcement p = Repositories.getInstance().getAnnouncementRepository().getAnnouncementByProperty((property));</span>
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">        if (p != null){</span>
+<span class="nc" id="L60">            this.agent = p.getAgent();</span>
+        }
+<span class="fc" id="L62">    }</span>
+
+//    public VisitRequest(Property property, DateTime preferredDate, List&lt;DateTime&gt; timeSlot, String clientName, long clientPhoneNumber, Agent agent) {
+//        this.property = property;
+//        this.preferredDate = preferredDate;
+//        this.timeSlot = timeSlot;
+//        this.clientName = clientName;
+//        this.clientPhoneNumber = clientPhoneNumber;
+//        this.agent = agent;
+//        this.clientReply = &quot;&quot;;
+//        this.wasAccepted = 0;
+//    }
+
+    /**
+     * This method accepts the visit request
+     */
+    public void acceptVisitRequest(){
+<span class="nc" id="L79">        this.wasAccepted = 1;</span>
+<span class="nc" id="L80">    }</span>
+
+    /**
+     * This method decline the visit request
+     */
+    public void declineVisitRequest(){
+<span class="nc" id="L86">        this.wasAccepted = -1;</span>
+<span class="nc" id="L87">    }</span>
+
+
+    /**
+     * This method returns the value of wasAccepted for the current visit request
+     * @return wasAccepted for the current visit request
+     */
+    public int accepted(){
+<span class="fc" id="L95">        return wasAccepted;</span>
+    }
+
+    /**
+     * This method allows to set the client reply of the current visit request.
+     * @param ClientReply
+     */
+    public void setClientReply(String ClientReply) {
+<span class="nc" id="L103">        clientReply = ClientReply;</span>
+<span class="nc" id="L104">    }</span>
+
+    /**
+     * This method returns the client reply of the current visit request.
+     * @return client replay
+     */
+    public String getClientReply() {
+<span class="nc" id="L111">        return clientReply;</span>
+    }
+
+    /**
+     * This method returns the property of the current visit request.
+     * @return the Visit request's property.
+     */
+    public Property getProperty() {
+<span class="fc" id="L119">        return property;</span>
+    }
+
+    /**
+     * This method returns the preferred date of the current visit request.
+     * @return the Visit request's preferred date.
+     */
+    public DateTime getPreferredDate() {
+<span class="fc" id="L127">        return preferredDate;</span>
+    }
+
+
+
+    /**
+     * This method returns the start time of the current visit request.
+     * @return the Visit request's time slot.
+     */
+    public DateTime getTimeSlot(int i) {
+<span class="fc" id="L137">        return timeSlot.get(i);</span>
+    }
+
+    /**
+     * This method returns the time slot for the current visit request.
+     * @return the Visit request's time slot.
+     */
+    public List&lt;DateTime&gt; getTimeSlot(){
+<span class="fc" id="L145">        return timeSlot;</span>
+    }
+
+    /**
+     * This method returns the client name of the current visit request.
+     * @return the Visit request's client name.
+     */
+    public String getClientName() {
+<span class="fc" id="L153">        return clientName;</span>
+    }
+
+
+    /**
+     * This method returns the client phone number of the current visit request.
+     * @return the Visit request's client phone number.
+     */
+    public long getClientPhoneNumber() {
+<span class="fc" id="L162">        return clientPhoneNumber;</span>
+    }
+
+    public List&lt;DateTime&gt; getTimeSlotByDate(DateTime date){
+<span class="nc" id="L166">        List&lt;DateTime&gt; timeSlot = null;</span>
+
+<span class="nc bnc" id="L168" title="All 4 branches missed.">        if (preferredDate.getHour() == date.getHour() &amp;&amp; preferredDate.getMinute() == date.getMinute()){</span>
+<span class="nc" id="L169">            timeSlot = getTimeSlot();</span>
+        }
+<span class="nc" id="L171">        return  timeSlot;</span>
+
+    }
+
+
+    public Agent getAgent() {
+<span class="nc" id="L177">        return agent;</span>
+    }
+
+    /**
+     * Checks if the given object is equal to this Visit request object
+     * @param o the object to be compared with this Visit request object
+     * @return true if the given object is equal to this Visit request object, false otherwise
+     */
+
+    public boolean equals(Object o) {
+<span class="fc bfc" id="L187" title="All 2 branches covered.">        if (this == o) {</span>
+<span class="fc" id="L188">            return true;</span>
+        }
+<span class="fc bfc" id="L190" title="All 2 branches covered.">        if (!(o instanceof VisitRequest)) {</span>
+<span class="fc" id="L191">            return false;</span>
+        }
+<span class="fc" id="L193">        VisitRequest visitRequest = (VisitRequest) o;</span>
+<span class="fc" id="L194">        Boolean propertyEqual = Objects.equals(property, visitRequest.property);</span>
+<span class="fc" id="L195">        Boolean preferredDateEqual = preferredDate.equals(visitRequest.preferredDate);</span>
+<span class="fc" id="L196">        Boolean timeSlotEqual = timeSlot.equals(visitRequest.timeSlot);</span>
+<span class="fc" id="L197">        Boolean clientNameEquals = clientName.equals(visitRequest.clientName);</span>
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">        Boolean clientPhoneNumberEquals = clientPhoneNumber == visitRequest.clientPhoneNumber;</span>
+<span class="pc bpc" id="L199" title="2 of 6 branches missed.">        return (propertyEqual &amp;&amp; preferredDateEqual &amp;&amp; clientNameEquals</span>
+<span class="pc bpc" id="L200" title="2 of 4 branches missed.">                &amp;&amp; clientPhoneNumberEquals &amp;&amp; timeSlotEqual);</span>
+    }
+
+    /**
+     *
+     * The hash code is based on the values of the property, preferredDate, timeSlot, clientName and clientPhoneNumber.
+     * @return a hash code value for the visit request object.
+     */
+    @Override
+    public int hashCode() {
+<span class="fc" id="L210">        return Objects.hash(property, preferredDate, timeSlot, clientName, clientPhoneNumber);</span>
+    }
+
+    /**
+     * Clone method.
+     *
+     * @return a clone of the current visit request
+     */
+    public VisitRequest clone() {
+<span class="fc" id="L219">        return new VisitRequest(this.getProperty(), this.getPreferredDate(), this.getTimeSlot(), this.getClientName(),</span>
+<span class="fc" id="L220">                this.getClientPhoneNumber());</span>
+    }
+
+    /**
+     * This method displays a String of the current visit request object.
+     * @return String of the current visit request object.
+     */
+    @Override
+public String toString(){
+<span class="fc" id="L229">        return String.format(&quot;=== Visit Request information ===&quot;+</span>
+                &quot;\n--------------------------------------------------&quot; + &quot;\nProperty- %s&quot; +
+                &quot;\n--------------------------------------------------&quot; + &quot;\nPreferredDate- %s&quot; +
+                &quot;\n--------------------------------------------------&quot; + &quot;\nTimeSlot- %s-%s&quot; +
+                &quot;\n--------------------------------------------------&quot;+ &quot;\nClient name- %s&quot; +
+                &quot;\n--------------------------------------------------&quot; + &quot;\nClient phone number- %d&quot;,
+<span class="fc" id="L235">                property.toString(), this.preferredDate,this.getTimeSlot(0).getTimestamp(), this.getTimeSlot(1).getTimestamp(), this.clientName, this.clientPhoneNumber);</span>
+    }
+    public String toStringComplete(){
+<span class="nc" id="L238">        return String.format(&quot;\n=== Visit Request information ===&quot; +</span>
+                        &quot;\n--------------------------------------------------&quot; + &quot;\nProperty- %s&quot; +
+                        &quot;\n--------------------------------------------------&quot; + &quot;\nPreferredDate- %s&quot; +
+                        &quot;\n--------------------------------------------------&quot; + &quot;\nTimeSlot- %s-%s&quot; +
+                        &quot;\n--------------------------------------------------&quot; + &quot;\nClient name- %s&quot; +
+                        &quot;\n--------------------------------------------------&quot; + &quot;\nClient phone number- %s&quot; +
+                        &quot;\n--------------------------------------------------&quot; + &quot;\nAgent name- %s&quot; +
+                        &quot;\n--------------------------------------------------&quot; + &quot;\nAgent phone number- %s&quot; +
+                        &quot;\n--------------------------------------------------&quot; + &quot;\nStore name- %s&quot; +
+                        &quot;\n--------------------------------------------------&quot; + &quot;\nStore ID- %d&quot;,
+<span class="nc" id="L248">                this.property.toString(), this.preferredDate.toString(), this.getTimeSlot(0).getTimestamp(), this.getTimeSlot(1).getTimestamp(), this.clientName, this.clientPhoneNumber,</span>
+<span class="nc" id="L249">                this.getAgent().getName(), this.agent.getPhoneNumber(), this.agent.getStore().getDesignation(), this.agent.getStore().getId());</span>
+    }
+
+    public VisitRequestDTO toDTO (){
+<span class="fc" id="L253">        VisitRequest visitRequest = new VisitRequest(property,preferredDate,timeSlot,clientName,clientPhoneNumber, wasAccepted);</span>
+<span class="fc" id="L254">        return VisitRequestMapper.toDTO(visitRequest);</span>
+    }
+
+    public boolean confirmClientReplay(String clientReply){
+<span class="nc" id="L258">        return clientReply.equals(&quot;&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

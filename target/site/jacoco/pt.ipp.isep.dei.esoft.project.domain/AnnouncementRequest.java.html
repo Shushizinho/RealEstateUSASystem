@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AnnouncementRequest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.domain</a> &gt; <span class="el_source">AnnouncementRequest.java</span></div><h1>AnnouncementRequest.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.domain;
+
+
+import pt.ipp.isep.dei.esoft.project.dto.AnnouncementRequestDTO;
+import pt.ipp.isep.dei.esoft.project.mapper.AnnouncementRequestMapper;
+
+
+import java.io.Serializable;
+import java.util.Objects;
+/**
+ * Represents a general AnnouncementRequest.
+ */
+public class AnnouncementRequest implements Serializable {
+
+<span class="pc" id="L15">    private Integer rentDuration = 0;</span>
+
+<span class="pc" id="L17">    private double listedPrice = 0;</span>
+    private BusinessType businessType;
+    private Property property;
+    private Agent agent;
+    private Client client;
+
+    private DateTime date;
+
+<span class="pc" id="L25">    private boolean status = false;</span>
+
+<span class="fc" id="L27">    public AnnouncementRequest(Integer rentDuration, BusinessType businessType, Property property, Agent agent, Client client) {</span>
+<span class="fc" id="L28">        this.rentDuration = rentDuration;</span>
+<span class="fc" id="L29">        this.businessType = businessType;</span>
+<span class="fc" id="L30">        this.property = property;</span>
+<span class="fc" id="L31">        this.agent = agent;</span>
+<span class="fc" id="L32">        this.client = client;</span>
+<span class="fc" id="L33">        this.date = new DateTime();</span>
+<span class="fc" id="L34">    }</span>
+
+<span class="nc" id="L36">    public AnnouncementRequest(Integer rentDuration, double listedPrice, BusinessType businessType, Property property, Agent agent, Client client) {</span>
+<span class="nc" id="L37">        this.rentDuration = rentDuration;</span>
+<span class="nc" id="L38">        this.listedPrice = listedPrice;</span>
+<span class="nc" id="L39">        this.businessType = businessType;</span>
+<span class="nc" id="L40">        this.property = property;</span>
+<span class="nc" id="L41">        this.agent = agent;</span>
+<span class="nc" id="L42">        this.client = client;</span>
+<span class="nc" id="L43">        this.date = new DateTime();</span>
+<span class="nc" id="L44">    }</span>
+
+<span class="nc" id="L46">    public AnnouncementRequest(BusinessType businessType, Property property, Agent agent, Client client) {</span>
+<span class="nc" id="L47">        this.businessType = businessType;</span>
+<span class="nc" id="L48">        this.property = property;</span>
+<span class="nc" id="L49">        this.agent = agent;</span>
+<span class="nc" id="L50">        this.client = client;</span>
+<span class="nc" id="L51">        this.date = new DateTime();</span>
+<span class="nc" id="L52">    }</span>
+<span class="nc" id="L53">    public AnnouncementRequest(Integer rentDuration, BusinessType businessType, Property property, Agent agent, Client client, DateTime date) {</span>
+<span class="nc" id="L54">        this.rentDuration = rentDuration;</span>
+<span class="nc" id="L55">        this.businessType = businessType;</span>
+<span class="nc" id="L56">        this.property = property;</span>
+<span class="nc" id="L57">        this.agent = agent;</span>
+<span class="nc" id="L58">        this.client = client;</span>
+<span class="nc" id="L59">        this.date = date;</span>
+<span class="nc" id="L60">    }</span>
+
+<span class="nc" id="L62">    public AnnouncementRequest(BusinessType businessType, Property property, Agent agent, Client client, DateTime date) {</span>
+<span class="nc" id="L63">        this.businessType = businessType;</span>
+<span class="nc" id="L64">        this.property = property;</span>
+<span class="nc" id="L65">        this.agent = agent;</span>
+<span class="nc" id="L66">        this.client = client;</span>
+<span class="nc" id="L67">        this.date = date;</span>
+<span class="nc" id="L68">    }</span>
+
+    public void acceptAnnouncementRequest(){
+<span class="nc" id="L71">        this.status = true;</span>
+<span class="nc" id="L72">    }</span>
+
+
+    public boolean isStatus() {
+<span class="nc" id="L76">        return status;</span>
+    }
+
+    public void setStatus(boolean status) {
+<span class="nc" id="L80">        this.status = status;</span>
+<span class="nc" id="L81">    }</span>
+
+    public String getBusinessType() {
+<span class="nc" id="L84">        return String.valueOf(businessType);</span>
+    }
+
+    public BusinessType getBusinessTypeObject() {
+<span class="fc" id="L88">        return this.businessType;</span>
+    }
+
+
+    /**
+     * Checks if the given object is equal to this AnnouncmentRequest object
+     * @param o the object to be compared with this AnnouncmentRequest object
+     * @return true if the given object is equal to this AnnouncmentRequest object, false otherwise
+     */
+        @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if (this == o) {</span>
+<span class="nc" id="L100">            return true;</span>
+        }
+<span class="nc bnc" id="L102" title="All 2 branches missed.">        if (!(o instanceof AnnouncementRequest)) {</span>
+<span class="nc" id="L103">            return false;</span>
+        }
+<span class="nc" id="L105">        AnnouncementRequest announcementRequest = (AnnouncementRequest) o;</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        Boolean rentDurationEqual = rentDuration == announcementRequest.rentDuration;</span>
+<span class="nc" id="L107">        Boolean businessTypeEqual = Objects.equals(businessType, announcementRequest.businessType);</span>
+<span class="nc" id="L108">        Boolean propertyEqual = Objects.equals(property, announcementRequest.property);</span>
+<span class="nc" id="L109">        Boolean agentEqual = Objects.equals(agent, announcementRequest.agent);</span>
+<span class="nc" id="L110">        Boolean clientEqual = Objects.equals(client, announcementRequest.client);</span>
+<span class="nc bnc" id="L111" title="All 10 branches missed.">        return ( rentDurationEqual &amp;&amp; businessTypeEqual &amp;&amp; propertyEqual &amp;&amp; agentEqual &amp;&amp; clientEqual );</span>
+    }
+
+    /**
+     * Returns a hash code value for the AnnouncmentRequest object.
+     *  The hash code is based on the values of the rentDuration, businessType, property, agent and client fields.
+     *
+     * @return the hash code value for this AnnouncmentRequest object
+     */
+    @Override
+    public int hashCode() {
+<span class="nc" id="L122">        return Objects.hash(rentDuration, businessType, property, agent, client);</span>
+    }
+
+    public DateTime getDate() {
+<span class="nc" id="L126">        return date;</span>
+    }
+
+    /**
+     * Clone method.
+     *
+     * @return A clone of the current instance.
+     */
+    public AnnouncementRequest clone() {
+<span class="nc" id="L135">        return new AnnouncementRequest(this.rentDuration,this.businessType,this.property,this.agent,this.client,this.date);</span>
+    }
+
+    /**
+     * Returns a string representation of the AnnouncementRequest object.
+     *
+     * @return A string representation of the AnnouncementRequest object.
+     */
+    public String toString() {
+<span class="nc" id="L144">        String result = String.format(&quot;Announcement Request\n ================== \n &quot;);</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">        if(businessType.getDescriptionAnnoucement().compareTo(&quot;Rent&quot;)==0){</span>
+<span class="nc" id="L146">            result+=String.format( &quot;Rent duration=%d \n&quot;,rentDuration);</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">        } else if (businessType.getDescriptionAnnoucement().compareTo(&quot;Sale&quot;)==0){</span>
+
+<span class="nc" id="L149">            result+=String.format( &quot;Listed Price=%d \n&quot;,listedPrice);</span>
+        }
+
+<span class="nc" id="L152">        result+= String.format( &quot; Business type=%s\n ------------------ \n Property:%s \n ------------------ \n Date:%s&quot;, businessType.getDescriptionAnnoucement(), property, date);</span>
+
+<span class="nc" id="L154">        return result;</span>
+    }
+
+
+    public double getListedPrice(){
+<span class="nc" id="L159">        return listedPrice;</span>
+    }
+
+public void setListedPrice( double listedPrice){
+
+<span class="nc" id="L164">        this.listedPrice=listedPrice;</span>
+<span class="nc" id="L165">}</span>
+
+    public Integer getRentDuration() {
+<span class="fc" id="L168">        return rentDuration;</span>
+    }
+
+    public Property getProperty() {
+<span class="fc" id="L172">        return property;</span>
+    }
+
+    public Agent getAgent() {
+<span class="fc" id="L176">        return agent;</span>
+    }
+
+
+
+
+
+    public Client getClient() {
+<span class="fc" id="L184">        return client;</span>
+    }
+
+
+    public AnnouncementRequestDTO toDTO (){
+<span class="nc" id="L189">        AnnouncementRequest announcementRequest = new AnnouncementRequest(rentDuration,businessType,property,agent,client,date);</span>
+<span class="nc" id="L190">        return AnnouncementRequestMapper.toDTO(announcementRequest);</span>
+    }
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

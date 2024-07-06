@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TaskCategoryRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.repository</a> &gt; <span class="el_source">TaskCategoryRepository.java</span></div><h1>TaskCategoryRepository.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.repository;
+
+import pt.ipp.isep.dei.esoft.project.domain.TaskCategory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * The type Task category repository.
+ */
+<span class="fc" id="L12">public class TaskCategoryRepository {</span>
+
+<span class="fc" id="L14">    private final List&lt;TaskCategory&gt; taskCategories = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * This method returns an exsiting Task Category by its description.
+     *
+     * @param taskCategoryDescription The description of the task category to be created.
+     * @return The task category.
+     * @throws IllegalArgumentException if the task category does not exist, which should never happen.
+     */
+    public TaskCategory getTaskCategoryByDescription(String taskCategoryDescription) {
+<span class="fc" id="L24">        TaskCategory newTaskCategory = new TaskCategory(taskCategoryDescription);</span>
+<span class="fc" id="L25">        TaskCategory taskCategory = null;</span>
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        if (taskCategories.contains(newTaskCategory)) {</span>
+<span class="fc" id="L27">            taskCategory = taskCategories.get(taskCategories.indexOf(newTaskCategory));</span>
+        }
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        if (taskCategory == null) {</span>
+<span class="fc" id="L30">            throw new IllegalArgumentException(</span>
+                    &quot;Task Category requested for [&quot; + taskCategoryDescription + &quot;] does not exist.&quot;);
+        }
+<span class="fc" id="L33">        return taskCategory;</span>
+    }
+
+    /**
+     * Add optional.
+     *
+     * @param taskCategory the task category
+     * @return the optional
+     */
+    public Optional&lt;TaskCategory&gt; add(TaskCategory taskCategory) {
+
+<span class="fc" id="L44">        Optional&lt;TaskCategory&gt; newTaskCategory = Optional.empty();</span>
+<span class="fc" id="L45">        boolean operationSuccess = false;</span>
+
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        if (validateTaskCategory(taskCategory)) {</span>
+<span class="fc" id="L48">            newTaskCategory = Optional.of(taskCategory.clone());</span>
+<span class="fc" id="L49">            operationSuccess = taskCategories.add(newTaskCategory.get());</span>
+        }
+
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        if (!operationSuccess) {</span>
+<span class="fc" id="L53">            newTaskCategory = Optional.empty();</span>
+        }
+
+<span class="fc" id="L56">        return newTaskCategory;</span>
+    }
+
+    private boolean validateTaskCategory(TaskCategory taskCategory) {
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        boolean isValid = !taskCategories.contains(taskCategory);</span>
+<span class="fc" id="L61">        return isValid;</span>
+    }
+
+    /**
+     * This method returns a defensive (immutable) copy of the list of task categories.
+     *
+     * @return The list of task categories.
+     */
+    public List&lt;TaskCategory&gt; getTaskCategories() {
+        //This is a defensive copy, so that the repository cannot be modified from the outside.
+<span class="fc" id="L71">        return List.copyOf(taskCategories);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

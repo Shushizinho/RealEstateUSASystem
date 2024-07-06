@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PurchaseOrder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.domain</a> &gt; <span class="el_source">PurchaseOrder.java</span></div><h1>PurchaseOrder.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.domain;
+
+import java.io.Serializable;
+import java.util.Objects;
+
+public class PurchaseOrder implements Serializable {
+
+    private final double orderAmount;
+    private final Announcement announcement;
+    private final Client client;
+    private int wasAccepted;
+    private DateTime creationDate;
+
+<span class="nc" id="L14">    public PurchaseOrder(double orderAmount, Announcement announcement, Client client) {</span>
+<span class="nc" id="L15">        this.orderAmount = orderAmount;</span>
+<span class="nc" id="L16">        this.announcement = announcement;</span>
+<span class="nc" id="L17">        this.client = client;</span>
+<span class="nc" id="L18">        this.wasAccepted = 0;</span>
+<span class="nc" id="L19">        this.creationDate = new DateTime();</span>
+<span class="nc" id="L20">    }</span>
+
+<span class="nc" id="L22">    public PurchaseOrder(double orderAmount, Announcement announcement, Client client, int wasAccepted, DateTime creationDate) {</span>
+<span class="nc" id="L23">        this.orderAmount = orderAmount;</span>
+<span class="nc" id="L24">        this.announcement = announcement;</span>
+<span class="nc" id="L25">        this.client = client;</span>
+<span class="nc" id="L26">        this.wasAccepted = wasAccepted;</span>
+<span class="nc" id="L27">        this.creationDate = creationDate;</span>
+<span class="nc" id="L28">    }</span>
+
+//    public PropertyType(){
+//
+//    }
+//    wasAccepted values - 1 for Accepted, 0 for Stand By, -1 for Rejected
+    public void acceptOrder(){
+<span class="nc" id="L35">        this.wasAccepted = 1;</span>
+<span class="nc" id="L36">    }</span>
+    public void declineOrder(){
+<span class="nc" id="L38">        this.wasAccepted = -1;</span>
+<span class="nc" id="L39">    }</span>
+    public void rejectOrder(){
+<span class="nc" id="L41">        this.wasAccepted = -1;</span>
+<span class="nc" id="L42">    }</span>
+    public double getOrderAmount() {
+<span class="nc" id="L44">        return orderAmount;</span>
+    }
+    public int accepted(){
+<span class="nc" id="L47">        return wasAccepted;</span>
+    }
+
+    public Client getClient() {
+<span class="nc" id="L51">        return client;</span>
+    }
+
+    /**
+     * Checks if the given object is equal to this PropertyType object
+     * @param o the object to be compared with this PropertyType object
+     * @return true if the given object is equal to this PropertyType object, false otherwise
+     */
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (this == o) {</span>
+<span class="nc" id="L63">            return true;</span>
+        }
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (!(o instanceof PurchaseOrder)) {</span>
+<span class="nc" id="L66">            return false;</span>
+        }
+<span class="nc" id="L68">        PurchaseOrder that = (PurchaseOrder) o;</span>
+<span class="nc bnc" id="L69" title="All 6 branches missed.">        return (orderAmount == that.orderAmount &amp;&amp; announcement.equals(that.announcement) &amp;&amp; client.equals(that.client));</span>
+    }
+
+    /**
+     * Returns a hash code value for the PropertyType object.
+     * The hash code is based on the value of the description field.
+     *
+     * @return the hash code value for this PropertyType object
+     */
+    @Override
+    public int hashCode() {
+<span class="nc" id="L80">        return Objects.hash(orderAmount,announcement,client);</span>
+    }
+
+    public Announcement getAnnouncement() {
+<span class="nc" id="L84">        return announcement;</span>
+    }
+
+<span class="nc" id="L87">    public int getWasAccepted() { return wasAccepted; }</span>
+
+    /**
+     * Clone method.
+     *
+     * @return A clone of the current Property Type.
+     */
+    public PurchaseOrder clone() {
+<span class="nc" id="L95">        return new PurchaseOrder(this.orderAmount, this.announcement, this.client, this.wasAccepted, this.creationDate);</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L100">        return String.format(&quot;\nOrder of $%.2f by %s (%s) made to %s&quot;, this.orderAmount,this.client.getName(), this.client.getEmail(), this.announcement.getProperty().getAddress());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

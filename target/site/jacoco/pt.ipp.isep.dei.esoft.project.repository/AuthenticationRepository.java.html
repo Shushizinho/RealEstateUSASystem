@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthenticationRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.repository</a> &gt; <span class="el_source">AuthenticationRepository.java</span></div><h1>AuthenticationRepository.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.repository;
+
+
+import pt.isep.lei.esoft.auth.AuthFacade;
+import pt.isep.lei.esoft.auth.UserSession;
+
+/**
+ * The type Authentication repository.
+ */
+<span class="fc" id="L10">public class AuthenticationRepository {</span>
+<span class="fc" id="L11">    private final AuthFacade authenticationFacade = new AuthFacade();</span>
+
+    /**
+     * Do login boolean.
+     *
+     * @param email the email
+     * @param pwd   the pwd
+     * @return the boolean
+     */
+    public boolean doLogin(String email, String pwd) {
+<span class="nc" id="L21">        return authenticationFacade.doLogin(email, pwd).isLoggedIn();</span>
+    }
+
+    /**
+     * Do logout.
+     */
+    public void doLogout() {
+<span class="nc" id="L28">        authenticationFacade.doLogout();</span>
+<span class="nc" id="L29">    }</span>
+
+    /**
+     * Gets current user session.
+     *
+     * @return the current user session
+     */
+    public UserSession getCurrentUserSession() {
+<span class="nc" id="L37">        return authenticationFacade.getCurrentUserSession();</span>
+    }
+
+    /**
+     * Add user role boolean.
+     *
+     * @param id          the id
+     * @param description the description
+     * @return the boolean
+     */
+    public boolean addUserRole(String id, String description) {
+<span class="nc" id="L48">        return authenticationFacade.addUserRole(id, description);</span>
+    }
+
+    /**
+     * Add user with role boolean.
+     *
+     * @param name   the name
+     * @param email  the email
+     * @param pwd    the pwd
+     * @param roleId the role id
+     * @return the boolean
+     */
+    public boolean addUserWithRole(String name, String email, String pwd, String roleId) {
+<span class="fc" id="L61">        return authenticationFacade.addUserWithRole(name, email, pwd, roleId);</span>
+    }
+
+    /**
+     * Add user with roles boolean.
+     *
+     * @param name   the name
+     * @param email  the email
+     * @param pwd    the pwd
+     * @param roleId the role id
+     * @return the boolean
+     */
+    public boolean addUserWithRoles(String name, String email, String pwd, String[] roleId) {
+<span class="fc" id="L74">        return authenticationFacade.addUserWithRoles(name, email, pwd, roleId);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

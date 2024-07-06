@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AnnouncementRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.repository</a> &gt; <span class="el_source">AnnouncementRepository.java</span></div><h1>AnnouncementRepository.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.repository;
+
+
+import pt.ipp.isep.dei.esoft.project.domain.*;
+import pt.ipp.isep.dei.esoft.project.dto.*;
+import pt.ipp.isep.dei.esoft.project.mapper.AnnouncementMapper;
+import pt.ipp.isep.dei.esoft.project.mapper.AnnouncementRequestMapper;
+import pt.ipp.isep.dei.esoft.project.mapper.PairMapper;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.List;
+import java.util.ArrayList;
+
+
+/**
+ * Repository class for storing and retrieving {@link Announcement} objects.
+ */
+<span class="fc" id="L22">public class AnnouncementRepository {</span>
+
+<span class="fc" id="L24">    private final List&lt;Announcement&gt; announcements =new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L25">    private final List&lt;SaleAnnouncement&gt; saleAnnouncements= new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L27">    private final List &lt;RentAnnouncement&gt; rentAnnouncements= new ArrayList&lt;&gt;();</span>
+
+
+    /**
+     * Adds a new sale announcement to the repository.
+     *
+     * @param saleAnnouncement the sale announcement to be added to the repository
+     * @return an Optional containing the newly added sale announcement if the operation was successful, or an empty Optional otherwise
+     */
+    public Optional &lt;SaleAnnouncement&gt; add(SaleAnnouncement saleAnnouncement){
+
+<span class="fc" id="L38">        Optional&lt;SaleAnnouncement&gt;  newSaleAnnouncement = Optional.empty();</span>
+
+<span class="fc" id="L40">        boolean operationSuccess = false;</span>
+
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">        if (validateSaleAnnouncement(saleAnnouncement)) {</span>
+<span class="fc" id="L43">            newSaleAnnouncement = Optional.of(saleAnnouncement.clone());</span>
+<span class="pc bpc" id="L44" title="2 of 4 branches missed.">            operationSuccess = (saleAnnouncements.add(newSaleAnnouncement.get()) &amp;&amp; announcements.add(newSaleAnnouncement.get().getAnnouncement()));</span>
+        }
+
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">        if (!operationSuccess) {</span>
+<span class="nc" id="L48">            newSaleAnnouncement = Optional.empty();</span>
+        }
+
+
+<span class="fc" id="L52">        return newSaleAnnouncement;</span>
+
+    }
+
+
+    /**
+     * Add optional .
+     *
+     * @param Announcement the announcement
+     * @return the optional
+     */
+    public Optional &lt;Announcement&gt; add(Announcement Announcement){
+
+<span class="nc" id="L65">        Optional&lt;Announcement&gt;  newAnnouncement = Optional.empty();</span>
+
+<span class="nc" id="L67">        boolean operationSuccess = false;</span>
+
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        if (validateAnnouncement(Announcement)) {</span>
+<span class="nc" id="L70">            newAnnouncement = Optional.of(Announcement.clone());</span>
+<span class="nc" id="L71">            operationSuccess = announcements.add(newAnnouncement.get());</span>
+        }
+
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (!operationSuccess) {</span>
+<span class="nc" id="L75">            newAnnouncement = Optional.empty();</span>
+        }
+
+<span class="nc" id="L78">        return newAnnouncement;</span>
+
+    }
+
+    /**
+     * Adds a new rent announcement to the repository.
+     *
+     * @param rentAnnouncement the rent announcement to add
+     * @return an {@code Optional} containing the newly added announcement if the operation was successful, or an empty {@code Optional} if it failed
+     */
+    public Optional &lt;RentAnnouncement&gt; add(RentAnnouncement rentAnnouncement){
+
+<span class="nc" id="L90">        Optional&lt;RentAnnouncement&gt;  newRentAnnouncement = Optional.empty();</span>
+
+<span class="nc" id="L92">        boolean operationSuccess = false;</span>
+
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (validateRentAnnouncement(rentAnnouncement)) {</span>
+<span class="nc" id="L95">            newRentAnnouncement = Optional.of(rentAnnouncement.clone());</span>
+<span class="nc bnc" id="L96" title="All 4 branches missed.">            operationSuccess = rentAnnouncements.add(newRentAnnouncement.get()) &amp;&amp; announcements.add(newRentAnnouncement.get().getAnnouncement());</span>
+
+        }
+
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        if (!operationSuccess) {</span>
+<span class="nc" id="L101">            newRentAnnouncement = Optional.empty();</span>
+        }
+
+<span class="nc" id="L104">        return newRentAnnouncement;</span>
+
+    }
+
+    /**
+     * Creates a new sale announcement based on the provided parameters.
+     *
+     * @param announcementRequestDTO the DTO object containing the announcement request data
+     * @param commission             the commission for the announcement
+     * @param listedPrice            the listed price for the property
+     * @return an Optional containing the new sale announcement if it was successfully created, or an empty Optional if the announcement was not valid
+     */
+    public Optional&lt;SaleAnnouncement&gt; createSaleAnnouncement(AnnouncementRequestDTO announcementRequestDTO, double commission, double listedPrice){
+
+
+
+<span class="nc" id="L120">        SaleAnnouncement saleAnnouncement = AnnouncementRequestMapper.SaleToEntity( announcementRequestDTO,  commission,  listedPrice);</span>
+
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        if (!validateSaleAnnouncement(saleAnnouncement)) {</span>
+<span class="nc" id="L123">            return Optional.empty();</span>
+        }
+
+<span class="nc" id="L126">        Optional&lt;SaleAnnouncement&gt; newAnnouncement = Optional.of(saleAnnouncement.clone());</span>
+
+<span class="nc" id="L128">        saleAnnouncements.add(saleAnnouncement);</span>
+
+<span class="nc" id="L130">        return newAnnouncement;</span>
+
+
+    }
+
+    /**
+     * Creates a new rent announcement based on the provided parameters.
+     *
+     * @param announcementRequestDTO the DTO object containing the announcement request data
+     * @param commission             the commission for the announcement
+     * @return an Optional containing the new rent announcement if it was successfully created, or an empty Optional if the announcement was not valid
+     */
+    public Optional&lt;RentAnnouncement&gt; createRentAnnouncement(AnnouncementRequestDTO announcementRequestDTO, double commission){
+
+<span class="nc" id="L144">     RentAnnouncement rentAnnouncement= AnnouncementRequestMapper.RentToEntity(announcementRequestDTO,commission);</span>
+
+
+<span class="nc bnc" id="L147" title="All 2 branches missed.">        if (!validateRentAnnouncement(rentAnnouncement)) {</span>
+<span class="nc" id="L148">            return Optional.empty();</span>
+        }
+
+<span class="nc" id="L151">        Optional&lt;RentAnnouncement&gt; newAnnouncement = Optional.of(rentAnnouncement.clone());</span>
+
+<span class="nc" id="L153">        rentAnnouncements.add(rentAnnouncement);</span>
+
+<span class="nc" id="L155">        return newAnnouncement;</span>
+
+
+    }
+
+    /**
+     * Create announcement optional.
+     *
+     * @param announcementRequestDTO the announcement request dto
+     * @param commission             the commission
+     * @return the optional
+     */
+    public Optional&lt;Announcement&gt; createAnnouncement( AnnouncementRequestDTO announcementRequestDTO, double commission){
+
+
+
+<span class="nc" id="L171">        Announcement announcement = AnnouncementRequestMapper.AnnouncementToEntity(announcementRequestDTO,commission);</span>
+
+<span class="nc bnc" id="L173" title="All 2 branches missed.">        if (!validateAnnouncement(announcement)) {</span>
+<span class="nc" id="L174">            return Optional.empty();</span>
+        }
+
+<span class="nc" id="L177">        Optional&lt;Announcement&gt; newAnnouncement = Optional.of(announcement);</span>
+
+<span class="nc" id="L179">        announcements.add(announcement);</span>
+<span class="nc" id="L180">        System.out.println(newAnnouncement.get().getAgent().getEmployee().getName());</span>
+
+<span class="nc" id="L182">        return newAnnouncement;</span>
+
+
+    }
+
+
+    /**
+     * Create announcement optional.
+     *
+     * @param announcementDTO the announcement dto
+     * @return the optional
+     */
+    public Optional&lt;Announcement&gt; createAnnouncement(AnnouncementDTO announcementDTO){
+
+
+
+<span class="nc" id="L198">        Announcement announcement = AnnouncementMapper.toEntity(announcementDTO);</span>
+
+<span class="nc bnc" id="L200" title="All 2 branches missed.">        if (!validateAnnouncement(announcement)) {</span>
+<span class="nc" id="L201">            return Optional.empty();</span>
+        }
+
+<span class="nc" id="L204">        Optional&lt;Announcement&gt; newAnnouncement = Optional.of(announcement.clone());</span>
+
+<span class="nc" id="L206">        announcements.add(announcement);</span>
+<span class="nc" id="L207">        return newAnnouncement;</span>
+
+
+    }
+
+
+    /**
+     * Creates a new sale announcement based on the provided parameters.
+     *
+     * @param date         the date of the announcement
+     * @param commission   the commission for the announcement
+     * @param businessType the business type of the announcement
+     * @param property     the property associated with the announcement
+     * @param listedPrice  the listed price for the property
+     * @param agent        the employee responsible for the announcement
+     * @return an Optional containing the new sale announcement if it was successfully created, or an empty Optional if the announcement was not valid
+     */
+    public Optional&lt;SaleAnnouncement&gt; createSaleAnnouncement2(DateTime date, double commission, BusinessType businessType, Property property, double listedPrice, Agent agent){
+
+
+
+<span class="nc" id="L228">        SaleAnnouncement saleAnnouncement = new SaleAnnouncement(agent,date,commission,businessType,property,listedPrice);</span>
+
+<span class="nc bnc" id="L230" title="All 2 branches missed.">        if (!validateSaleAnnouncement(saleAnnouncement)) {</span>
+<span class="nc" id="L231">            return Optional.empty();</span>
+        }
+
+<span class="nc" id="L234">        Optional&lt;SaleAnnouncement&gt; newAnnouncement = Optional.of(saleAnnouncement.clone());</span>
+
+<span class="nc" id="L236">        saleAnnouncements.add(saleAnnouncement);</span>
+
+<span class="nc" id="L238">        return newAnnouncement;</span>
+
+
+    }
+
+    /**
+     * Creates a new rent announcement based on the provided parameters.
+     *
+     * @param date         the date of the announcement
+     * @param commission   the commission for the announcement
+     * @param businessType the business type of the announcement
+     * @param property     the property associated with the announcement
+     * @param rentDuration the duration of the rent for the property
+     * @param agent        the employee responsible for the announcement
+     * @return an Optional containing the new rent announcement if it was successfully created, or an empty Optional if the announcement was not valid
+     */
+    public Optional&lt;RentAnnouncement&gt; createRentAnnouncement2(DateTime date, double commission, BusinessType businessType, Property property, Integer rentDuration, Agent agent){
+
+<span class="nc" id="L256">        RentAnnouncement rentAnnouncement = new RentAnnouncement(agent,date,commission,businessType,property,rentDuration);</span>
+<span class="nc bnc" id="L257" title="All 2 branches missed.">        if (!validateRentAnnouncement(rentAnnouncement)) {</span>
+<span class="nc" id="L258">            return Optional.empty();</span>
+        }
+
+<span class="nc" id="L261">        Optional&lt;RentAnnouncement&gt; newAnnouncement = Optional.of(rentAnnouncement.clone());</span>
+
+<span class="nc" id="L263">        rentAnnouncements.add(rentAnnouncement);</span>
+
+<span class="nc" id="L265">        return newAnnouncement;</span>
+
+
+    }
+
+    /**
+     * Retrieves a copy of the list of sale announcements.
+     *
+     * @return a list of sale announcements
+     */
+    public List&lt;Announcement&gt; getSaleAnnouncements() {
+<span class="nc" id="L276">        List&lt;Announcement&gt; saleAnnouncements = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L277" title="All 2 branches missed.">        for (Announcement announcement:announcements) {</span>
+<span class="nc bnc" id="L278" title="All 2 branches missed.">            if (announcement.getBusinessType().equals(new BusinessType(&quot;Sale&quot;, &quot;Buy&quot;))) {</span>
+<span class="nc" id="L279">                saleAnnouncements.add(announcement);</span>
+            }
+<span class="nc" id="L281">        }</span>
+//        saleAnnouncementsCopy.addAll(saleAnnouncements);
+<span class="nc" id="L283">        return saleAnnouncements;</span>
+    }
+
+    /**
+     * Gets rent announcements.
+     *
+     * @return the rent announcements
+     */
+    public List&lt;RentAnnouncement&gt; getRentAnnouncements() {
+<span class="nc" id="L292">        List&lt;RentAnnouncement&gt; rentAnnouncementsCopy = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L293">        rentAnnouncementsCopy.addAll(rentAnnouncements);</span>
+<span class="nc" id="L294">        return rentAnnouncementsCopy;</span>
+    }
+
+
+    /**
+     * Validate announcement boolean.
+     *
+     * @param announcement the announcement
+     * @return the boolean
+     */
+    public boolean validateAnnouncement(Announcement announcement) {
+<span class="nc bnc" id="L305" title="All 2 branches missed.">        for(Announcement sa : announcements){</span>
+<span class="nc bnc" id="L306" title="All 2 branches missed.">            if(sa.equals(announcement)){</span>
+<span class="nc" id="L307">                return false;</span>
+            }
+<span class="nc" id="L309">        }</span>
+<span class="nc" id="L310">        return true;</span>
+    }
+
+
+    /**
+     * Validates if a SaleAnnouncement is valid to be added to the list of SaleAnnouncements.
+     * A RentAnnouncement is considered valid if it does not already exist in the list of SaleAnnouncements.
+     *
+     * @param saleAnnouncement the SaleAnnouncement to be validated
+     * @return true if the SaleAnnouncement is valid, false otherwise
+     */
+    public boolean validateSaleAnnouncement(SaleAnnouncement saleAnnouncement) {
+<span class="fc bfc" id="L322" title="All 2 branches covered.">      for(SaleAnnouncement sa : saleAnnouncements){</span>
+<span class="pc bpc" id="L323" title="1 of 2 branches missed.">          if(sa.equals(saleAnnouncement)){</span>
+<span class="nc" id="L324">              return false;</span>
+          }
+<span class="fc" id="L326">      }</span>
+<span class="fc" id="L327">      return true;</span>
+    }
+
+    /**
+     * Validates if a RentAnnouncement is valid to be added to the list of RentAnnouncements.
+     * A RentAnnouncement is considered valid if it does not already exist in the list of RentAnnouncements.
+     *
+     * @param rentAnnouncement the RentAnnouncement to be validated
+     * @return true if the RentAnnouncement is valid, false otherwise
+     */
+    public boolean validateRentAnnouncement(RentAnnouncement rentAnnouncement) {
+<span class="nc bnc" id="L338" title="All 2 branches missed.">        for(RentAnnouncement ra : rentAnnouncements){</span>
+
+<span class="nc bnc" id="L340" title="All 2 branches missed.">            if(ra.equals(rentAnnouncement)){</span>
+<span class="nc" id="L341">                return false;</span>
+            }
+
+<span class="nc" id="L344">        }</span>
+<span class="nc" id="L345">        return true;</span>
+    }
+
+
+    /**
+     * Removes the specified SaleAnnouncement from the list of announcements.
+     *
+     * @param saleAnnouncement the SaleAnnouncement to remove
+     * @return true if the SaleAnnouncement was removed successfully, false otherwise
+     */
+    public boolean removeSaleAnnouncement(SaleAnnouncement saleAnnouncement){
+
+<span class="nc" id="L357">        return saleAnnouncements.remove(saleAnnouncement);</span>
+    }
+
+    /**
+
+     Returns a list of all announcements stored in the system.
+     @return a list of all announcements stored in the system
+     */
+    private List&lt;Announcement&gt; getAllAnnouncements() {
+<span class="nc" id="L366">        return announcements;</span>
+    }
+
+    /**
+     * Returns an immutable copy of the list of all announcements in the system.
+     *
+     * @return an immutable copy of the list of all announcements in the system.
+     */
+    public List&lt;Announcement&gt; getAnnouncements(){
+<span class="fc" id="L375">        return List.copyOf(announcements);</span>
+    }
+
+
+    /**
+     * Returns a list of all properties that are current with a given businessType.
+     *
+     * @param businessType the business type
+     * @return a list of Property objects that are with a given businessType.
+     */
+    public List&lt;Property&gt; getAllPropertiesByBusinessType(String businessType){
+<span class="fc" id="L386">        List&lt;Property&gt; properties = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L387" title="All 2 branches covered.">        for (Announcement announcement : announcements) {</span>
+<span class="pc bpc" id="L388" title="1 of 2 branches missed.">            if (announcement.getBusinessType().getDescriptionProperty().equals(businessType)) {</span>
+<span class="fc" id="L389">                properties.add(announcement.getProperty());</span>
+            }
+<span class="fc" id="L391">        }</span>
+<span class="fc" id="L392">        return properties;</span>
+    }
+
+
+    /**
+     * This method makes a list of all properties with an announcement.
+     *
+     * @return list of properties.
+     */
+    public List&lt;Property&gt; getPropertyListByAnnouncements(){
+<span class="nc" id="L402">        List&lt;Property&gt; properties= getAllPropertiesByBusinessType(&quot;Rent&quot;);</span>
+<span class="nc" id="L403">        List&lt;Property&gt; properties1 = getAllPropertiesByBusinessType(&quot;Sale&quot;);</span>
+<span class="nc" id="L404">        properties.addAll(properties1);</span>
+
+<span class="nc" id="L406">        Collections.sort(properties, new DateComparator());</span>
+
+<span class="nc" id="L408">        return properties;</span>
+    }
+
+
+    /**
+     * Returns the sale announcement that has the given property.
+     *
+     * @param businessType the business type
+     * @return the announcement that has the given property
+     * @throws IllegalArgumentException if no announcement with the given property exists
+     */
+    public List&lt;Announcement&gt; getSaleAnnouncementByBusinessType(String businessType) {
+<span class="nc" id="L420">        List&lt;Announcement&gt; an= new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L421">        BusinessTypeRepository businessTypeRepository = Repositories.getInstance().getBusinessTypeRepository();</span>
+
+
+<span class="nc bnc" id="L424" title="All 2 branches missed.">        for (Announcement announcement : announcements) {</span>
+<span class="nc" id="L425">            BusinessType businessType1 = announcement.getBusinessType();</span>
+<span class="nc" id="L426">            BusinessType businessType2 = businessTypeRepository.getBusinessTypeByDescription(businessType, false);</span>
+<span class="nc bnc" id="L427" title="All 2 branches missed.">            if (businessType1.equals(businessType2)) {</span>
+<span class="nc" id="L428">                an.add(announcement);</span>
+            }
+<span class="nc" id="L430">        }</span>
+<span class="nc" id="L431">        return an;</span>
+    }
+
+
+    /**
+     * Create sms.
+     *
+     * @param senderNumber    the sender number
+     * @param agentName       the agent name
+     * @param dateTime        the date time
+     * @param address         the address
+     */
+    public void createSMS(long senderNumber,String agentName, DateTimeDTO dateTime, AddressDTO address) {
+<span class="nc" id="L444">        String fileName = &quot;Sms.txt&quot;;</span>
+
+
+<span class="nc" id="L447">        String fileContent = &quot;Number: &quot; + senderNumber + &quot;\n&quot;</span>
+<span class="nc" id="L448">                + &quot;Address: &quot; + address.toString() + &quot;\n&quot;</span>
+<span class="nc" id="L449">                + &quot;Date and Time: &quot; + dateTime.toStringDTO() + &quot;\n&quot;</span>
+                + &quot;Agent: &quot; + agentName + &quot;\n&quot;
+                + &quot;Dear owner,\n\n&quot;
+                + &quot;We are pleased to inform you that the advertisement for your property has been published.\n&quot;
+                + &quot;Please check our website or contact your agent for further details.\n\n&quot;;
+
+<span class="nc" id="L455">        String directory = &quot;src\\main\\resources\\passwords\\&quot;;</span>
+
+        try {
+<span class="nc" id="L458">            File file = new File(directory, fileName);</span>
+
+            FileWriter writer;
+<span class="nc bnc" id="L461" title="All 2 branches missed.">            if (file.exists()) {</span>
+<span class="nc" id="L462">                writer = new FileWriter(file, true);</span>
+            } else {
+<span class="nc" id="L464">                writer = new FileWriter(file);</span>
+            }
+
+<span class="nc" id="L467">            writer.append(&quot;\n\n&quot;);</span>
+<span class="nc" id="L468">            writer.write(fileContent);</span>
+<span class="nc" id="L469">            writer.close();</span>
+<span class="nc" id="L470">            System.out.println(&quot;=====================&quot;);</span>
+<span class="nc" id="L471">            System.out.println(&quot;Sms was sent successfully.&quot;);</span>
+<span class="nc" id="L472">        } catch (IOException e) {</span>
+<span class="nc" id="L473">            System.out.println(&quot;An error occurred while creating the sms.&quot;);</span>
+<span class="nc" id="L474">            e.printStackTrace();</span>
+<span class="nc" id="L475">        }</span>
+<span class="nc" id="L476">    }</span>
+
+
+    /**
+     * Returns the rent announcement that has the given property.
+     *
+     * @param businessType the business type
+     * @return the announcement that has the given property
+     * @throws IllegalArgumentException if no announcement with the given property exists
+     */
+    public List&lt;Announcement&gt; getRentAnnouncementByProperty(String businessType) {
+<span class="nc" id="L487">        List&lt;Announcement&gt; an= new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L488">        BusinessTypeRepository businessTypeRepository = Repositories.getInstance().getBusinessTypeRepository();</span>
+<span class="nc bnc" id="L489" title="All 2 branches missed.">        for (RentAnnouncement announcement : rentAnnouncements) {</span>
+<span class="nc" id="L490">            BusinessType businessType1 = announcement.getAnnouncement().getBusinessType();</span>
+<span class="nc" id="L491">            BusinessType businessType2 = businessTypeRepository.getBusinessTypeByDescription(businessType, true);</span>
+<span class="nc bnc" id="L492" title="All 2 branches missed.">            if (businessType1.equals(businessType2)) {</span>
+<span class="nc" id="L493">                an.add(announcement.getAnnouncement());</span>
+            }
+<span class="nc" id="L495">        }</span>
+<span class="nc" id="L496">        return an;</span>
+    }
+
+    /**
+     * Retrieves the sale announcement associated with a given property.
+     *
+     * @param property the property to find the sale announcement for
+     * @return the sale announcement associated with the property, or null if not found
+     */
+    public Announcement getAnnouncementByProperty(Property property) {
+<span class="fc bfc" id="L506" title="All 2 branches covered.">        for (Announcement announcement : announcements) {</span>
+            //announcement.getBusinessType().equals(new BusinessType(&quot;Sale&quot;, &quot;Buy&quot;)) &amp;&amp;
+<span class="pc bpc" id="L508" title="1 of 2 branches missed.">            if (announcement.getProperty().equals(property)) {</span>
+<span class="nc" id="L509">                return announcement;</span>
+            }
+<span class="fc" id="L511">        }</span>
+<span class="fc" id="L512">        return null;</span>
+    }
+
+    /**
+     * Gets announcements by store.
+     *
+     * @param store the store
+     * @return the announcements by store
+     */
+    public List&lt;Announcement&gt; getAnnouncementsByStore(Store store) {
+<span class="nc" id="L522">        List&lt;Announcement&gt; announcementList = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L523" title="All 2 branches missed.">        for (Announcement announcement : announcements) {</span>
+<span class="nc bnc" id="L524" title="All 2 branches missed.">            if (announcement.getProperty().getStore().equals(store)) {</span>
+<span class="nc" id="L525">                announcementList.add(announcement);</span>
+            }
+<span class="nc" id="L527">        }</span>
+<span class="nc" id="L528">        return announcementList;</span>
+    }
+
+
+    /**
+     * Returns the announcement that matches the given {@code BusinessType}.
+     *
+     * @param businessType the business type of the announcement to be retrieved
+     * @return the announcement that matches the given business type
+     * @throws IllegalArgumentException if no announcement with the given business type is found
+     */
+    public Announcement getAnnouncementByBusinessType(BusinessType businessType) {
+
+
+<span class="nc bnc" id="L542" title="All 2 branches missed.">        for ( Announcement announcement : announcements) {</span>
+<span class="nc bnc" id="L543" title="All 2 branches missed.">            if (announcement.getBusinessType().equals(businessType)) {</span>
+<span class="nc" id="L544">                return announcement;</span>
+            }
+<span class="nc" id="L546">        }</span>
+<span class="nc" id="L547">        throw new IllegalArgumentException(&quot;Announcement with business type [&quot; + businessType + &quot;] does not exist.&quot;);</span>
+    }
+
+    /**
+     * Filters a list of sale announcements based on store and price range criteria.
+     *
+     * @param announcementList the list of sale announcements to be filtered
+     * @param store            the store to compare with (null if it is to not be filtered by store)
+     * @param priceRange       the price range to compare with (null if it is to not be filtered by priceRange)
+     * @return the filtered list of sale announcements
+     */
+    public List&lt;Announcement&gt; filterSaleAnnouncements(List&lt;Announcement&gt; announcementList, Store store, PairDTO&lt;Integer, Integer&gt; priceRange){
+<span class="nc" id="L559">        List&lt;Announcement&gt; filteredAnnouncementList = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L560" title="All 2 branches missed.">        for (Announcement saleAnnouncement: announcementList) {</span>
+<span class="nc bnc" id="L561" title="All 2 branches missed.">            if (checkStoreAndPrice(saleAnnouncement, store, PairMapper.toEntity(priceRange))) filteredAnnouncementList.add(saleAnnouncement);</span>
+<span class="nc" id="L562">        }</span>
+<span class="nc" id="L563">        return filteredAnnouncementList;</span>
+    }
+    /**
+     * Checks if a sale announcement satisfies the store and price range criteria.
+     *
+     * @param saleAnnouncement the sale announcement to be checked
+     * @param store the store to compare with (null if it is to not be filtered by store)
+     * @param priceRange the price range to compare with (null if it is to not be filtered by priceRange)
+     * @return true if the sale announcement satisfies the criteria, false otherwise
+     */
+    private Boolean checkStoreAndPrice(Announcement saleAnnouncement, Store store, Pair&lt;Integer, Integer&gt; priceRange){
+//        System.out.println(saleAnnouncement.getProperty());
+<span class="nc bnc" id="L575" title="All 8 branches missed.">        return ((saleAnnouncement.getProperty().getStore().equals(store) || store == null) &amp;&amp; (saleAnnouncement.getProperty().priceInRange(priceRange) || priceRange == null));</span>
+    }
+
+    /**
+     * Gets last.
+     *
+     * @return the last
+     */
+    public Announcement getLast() {
+<span class="nc" id="L584">        return announcements.get(announcements.size()-1);</span>
+    }
+
+
+
+
+
+
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

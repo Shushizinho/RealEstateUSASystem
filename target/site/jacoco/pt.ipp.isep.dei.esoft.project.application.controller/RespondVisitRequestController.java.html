@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RespondVisitRequestController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.application.controller</a> &gt; <span class="el_source">RespondVisitRequestController.java</span></div><h1>RespondVisitRequestController.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.application.controller;
+
+import pt.ipp.isep.dei.esoft.project.domain.Client;
+import pt.ipp.isep.dei.esoft.project.domain.VisitRequest;
+import pt.ipp.isep.dei.esoft.project.dto.VisitRequestDTO;
+import pt.ipp.isep.dei.esoft.project.mapper.VisitRequestMapper;
+import pt.ipp.isep.dei.esoft.project.repository.AuthenticationRepository;
+import pt.ipp.isep.dei.esoft.project.repository.ClientRepository;
+import pt.ipp.isep.dei.esoft.project.repository.Repositories;
+import pt.ipp.isep.dei.esoft.project.repository.VisitRequestRepository;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * The type Respond visit request controller.
+ */
+public class RespondVisitRequestController {
+
+<span class="nc" id="L20">    private AuthenticationRepository authenticationRepository = null;</span>
+<span class="nc" id="L21">    private VisitRequestRepository visitRequestRepository = null;</span>
+<span class="nc" id="L22">    private ClientRepository clientRepository = null;</span>
+
+    /**
+     * Instantiates a new Respond visit request controller.
+     */
+<span class="nc" id="L27">    public RespondVisitRequestController() {</span>
+<span class="nc" id="L28">        getVisitRequestRepository();</span>
+<span class="nc" id="L29">        getAuthenticationRepository();</span>
+<span class="nc" id="L30">        getClientRepository();</span>
+<span class="nc" id="L31">    }</span>
+
+    /**
+     * Retrieves the AuthenticationRepository instance.
+     * If the repository is not yet initialized, it initializes it using the Repositories singleton.
+     *
+     * @return The AuthenticationRepository instance.
+     */
+    private AuthenticationRepository getAuthenticationRepository() {
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        if (authenticationRepository == null) {</span>
+<span class="nc" id="L41">            Repositories repositories = Repositories.getInstance();</span>
+<span class="nc" id="L42">            authenticationRepository = repositories.getAuthenticationRepository();</span>
+        }
+<span class="nc" id="L44">        return authenticationRepository;</span>
+    }
+
+    private VisitRequestRepository getVisitRequestRepository(){
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        if(visitRequestRepository == null){</span>
+<span class="nc" id="L49">            Repositories repositories = Repositories.getInstance();</span>
+<span class="nc" id="L50">            visitRequestRepository = repositories.getVisitRequestRepository();</span>
+        }
+<span class="nc" id="L52">        return visitRequestRepository;</span>
+    }
+
+    private ClientRepository getClientRepository(){
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        if(clientRepository == null){</span>
+<span class="nc" id="L57">            Repositories repositories = Repositories.getInstance();</span>
+<span class="nc" id="L58">            clientRepository = repositories.getClientRepository();</span>
+        }
+<span class="nc" id="L60">        return clientRepository;</span>
+    }
+
+    /**
+     * Get visit requests list.
+     *
+     * @return the list
+     */
+    public List&lt;VisitRequest&gt; getVisitRequests(){
+<span class="nc" id="L69">        visitRequestRepository = getVisitRequestRepository();</span>
+<span class="nc" id="L70">        List&lt;VisitRequest&gt; v = visitRequestRepository.getVisitRequests();</span>
+<span class="nc" id="L71">        List&lt;VisitRequestDTO&gt; visitRequestDTOS = VisitRequestMapper.getVisitRequestsDTO(v);</span>
+
+<span class="nc" id="L73">        List&lt;VisitRequest&gt; visitRequests= new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        for (VisitRequestDTO visitRequestDTO : visitRequestDTOS) {</span>
+<span class="nc" id="L75">            visitRequests.add(VisitRequestMapper.toEntity(visitRequestDTO));</span>
+<span class="nc" id="L76">        }</span>
+
+<span class="nc" id="L78">        return visitRequests;</span>
+
+    }
+
+    /**
+     * Get client list list.
+     *
+     * @return the list
+     */
+    public List&lt;Client&gt; getClientList(){
+<span class="nc" id="L88">        ClientRepository clientRepository = getClientRepository();</span>
+<span class="nc" id="L89">        return clientRepository.getClients();</span>
+    }
+
+    /**
+     * Creates and sends an email using the specified details.
+     *
+     * @param sender   The email address of the sender.
+     * @param receiver The email address of the recipient.
+     * @param subject  The subject of the email.
+     * @param message  The content of the email.
+     */
+    public void createEmail(String sender, String receiver, String subject, String message){
+<span class="nc" id="L101">        getVisitRequestRepository().createEmail(sender, receiver, subject, message);</span>
+<span class="nc" id="L102">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

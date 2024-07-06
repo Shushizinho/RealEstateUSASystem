@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Repositories.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.repository</a> &gt; <span class="el_source">Repositories.java</span></div><h1>Repositories.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.repository;
+
+/**
+ * The type Repositories.
+ */
+public class Repositories {
+
+<span class="fc" id="L8">    private static final Repositories instance = new Repositories();</span>
+    /**
+     * The Task category repository.
+     */
+<span class="fc" id="L12">    TaskCategoryRepository taskCategoryRepository = new TaskCategoryRepository();</span>
+    /**
+     * The Organization repository.
+     */
+<span class="fc" id="L16">    OrganizationRepository organizationRepository = new OrganizationRepository();</span>
+    /**
+     * The Authentication repository.
+     */
+<span class="fc" id="L20">    AuthenticationRepository authenticationRepository = new AuthenticationRepository();</span>
+    /**
+     * The Announcement repository.
+     */
+<span class="fc" id="L24">    AnnouncementRepository announcementRepository = new AnnouncementRepository();</span>
+
+    /**
+     * The Property filters repository.
+     */
+<span class="fc" id="L29">    PropertyFiltersRepository propertyFiltersRepository = new PropertyFiltersRepository();</span>
+    /**
+     * The Property type repository.
+     */
+<span class="fc" id="L33">    PropertyTypeRepository propertyTypeRepository = new PropertyTypeRepository();</span>
+    /**
+     * The Business type repository.
+     */
+<span class="fc" id="L37">    BusinessTypeRepository businessTypeRepository = new BusinessTypeRepository();</span>
+    /**
+     * The Store repository.
+     */
+<span class="fc" id="L41">    StoreRepository storeRepository = new StoreRepository();</span>
+    /**
+     * The Employee repository.
+     */
+<span class="fc" id="L45">    EmployeeRepository employeeRepository = new EmployeeRepository();</span>
+    /**
+     * The Purchase order repository.
+     */
+<span class="fc" id="L49">    PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();</span>
+
+    /**
+     * The Property repository.
+     */
+<span class="fc" id="L54">    PropertyRepository propertyRepository = new PropertyRepository();</span>
+
+    /**
+     * The Role repository.
+     */
+<span class="fc" id="L59">    RoleRepository roleRepository = new RoleRepository();</span>
+    /**
+     * The Client repository.
+     */
+<span class="fc" id="L63">    ClientRepository clientRepository = new ClientRepository();</span>
+    /**
+     * The Announcement request repository.
+     */
+<span class="fc" id="L67">    AnnouncementRequestRepository announcementRequestRepository = new AnnouncementRequestRepository();</span>
+
+    /**
+     * The Visit request repository.
+     */
+<span class="fc" id="L72">    VisitRequestRepository visitRequestRepository = new VisitRequestRepository();</span>
+
+
+
+<span class="fc" id="L76">    private Repositories() {</span>
+<span class="fc" id="L77">    }</span>
+
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
+    public static Repositories getInstance() {
+<span class="fc" id="L85">        return instance;</span>
+    }
+
+    /**
+     * Gets organization repository.
+     *
+     * @return the organization repository
+     */
+    public OrganizationRepository getOrganizationRepository() {
+<span class="fc" id="L94">        return organizationRepository;</span>
+    }
+
+    /**
+     * Gets task category repository.
+     *
+     * @return the task category repository
+     */
+    public TaskCategoryRepository getTaskCategoryRepository() {
+<span class="fc" id="L103">        return taskCategoryRepository;</span>
+    }
+
+    /**
+     * Gets authentication repository.
+     *
+     * @return the authentication repository
+     */
+    public AuthenticationRepository getAuthenticationRepository() {
+<span class="fc" id="L112">        return authenticationRepository;</span>
+    }
+
+    /**
+     * Gets property filters repository.
+     *
+     * @return the property filters repository
+     */
+    public PropertyFiltersRepository getPropertyFiltersRepository() {
+<span class="fc" id="L121">        return propertyFiltersRepository;</span>
+    }
+
+    /**
+     * Gets property type repository.
+     *
+     * @return the property type repository
+     */
+    public PropertyTypeRepository getPropertyTypeRepository() {
+<span class="fc" id="L130">        return propertyTypeRepository;</span>
+    }
+
+    /**
+     * Gets client repository.
+     *
+     * @return the client repository
+     */
+    public ClientRepository getClientRepository() {
+<span class="fc" id="L139">        return clientRepository;</span>
+    }
+
+    /**
+     * Gets business type repository.
+     *
+     * @return the business type repository
+     */
+    public BusinessTypeRepository getBusinessTypeRepository() {
+<span class="fc" id="L148">        return businessTypeRepository;</span>
+    }
+
+
+    /**
+     * Gets store repository.
+     *
+     * @return the store repository
+     */
+    public StoreRepository getStoreRepository() {
+<span class="fc" id="L158">        return storeRepository;</span>
+    }
+
+
+    /**
+     * Gets sale announcement repository.
+     *
+     * @return the sale announcement repository
+     */
+    public AnnouncementRepository getSaleAnnouncementRepository() {
+<span class="nc" id="L168">        return announcementRepository;</span>
+    }
+
+    /**
+     * Get employee repository employee repository.
+     *
+     * @return the employee repository
+     */
+<span class="fc" id="L176">    public EmployeeRepository getEmployeeRepository(){return employeeRepository; }</span>
+
+    /**
+     * Get property repository property repository.
+     *
+     * @return the property repository
+     */
+    public PropertyRepository getPropertyRepository(){
+<span class="fc" id="L184">        return propertyRepository;</span>
+    }
+
+    /**
+     * Get purchase order repository purchase order repository.
+     *
+     * @return the purchase order repository
+     */
+    public PurchaseOrderRepository getPurchaseOrderRepository(){
+<span class="fc" id="L193">        return purchaseOrderRepository;</span>
+    }
+
+    /**
+     * Gets role repository.
+     *
+     * @return the role repository
+     */
+    public RoleRepository getRoleRepository() {
+<span class="fc" id="L202">        return roleRepository;</span>
+    }
+
+    /**
+     * Gets announcement repository.
+     *
+     * @return the announcement repository
+     */
+<span class="fc" id="L210">    public AnnouncementRepository getAnnouncementRepository() {return announcementRepository;}</span>
+
+    /**
+     * Gets announcement request repository.
+     *
+     * @return the announcement request repository
+     */
+<span class="fc" id="L217">    public AnnouncementRequestRepository getAnnouncementRequestRepository() {return announcementRequestRepository;}</span>
+
+    /**
+     * Gets visit request repository.
+     *
+     * @return the visit request repository
+     */
+    public  VisitRequestRepository getVisitRequestRepository() {
+<span class="fc" id="L225">        return  visitRequestRepository;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

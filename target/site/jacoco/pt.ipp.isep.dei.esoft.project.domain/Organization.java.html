@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Organization.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.domain</a> &gt; <span class="el_source">Organization.java</span></div><h1>Organization.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.domain;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+public class Organization {
+    private final String vatNumber;
+<span class="nc" id="L10">    List&lt;Employee&gt; employees = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L11">    List&lt;Task&gt; tasks = new ArrayList&lt;&gt;();</span>
+    private String name;
+    private String website;
+    private String phone;
+    private String email;
+
+    /**
+     * This method is the constructor of the organization.
+     *
+     * @param vatNumber The vat number of the organization. This is the identity of the organization, therefore it
+     *                  cannot be changed.
+     */
+<span class="nc" id="L23">    public Organization(String vatNumber) {</span>
+<span class="nc" id="L24">        this.vatNumber = vatNumber;</span>
+<span class="nc" id="L25">    }</span>
+
+    /**
+     * This method checks if an employee works for the organization.
+     *
+     * @param employee The employee to be checked.
+     * @return True if the employee works for the organization.
+     */
+    public boolean employs(Employee employee) {
+<span class="nc" id="L34">        return employees.contains(employee);</span>
+    }
+
+    /**
+     * This method creates a new task.
+     *
+     * @param reference            The reference of the task to be created.
+     * @param description          The description of the task to be created.
+     * @param informalDescription  The informal description of the task to be created.
+     * @param technicalDescription The technical description of the task to be created.
+     * @param duration             The duration of the task to be created.
+     * @param cost                 The cost of the task to be created.
+     * @param taskCategory         The task category of the task to be created.
+     * @param employee             The employee of the task to be created.
+     * @return
+     */
+    public Optional&lt;Task&gt; createTask(String reference, String description, String informalDescription,
+                                     String technicalDescription, Integer duration, Double cost,
+                                     TaskCategory taskCategory, Employee employee) {
+
+        //TODO: we could also check if the employee works for the organization before proceeding
+        //checkIfEmployeeWorksForOrganization(employee);
+
+        // When a Task is added, it should fail if the Task already exists in the list of Tasks.
+        // In order to not return null if the operation fails, we use the Optional class.
+<span class="nc" id="L59">        Optional&lt;Task&gt; optionalValue = Optional.empty();</span>
+
+<span class="nc" id="L61">        Task task = new Task(reference, description, informalDescription, technicalDescription, duration, cost,</span>
+                taskCategory, employee);
+
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        if (addTask(task)) {</span>
+<span class="nc" id="L65">            optionalValue = Optional.of(task);</span>
+        }
+<span class="nc" id="L67">        return optionalValue;</span>
+    }
+
+    /**
+     * This method adds a task to the list of tasks.
+     *
+     * @param task The task to be added.
+     * @return True if the task was added successfully.
+     */
+    private boolean addTask(Task task) {
+<span class="nc" id="L77">        boolean success = false;</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        if (validate(task)) {</span>
+            // A clone of the task is added to the list of tasks, to avoid side effects and outside manipulation.
+<span class="nc" id="L80">            success = tasks.add(task.clone());</span>
+        }
+<span class="nc" id="L82">        return success;</span>
+
+    }
+
+    /**
+     * This method validates the task, checking for duplicates.
+     *
+     * @param task The task to be validated.
+     * @return True if the task is valid.
+     */
+    private boolean validate(Task task) {
+<span class="nc" id="L93">        return tasksDoNotContain(task);</span>
+    }
+
+    /**
+     * This method checks if the task is already in the list of tasks.
+     *
+     * @param task The task to be checked.
+     * @return True if the task is not in the list of tasks.
+     */
+    private boolean tasksDoNotContain(Task task) {
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        return !tasks.contains(task);</span>
+    }
+
+    /**
+     * This methos checks if the organization has an employee with the given email.
+     *
+     * @param email The email to be checked.
+     * @return True if the organization has an employee with the given email.
+     */
+    public boolean anyEmployeeHasEmail(String email) {
+<span class="nc" id="L113">        boolean result = false;</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">        for (Employee employee : employees) {</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">            if (employee.hasEmail(email)) {</span>
+<span class="nc" id="L116">                result = true;</span>
+            }
+<span class="nc" id="L118">        }</span>
+<span class="nc" id="L119">        return result;</span>
+    }
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        if (this == o) {</span>
+<span class="nc" id="L125">            return true;</span>
+        }
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        if (!(o instanceof Organization)) {</span>
+<span class="nc" id="L128">            return false;</span>
+        }
+<span class="nc" id="L130">        Organization that = (Organization) o;</span>
+<span class="nc" id="L131">        return vatNumber.equals(that.vatNumber);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L136">        return Objects.hash(vatNumber);</span>
+    }
+
+    //add employee to organization
+    public boolean addEmployee(Employee employee) {
+<span class="nc" id="L141">        boolean success = false;</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        if (validateEmployee(employee)) {</span>
+<span class="nc" id="L143">            success = employees.add(employee);</span>
+        }
+<span class="nc" id="L145">        return success;</span>
+    }
+
+    private boolean validateEmployee(Employee employee) {
+<span class="nc" id="L149">        return employeesDoNotContain(employee);</span>
+    }
+
+    private boolean employeesDoNotContain(Employee employee) {
+<span class="nc bnc" id="L153" title="All 2 branches missed.">        return !employees.contains(employee);</span>
+    }
+
+    //Clone organization
+    public Organization clone() {
+<span class="nc" id="L158">        Organization clone = new Organization(this.vatNumber);</span>
+<span class="nc" id="L159">        clone.name = (this.name);</span>
+<span class="nc" id="L160">        clone.website = (this.website);</span>
+<span class="nc" id="L161">        clone.phone = (this.phone);</span>
+<span class="nc" id="L162">        clone.email = (this.email);</span>
+
+<span class="nc bnc" id="L164" title="All 2 branches missed.">        for (Employee in : this.employees) {</span>
+<span class="nc" id="L165">            clone.employees.add(in.clone());</span>
+<span class="nc" id="L166">        }</span>
+
+
+<span class="nc bnc" id="L169" title="All 2 branches missed.">        for (Task in : this.tasks) {</span>
+<span class="nc" id="L170">            clone.tasks.add(in.clone());</span>
+<span class="nc" id="L171">        }</span>
+
+
+<span class="nc" id="L174">        return clone;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ListBookingRequestController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.application.controller</a> &gt; <span class="el_source">ListBookingRequestController.java</span></div><h1>ListBookingRequestController.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.application.controller;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import pt.ipp.isep.dei.esoft.project.application.session.ApplicationSession;
+import pt.ipp.isep.dei.esoft.project.application.session.UserSession;
+import pt.ipp.isep.dei.esoft.project.domain.*;
+import pt.ipp.isep.dei.esoft.project.dto.VisitRequestDTO;
+import pt.ipp.isep.dei.esoft.project.mapper.VisitRequestMapper;
+import pt.ipp.isep.dei.esoft.project.repository.*;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * The type List booking request controller.
+ */
+public class ListBookingRequestController {
+
+<span class="fc" id="L23">    private VisitRequestRepository visitRequestRepository = null;</span>
+<span class="fc" id="L24">    private UserSession currentSession = null;</span>
+<span class="fc" id="L25">    private AuthenticationRepository authenticationRepository = null;</span>
+<span class="fc" id="L26">    private EmployeeRepository employeeRepository = null;</span>
+<span class="fc" id="L27">    private ClientRepository clientRepository = null;</span>
+
+    private static final String filterGmail = &quot;filter.term.gmail&quot;;
+    private static final String filterHotmail = &quot;filter.term.hotmail&quot;;
+    private static final String filterYahoo = &quot;filter.term.yahoo&quot;;
+
+
+
+    /**
+     * Instantiates a new List booking request controller.
+     */
+<span class="fc" id="L38">    public ListBookingRequestController(){</span>
+<span class="fc" id="L39">        getVisitRequestRepository();</span>
+<span class="fc" id="L40">        getEmployeeRepository();</span>
+<span class="fc" id="L41">        getAuthenticationRepository();</span>
+<span class="fc" id="L42">        getClientRepository();</span>
+
+<span class="fc" id="L44">    }</span>
+
+    /**
+     * Retrieves the AuthenticationRepository instance.
+     * If the repository is not yet initialized, it initializes it using the Repositories singleton.
+     *
+     * @return The AuthenticationRepository instance.
+     */
+    private AuthenticationRepository getAuthenticationRepository() {
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if (authenticationRepository == null) {</span>
+<span class="fc" id="L54">            Repositories repositories = Repositories.getInstance();</span>
+<span class="fc" id="L55">            authenticationRepository = repositories.getAuthenticationRepository();</span>
+        }
+<span class="fc" id="L57">        return authenticationRepository;</span>
+    }
+
+    private ClientRepository getClientRepository(){
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        if(clientRepository == null){</span>
+<span class="fc" id="L62">            Repositories repositories = Repositories.getInstance();</span>
+<span class="fc" id="L63">            clientRepository = repositories.getClientRepository();</span>
+        }
+<span class="fc" id="L65">        return clientRepository;</span>
+    }
+
+    /**
+     * Gets visit request repository.
+     *
+     * @return the visit request repository
+     */
+    public VisitRequestRepository getVisitRequestRepository() {
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        if (visitRequestRepository == null) {</span>
+<span class="fc" id="L75">            Repositories visitRequest = Repositories.getInstance();</span>
+
+            //Get the PropertyTypeRepository
+<span class="fc" id="L78">            visitRequestRepository = visitRequest.getVisitRequestRepository();</span>
+        }
+<span class="fc" id="L80">        return visitRequestRepository;</span>
+    }
+
+
+    /**
+     * Gets agent from session.
+     *
+     * @return the agent from session
+     */
+    public Agent getAgentFromSession() {
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        if (currentSession == null) {</span>
+<span class="nc" id="L91">            ApplicationSession appSession = ApplicationSession.getInstance();</span>
+
+            //Get the current session
+<span class="nc" id="L94">            currentSession = appSession.getCurrentSession();</span>
+        }
+<span class="nc" id="L96">        String email = currentSession.getUserEmail();</span>
+
+<span class="nc" id="L98">        return getEmployeeRepository().getEmployeeByEmail(email).getAssociatedAgent();</span>
+
+    }
+
+
+    private EmployeeRepository getEmployeeRepository(){
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">        if(employeeRepository == null){</span>
+<span class="fc" id="L105">            Repositories repositories = Repositories.getInstance();</span>
+<span class="fc" id="L106">            employeeRepository = repositories.getEmployeeRepository();</span>
+        }
+<span class="fc" id="L108">        return employeeRepository;</span>
+    }
+
+    /**
+     * Get client list list.
+     *
+     * @return the list
+     */
+    public List&lt;Client&gt; getClientList(){
+<span class="fc" id="L117">        ClientRepository clientRepository = getClientRepository();</span>
+<span class="fc" id="L118">        return clientRepository.getClients();</span>
+    }
+
+
+    /**
+     * Get visit requests list.
+     *
+     * @param email the email
+     * @param begin the begin
+     * @param end   the end
+     * @return the list
+     */
+    public List&lt;VisitRequest&gt; getVisitRequests(String email, DateTime begin, DateTime end){
+
+<span class="nc" id="L132">        return getVisitRequestRepository().getVisitRequestsByAgentInPeriod(email,begin,end);</span>
+    }
+
+    /**
+     * Get visit requests list.
+     *
+     * @return the list
+     */
+    public List&lt;VisitRequest&gt; getVisitRequests(){
+<span class="nc" id="L141">        visitRequestRepository = getVisitRequestRepository();</span>
+<span class="nc" id="L142">        List&lt;VisitRequest&gt; v = visitRequestRepository.getVisitRequests();</span>
+<span class="nc" id="L143">        List&lt;VisitRequestDTO&gt; visitRequestDTOS = VisitRequestMapper.getVisitRequestsDTO(v);</span>
+
+<span class="nc" id="L145">        List&lt;VisitRequest&gt; visitRequests= new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        for (VisitRequestDTO visitRequestDTO : visitRequestDTOS) {</span>
+<span class="nc" id="L147">            visitRequests.add(VisitRequestMapper.toEntity(visitRequestDTO));</span>
+<span class="nc" id="L148">        }</span>
+
+<span class="nc" id="L150">        return visitRequests;</span>
+
+    }
+
+
+    /**
+     * Get visit requests by agent list.
+     *
+     * @param visitRequestsListByAgent the visit requests list by agent
+     * @param begin                    the begin
+     * @param end                      the end
+     * @return the list
+     */
+    public List&lt;VisitRequestDTO&gt; getVisitRequestsByAgent(String visitRequestsListByAgent, DateTime begin, DateTime end ){
+
+
+<span class="nc" id="L166">        List &lt;VisitRequest&gt; visitRequestList= getVisitRequests(visitRequestsListByAgent, begin, end);</span>
+
+<span class="nc" id="L168">        return VisitRequestMapper.getVisitRequestsDTO(visitRequestList);</span>
+
+    }
+
+    /**
+     * Set accepted visit request.
+     *
+     * @param visitRequestDTO the visit request
+     */
+    public void setAcceptedVisitRequest(VisitRequestDTO visitRequestDTO){
+<span class="nc" id="L178">        visitRequestDTO.acceptVisitRequest();</span>
+<span class="nc" id="L179">    }</span>
+
+    /**
+     * Set decline visit request.
+     *
+     * @param visitRequestDTO the visit request
+     */
+    public void setDeclineVisitRequest(VisitRequestDTO visitRequestDTO){
+<span class="nc" id="L187">        visitRequestDTO.declineVisitRequest();</span>
+<span class="nc" id="L188">    }</span>
+
+    /**
+     * Creates and sends an email using the specified details.
+     *
+     * @param sender   The email address of the sender.
+     * @param receiver The email address of the recipient.
+     * @param subject  The subject of the email.
+     * @param message  The content of the email.
+     */
+    public void createEmail(String sender, String receiver, String subject, String message){
+
+<span class="fc" id="L200">        String[] partEmail = receiver.split(&quot;@&quot;);</span>
+<span class="fc bfc" id="L201" title="All 2 branches covered.">        if (partEmail[1].equals(&quot;gmail.com&quot;)) {</span>
+<span class="fc" id="L202">            EmailFilter gmailFilter = new GmailFilter(filterGmail);</span>
+<span class="fc" id="L203">            gmailFilter.createEmail(sender, receiver , subject, message);</span>
+<span class="fc bfc" id="L204" title="All 2 branches covered.">        } else if (partEmail[1].equals(&quot;hotmail.com&quot;)) {</span>
+<span class="fc" id="L205">            EmailFilter hotmailFilter = new HotmailFilter(filterHotmail);</span>
+<span class="fc" id="L206">            hotmailFilter.createEmail(sender, receiver , subject, message);</span>
+<span class="pc bpc" id="L207" title="1 of 2 branches missed.">        } else if (partEmail[1].equals(&quot;yahoo.com&quot;)) {</span>
+<span class="fc" id="L208">            EmailFilter yahooFilter = new YahooFilter(filterYahoo);</span>
+<span class="fc" id="L209">            yahooFilter.createEmail(sender, receiver , subject, message);</span>
+        }
+
+<span class="fc" id="L212">    }</span>
+
+
+    /**
+     * Get date date time.
+     *
+     * @param datePicker the date picker
+     * @param myLabel    the my label
+     * @return the date time
+     */
+    @FXML
+    public DateTime getDate(DatePicker datePicker, Label myLabel){
+
+<span class="nc" id="L225">        LocalDate date = datePicker.getValue();</span>
+<span class="nc" id="L226">        String myFormattedDate = date.format(DateTimeFormatter.ofPattern(&quot;dd-MM-yyyy&quot;));</span>
+<span class="nc" id="L227">        String[] dateParts = myFormattedDate.split(&quot;-&quot;);</span>
+<span class="nc" id="L228">        String day = dateParts[0];</span>
+<span class="nc" id="L229">        String month = dateParts[1];</span>
+<span class="nc" id="L230">        String year = dateParts[2];</span>
+
+<span class="nc" id="L232">        int day1 = Integer.parseInt(day);</span>
+<span class="nc" id="L233">        int month1 = Integer.parseInt(month);</span>
+<span class="nc" id="L234">        int year1 = Integer.parseInt(year);</span>
+
+<span class="nc" id="L236">        DateTime dateTime = new DateTime(day1, month1, year1);</span>
+
+<span class="nc" id="L238">        myLabel.setText(&quot;Begin date: &quot; + myFormattedDate);</span>
+
+<span class="nc" id="L240">        return dateTime;</span>
+
+    }
+
+    /**
+     * Get date end date time.
+     *
+     * @param datePicker the date picker
+     * @param myLabel    the my label
+     * @return the date time
+     */
+    @FXML
+    public DateTime getDateEnd(DatePicker datePicker, Label myLabel){
+
+<span class="nc" id="L254">        LocalDate date = datePicker.getValue();</span>
+<span class="nc" id="L255">        String myFormattedDate = date.format(DateTimeFormatter.ofPattern(&quot;dd-MM-yyyy&quot;));</span>
+
+<span class="nc" id="L257">        String[] dateParts = myFormattedDate.split(&quot;-&quot;);</span>
+<span class="nc" id="L258">        String day = dateParts[0];</span>
+<span class="nc" id="L259">        String month = dateParts[1];</span>
+<span class="nc" id="L260">        String year = dateParts[2];</span>
+
+
+
+<span class="nc" id="L264">        int day1 = Integer.parseInt(day);</span>
+<span class="nc" id="L265">        int month1 = Integer.parseInt(month);</span>
+<span class="nc" id="L266">        int year1 = Integer.parseInt(year);</span>
+
+<span class="nc" id="L268">        DateTime dateTime = new DateTime(day1, month1, year1);</span>
+
+<span class="nc" id="L270">        myLabel.setText(&quot;End date: &quot; + myFormattedDate);</span>
+<span class="nc" id="L271">        return dateTime;</span>
+
+    }
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

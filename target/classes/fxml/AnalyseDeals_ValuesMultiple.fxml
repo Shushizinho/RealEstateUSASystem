@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="942.0" style="-fx-background-color: transparent;" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.esoft.project.ui.gui.AnalyseDealsUI">
+   <children>
+      <Label id="input1" fx:id="input1" alignment="CENTER" layoutX="79.0" layoutY="51.0" prefHeight="31.0" prefWidth="91.0" styleClass="labelForInputs" text="Area">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <TextField id="inputValue1" fx:id="inputValue1" layoutX="63.0" layoutY="101.0" onMouseClicked="#getOutRed" prefHeight="39.0" prefWidth="123.0" />
+      <Label id="input2" fx:id="input2" alignment="CENTER" layoutX="255.0" layoutY="51.0" prefHeight="31.0" prefWidth="91.0" styleClass="labelForInputs" text="D.Center">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <TextField id="inputValue2" fx:id="inputValue2" layoutX="239.0" layoutY="101.0" onMouseClicked="#getOutRed" prefHeight="39.0" prefWidth="123.0" />
+      <Label id="input3" fx:id="input3" alignment="CENTER" layoutX="403.0" layoutY="51.0" prefHeight="31.0" prefWidth="136.0" styleClass="labelForInputs" text="Bedroom Nº">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <TextField id="inputValue3" fx:id="inputValue3" layoutX="410.0" layoutY="101.0" onMouseClicked="#getOutRed" prefHeight="39.0" prefWidth="123.0" />
+      <Label id="input4" fx:id="input4" alignment="CENTER" layoutX="569.0" layoutY="51.0" prefHeight="31.0" prefWidth="136.0" styleClass="labelForInputs" text="Bathroom Nº">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <TextField id="inputValue4" fx:id="inputValue4" layoutX="575.0" layoutY="101.0" onMouseClicked="#getOutRed" prefHeight="39.0" prefWidth="123.0" />
+      <Label id="input5" fx:id="input5" alignment="CENTER" layoutX="712.0" layoutY="51.0" prefHeight="31.0" prefWidth="191.0" styleClass="labelForInputs" text="Parking Space Nº">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <TextField id="inputValue5" fx:id="inputValue5" layoutX="746.0" layoutY="101.0" onMouseClicked="#getOutRed" prefHeight="39.0" prefWidth="123.0" />
+      <Label id="inputIC" fx:id="inputIC" alignment="CENTER" layoutX="79.0" layoutY="171.0" prefHeight="31.0" prefWidth="91.0" styleClass="labelForInputs" text="IC">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <TextField id="inputValueIC" fx:id="inputValueIC" layoutX="63.0" layoutY="221.0" onMouseClicked="#getOutRed" prefHeight="39.0" prefWidth="123.0" />
+      <Label id="inputBeta" fx:id="inputBeta" alignment="CENTER" layoutX="79.0" layoutY="293.0" prefHeight="31.0" prefWidth="91.0" styleClass="labelForInputs" text="Beta">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <TextField id="inputValueBeta" fx:id="inputValueBeta" layoutX="63.0" layoutY="343.0" onMouseClicked="#getOutRed" prefHeight="39.0" prefWidth="123.0" />
+      <VBox layoutX="728.0" layoutY="163.0" prefHeight="259.0" prefWidth="191.0">
+         <children>
+            <RadioButton id="info" fx:id="radioinfo" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="53.0" prefWidth="155.0" stylesheets="@../styles/Styles.css" text="Get more Info">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <toggleGroup>
+                  <ToggleGroup fx:id="TypeOfOutput" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton id="prediction" fx:id="radiopredict" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="52.0" prefWidth="190.0" stylesheets="@../styles/Styles.css" text="Make a prediction" toggleGroup="$TypeOfOutput">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </RadioButton>
+            <RadioButton id="cofInterv" fx:id="radioCI" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="52.0" prefWidth="199.0" stylesheets="@../styles/Styles.css" text="Cofidence Interval" toggleGroup="$TypeOfOutput">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </RadioButton>
+            <RadioButton id="hypothesisTest" fx:id="radiohypo" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="52.0" prefWidth="185.0" stylesheets="@../styles/Styles.css" text="Hypothesis tests" toggleGroup="$TypeOfOutput">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </RadioButton>
+            <RadioButton id="anovaTable" fx:id="radioanova" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="53.0" prefWidth="233.0" stylesheets="@../styles/Styles.css" text="ANOVA Table" toggleGroup="$TypeOfOutput">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </RadioButton>
+         </children>
+      </VBox>
+      <TableView id="tableView" fx:id="tableView" focusTraversable="false" layoutX="204.0" layoutY="275.0" mouseTransparent="true" prefHeight="147.0" prefWidth="512.0" visible="false">
+         <columns>
+            <TableColumn id="variantColumn" fx:id="variantColumn" prefWidth="93.0" text="Variation font" />
+            <TableColumn id="sumColumn" fx:id="sumColumn" prefWidth="107.0" text="Sum of squares" />
+            <TableColumn id="degreesColumn" fx:id="degreesColumn" prefWidth="124.0" text="Degrees of freedom" />
+            <TableColumn id="meanColumn" fx:id="meanColumn" maxWidth="7000.0" prefWidth="86.0" text="Mean square" />
+            <TableColumn id="statisticsColumn" fx:id="statisticsColumn" minWidth="8.0" prefWidth="110.0" text="F test statistics" />
+         </columns>
+      </TableView>
+      <Label id="infoLabel" fx:id="infoLabel" alignment="TOP_LEFT" layoutX="199.0" layoutY="145.0" prefHeight="114.0" prefWidth="522.0" style="-fx-font-size: 14;" text="Info" visible="false">
+         <font>
+            <Font size="5.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

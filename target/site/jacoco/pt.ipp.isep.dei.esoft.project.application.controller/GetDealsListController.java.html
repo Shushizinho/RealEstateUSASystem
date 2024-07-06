@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GetDealsListController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.application.controller</a> &gt; <span class="el_source">GetDealsListController.java</span></div><h1>GetDealsListController.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.application.controller;
+
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import pt.ipp.isep.dei.esoft.project.domain.InsertionSortAlgorithm;
+import pt.ipp.isep.dei.esoft.project.domain.BubbleSortAlgorithm;
+import pt.ipp.isep.dei.esoft.project.domain.Property;
+import pt.ipp.isep.dei.esoft.project.domain.PurchaseOrder;
+import pt.ipp.isep.dei.esoft.project.repository.PurchaseOrderRepository;
+import pt.ipp.isep.dei.esoft.project.repository.Repositories;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * The type Get deals list controller.
+ */
+public class GetDealsListController {
+<span class="fc" id="L19">    private final PurchaseOrderRepository purchaseOrderRepository = Repositories.getInstance().getPurchaseOrderRepository();</span>
+
+    /**
+     * Constructs a new instance of the GetDealsListController class and retrieves the deals list.
+     */
+<span class="fc" id="L24">    public GetDealsListController(){</span>
+<span class="fc" id="L25">        getDealsOrder();</span>
+<span class="fc" id="L26">    }</span>
+
+    /**
+     * Retrieves the list of deals from the purchase order repository.
+     *
+     * @return The list of properties representing the deals.
+     */
+    public List&lt;Property&gt; getDealsOrder(){
+<span class="fc" id="L34">        return purchaseOrderRepository.getDealsFromOrder();</span>
+    }
+
+    /**
+     * Sorts the given array of property areas using the Bubble Sort algorithm.
+     *
+     * @param areaProperty The array of property areas to be sorted.
+     * @return The sorted array of property areas.
+     */
+    public double[] getBubbleSort(double[] areaProperty){
+<span class="fc" id="L44">         return BubbleSortAlgorithm.sort(areaProperty);</span>
+    }
+
+    /**
+     * Sorts the given array of property areas using the Insertion Sort algorithm.
+     *
+     * @param areaProperty The array of property areas to be sorted.
+     * @return The sorted array of property areas.
+     */
+    public double[] getInsetionSort(double[] areaProperty){
+<span class="fc" id="L54">        return InsertionSortAlgorithm.sort(areaProperty);</span>
+    }
+
+    /**
+     * Retrieves the list of deals properties and apartments from the purchase order repository.
+     *
+     * @return The list of purchase orders representing the deals.
+     */
+    public List&lt;PurchaseOrder&gt; getDeals(){
+<span class="fc" id="L63">        return purchaseOrderRepository.getDealsPropertiesAndApartments();</span>
+    }
+
+    /**
+     * Lookup element by id t.
+     *
+     * @param &lt;T&gt;    the type parameter
+     * @param parent the parent
+     * @param id     the id
+     * @return the t
+     */
+    public &lt;T extends Node&gt; T lookupElementById(Parent parent, String id) {
+<span class="nc" id="L75">        return (T) parent.lookup(&quot;#&quot; + id);</span>
+    }
+
+
+    /**
+     * Sort deals double [ ].
+     *
+     * @param properties the properties
+     * @param method     the method
+     * @return the double [ ]
+     */
+    public double[] sortDeals(List&lt;Property&gt; properties, int method){
+<span class="fc" id="L87">        double[] areaProperty = new double[properties.size()];</span>
+
+<span class="fc" id="L89">        int i = 0;</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        for (Property p: properties) {</span>
+<span class="fc" id="L91">            areaProperty[i] = p.getArea();</span>
+<span class="fc" id="L92">            i++;</span>
+<span class="fc" id="L93">        }</span>
+
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        if (method == 1){</span>
+<span class="fc" id="L96">            areaProperty = getBubbleSort(areaProperty);</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">        }else if (method == 2){</span>
+<span class="fc" id="L98">            areaProperty = getInsetionSort(areaProperty);</span>
+        }
+
+<span class="fc" id="L101">        return areaProperty;</span>
+    }
+
+    /**
+     * Get property sorted list.
+     *
+     * @param propertyList the property list
+     * @param areaProperty the area property
+     * @return the list
+     */
+    public List&lt;Property&gt; getPropertySorted (List&lt;Property&gt; propertyList ,double[] areaProperty){
+<span class="fc" id="L112">        int i = 0;</span>
+<span class="fc" id="L113">        List&lt;Property&gt; sortedProperties = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        for (Double a: areaProperty) {</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">            for (Property p: propertyList) {</span>
+<span class="pc bpc" id="L116" title="2 of 4 branches missed.">                if(a.equals(p.getArea()) &amp;&amp; (!sortedProperties.contains(p)) ){</span>
+<span class="fc" id="L117">                    sortedProperties.add(p);</span>
+<span class="fc" id="L118">                    i++;</span>
+                }
+<span class="fc" id="L120">            }</span>
+        }
+<span class="fc" id="L122">        return sortedProperties;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

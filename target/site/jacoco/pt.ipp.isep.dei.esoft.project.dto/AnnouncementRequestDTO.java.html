@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AnnouncementRequestDTO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.dto</a> &gt; <span class="el_source">AnnouncementRequestDTO.java</span></div><h1>AnnouncementRequestDTO.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.dto;
+
+import java.util.Objects;
+
+
+/**
+ * The type Announcement request dto.
+ */
+public class AnnouncementRequestDTO {
+
+<span class="nc" id="L11">    private Integer rentDuration = 0;</span>
+    private double listedPrice;
+    private BusinessTypeDTO businessType;
+    private PropertyDTO property;
+    private AgentDTO agent;
+    private ClientDTO client;
+
+    private DateTimeDTO date;
+<span class="nc" id="L19">    private boolean status = false;</span>
+
+
+    /**
+     * Constructor for the AnnouncementRequestDTO class.
+     *
+     * @param rentDuration The rent duration.
+     * @param listedPrice  the listed price
+     * @param businessType The business type.
+     * @param property     The related property.
+     * @param agent        The associated agent.
+     * @param client       The related client.
+     * @param date         The formatted date.
+     */
+<span class="nc" id="L33">    public AnnouncementRequestDTO(Integer rentDuration, double listedPrice, BusinessTypeDTO businessType, PropertyDTO property, AgentDTO agent, ClientDTO client, DateTimeDTO date) {</span>
+<span class="nc" id="L34">        this.rentDuration = rentDuration;</span>
+<span class="nc" id="L35">        this.listedPrice = listedPrice;</span>
+<span class="nc" id="L36">        this.businessType = businessType;</span>
+<span class="nc" id="L37">        this.property = property;</span>
+<span class="nc" id="L38">        this.agent = agent;</span>
+<span class="nc" id="L39">        this.client = client;</span>
+<span class="nc" id="L40">        this.date = date;</span>
+<span class="nc" id="L41">    }</span>
+
+
+<span class="nc" id="L44">    public AnnouncementRequestDTO( double listedPrice, BusinessTypeDTO businessType, PropertyDTO property, AgentDTO agent, ClientDTO client, DateTimeDTO date) {</span>
+<span class="nc" id="L45">        this.listedPrice = listedPrice;</span>
+<span class="nc" id="L46">        this.businessType = businessType;</span>
+<span class="nc" id="L47">        this.property = property;</span>
+<span class="nc" id="L48">        this.agent = agent;</span>
+<span class="nc" id="L49">        this.client = client;</span>
+<span class="nc" id="L50">        this.date = date;</span>
+<span class="nc" id="L51">    }</span>
+
+    /**
+     * Constructor for the AnnouncementRequestDTO class.
+     *
+     * @param businessType The business type.
+     * @param property     The related property.
+     * @param agent        The associated agent.
+     * @param client       The related client.
+     * @param date         The formatted date.
+     */
+<span class="nc" id="L62">    public AnnouncementRequestDTO( BusinessTypeDTO businessType, PropertyDTO property, AgentDTO agent, ClientDTO client, DateTimeDTO date) {</span>
+<span class="nc" id="L63">        this.businessType = businessType;</span>
+<span class="nc" id="L64">        this.property = property;</span>
+<span class="nc" id="L65">        this.agent = agent;</span>
+<span class="nc" id="L66">        this.client = client;</span>
+<span class="nc" id="L67">        this.date = date;</span>
+<span class="nc" id="L68">    }</span>
+
+    /**
+     * Retrieves the listed price.
+     *
+     * @return The listed price.
+     */
+    public double getListedPrice(){
+
+<span class="nc" id="L77">        return listedPrice;</span>
+    }
+
+    /**
+     * Set listed price.
+     *
+     * @param listedPrice the listed price
+     */
+    public void setListedPrice(double listedPrice){
+
+<span class="nc" id="L87">        this.listedPrice = listedPrice;</span>
+<span class="nc" id="L88">    }</span>
+
+    /**
+     * Retrieves the rent duration.
+     *
+     * @return The rent duration.
+     */
+    public Integer getRentDuration() {
+<span class="nc" id="L96">        return rentDuration;</span>
+    }
+
+    /**
+     * Sets the rent duration.
+     *
+     * @param rentDuration The new rent duration.
+     */
+    public void setRentDuration(Integer rentDuration) {
+<span class="nc" id="L105">        this.rentDuration = rentDuration;</span>
+<span class="nc" id="L106">    }</span>
+
+    /**
+     * Retrieves the business type.
+     *
+     * @return The business type.
+     */
+    public BusinessTypeDTO getBusinessType() {
+<span class="nc" id="L114">        return businessType;</span>
+    }
+
+
+    /**
+     * Sets the business type.
+     *
+     * @param businessType The new business type.
+     */
+    public void setBusinessType(BusinessTypeDTO businessType) {
+<span class="nc" id="L124">        this.businessType = businessType;</span>
+<span class="nc" id="L125">    }</span>
+
+
+    /**
+     * Retrieves the property.
+     *
+     * @return The property.
+     */
+    public PropertyDTO getProperty() {
+<span class="nc" id="L134">        return property;</span>
+    }
+
+    /**
+     * Sets the property.
+     *
+     * @param property The new property.
+     */
+
+
+    public void setProperty(PropertyDTO property) {
+<span class="nc" id="L145">        this.property = property;</span>
+<span class="nc" id="L146">    }</span>
+
+    /**
+     * Retrieves the agent.
+     *
+     * @return The agent.
+     */
+
+
+    public AgentDTO getAgent() {
+<span class="nc" id="L156">        return agent;</span>
+    }
+
+
+    /**
+     * Sets the agent.
+     *
+     * @param agent The new agent.
+     */
+    public void setAgent(AgentDTO agent) {
+<span class="nc" id="L166">        this.agent = agent;</span>
+<span class="nc" id="L167">    }</span>
+
+    /**
+     * Retrieves the client.
+     *
+     * @return The client.
+     */
+    public ClientDTO getClient() {
+<span class="nc" id="L175">        return client;</span>
+    }
+
+
+    /**
+     * Sets the client.
+     *
+     * @param client The new client.
+     */
+    public void setClient(ClientDTO client) {
+<span class="nc" id="L185">        this.client = client;</span>
+<span class="nc" id="L186">    }</span>
+
+
+    /**
+     * Retrieves the date.
+     *
+     * @return The date.
+     */
+    public DateTimeDTO getDate() {
+<span class="nc" id="L195">        return date;</span>
+    }
+
+
+    /**
+     * Sets the date.
+     *
+     * @param date The new date.
+     */
+    public void setDate(DateTimeDTO date) {
+<span class="nc" id="L205">        this.date = date;</span>
+<span class="nc" id="L206">    }</span>
+
+
+    /**
+     * To string dto string.
+     *
+     * @return the string
+     */
+    public String toStringDTO() {
+<span class="nc" id="L215">        String rent = String.format(&quot;Announcement Request\n ================== \n &quot;);</span>
+<span class="nc bnc" id="L216" title="All 2 branches missed.">        if(businessType.getDescriptionAnnouncement().compareTo(&quot;Rent&quot;)==0){</span>
+<span class="nc" id="L217">            rent+=String.format( &quot;Rent duration=%d \n&quot;,rentDuration);</span>
+        }
+
+<span class="nc" id="L220">        rent+= String.format( &quot; Business type=%s\n ------------------ \n Property:%s \n ------------------ \n Date:%s\n ------------------ \n Client:%s&quot;, businessType.getDescriptionAnnouncement(), property.toStringDTO(), date.toStringDTO(),client.toString());</span>
+
+<span class="nc" id="L222">        return rent;</span>
+    }
+
+
+    /**
+     * Checks if the announcement request has been accepted.
+     *
+     * @return {@code true} if the announcement request has been accepted, {@code false} otherwise.
+     */
+    public boolean isAccepted() {
+<span class="nc" id="L232">        return status;</span>
+    }
+
+    /**
+     * Sets the acceptance status of the announcement request.
+     *
+     * @param accepted {@code true} if the announcement request is accepted, {@code false} otherwise.
+     */
+
+
+
+    public void setAccepted(boolean accepted) {
+<span class="nc" id="L244">        this.status = accepted;</span>
+<span class="nc" id="L245">    }</span>
+
+
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="nc bnc" id="L251" title="All 2 branches missed.">        if (this == obj) {</span>
+<span class="nc" id="L252">            return true;</span>
+        }
+<span class="nc bnc" id="L254" title="All 4 branches missed.">        if (obj == null || getClass() != obj.getClass()) {</span>
+<span class="nc" id="L255">            return false;</span>
+        }
+<span class="nc" id="L257">        AnnouncementRequestDTO other = (AnnouncementRequestDTO) obj;</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">        return Objects.equals(rentDuration, other.rentDuration) &amp;&amp;</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">                Objects.equals(businessType, other.businessType) &amp;&amp;</span>
+<span class="nc bnc" id="L260" title="All 2 branches missed.">                Objects.equals(property, other.property) &amp;&amp;</span>
+<span class="nc bnc" id="L261" title="All 2 branches missed.">                Objects.equals(agent, other.agent) &amp;&amp;</span>
+<span class="nc bnc" id="L262" title="All 2 branches missed.">                Objects.equals(client, other.client) &amp;&amp;</span>
+<span class="nc bnc" id="L263" title="All 2 branches missed.">                Objects.equals(date, other.date);</span>
+    }
+
+
+
+
+
+
+
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

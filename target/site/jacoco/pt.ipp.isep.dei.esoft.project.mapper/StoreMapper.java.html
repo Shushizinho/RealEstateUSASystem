@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StoreMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.mapper</a> &gt; <span class="el_source">StoreMapper.java</span></div><h1>StoreMapper.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.mapper;
+
+import pt.ipp.isep.dei.esoft.project.domain.Address;
+import pt.ipp.isep.dei.esoft.project.domain.Store;
+import pt.ipp.isep.dei.esoft.project.dto.AddressDTO;
+import pt.ipp.isep.dei.esoft.project.dto.StoreDTO;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * The type Store mapper.
+ */
+<span class="nc" id="L14">public class StoreMapper {</span>
+
+    /**
+     * To dto store dto.
+     *
+     * @param store the store
+     * @return the store dto
+     */
+    public static StoreDTO toDTO(Store store) {
+<span class="nc" id="L23">        Address address = store.getAddress();</span>
+<span class="nc" id="L24">        AddressDTO addressDTO = AddressToAddressDTO(address);</span>
+
+<span class="nc" id="L26">        return new StoreDTO((int) store.getId(),store.getDesignation(),addressDTO,store.getEmail(),store.getPhoneNumber());</span>
+    }
+
+    /**
+     * To dto list.
+     *
+     * @param lStore the l store
+     * @return the list
+     */
+    public static List&lt;StoreDTO&gt; toDTO(List&lt;Store&gt; lStore) {
+<span class="nc" id="L36">        List&lt;StoreDTO&gt; lStoreDTO = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L38" title="All 2 branches missed.">        for (Store store : lStore){</span>
+
+<span class="nc" id="L40">        Address address = store.getAddress();</span>
+<span class="nc" id="L41">        AddressDTO addressDTO = AddressToAddressDTO(address);</span>
+<span class="nc" id="L42">        lStoreDTO.add(new StoreDTO((int) store.getId(),store.getDesignation(),addressDTO,store.getEmail(),store.getPhoneNumber()));</span>
+
+<span class="nc" id="L44">        }</span>
+
+<span class="nc" id="L46">        return lStoreDTO;</span>
+    }
+
+    /**
+     * To entity store.
+     *
+     * @param storeDTO the store dto
+     * @return the store
+     */
+    public static Store toEntity(StoreDTO storeDTO) {
+<span class="nc" id="L56">        AddressDTO addressDTO = storeDTO.getAddress();</span>
+
+<span class="nc" id="L58">        Address address = AdressDTOtoAdress(addressDTO);</span>
+
+<span class="nc" id="L60">        return new Store((int) storeDTO.getId(),storeDTO.getDesignation(),storeDTO.getEmail(),address,storeDTO.getPhoneNumber());</span>
+    }
+
+    /**
+     * To entity list.
+     *
+     * @param lStoreDTO the l store dto
+     * @return the list
+     */
+    public static List&lt;Store&gt; toEntity(List&lt;StoreDTO&gt; lStoreDTO) {
+<span class="nc" id="L70">        List&lt;Store&gt; lStore = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        for (StoreDTO storeDTO : lStoreDTO){</span>
+
+<span class="nc" id="L74">            AddressDTO addressDTO = storeDTO.getAddress();</span>
+
+<span class="nc" id="L76">            Address address = AdressDTOtoAdress(addressDTO);</span>
+
+<span class="nc" id="L78">            lStore.add(new Store((int) storeDTO.getId(),storeDTO.getDesignation(),storeDTO.getEmail(),address,storeDTO.getPhoneNumber()));</span>
+
+<span class="nc" id="L80">        }</span>
+
+<span class="nc" id="L82">        return lStore;</span>
+    }
+
+    /**
+     * Adress dt oto adress address.
+     *
+     * @param addressDTO the address dto
+     * @return the address
+     */
+    public static Address AdressDTOtoAdress (AddressDTO addressDTO){
+<span class="nc" id="L92">        String street = addressDTO.getStreetAddress();</span>
+<span class="nc" id="L93">        String city = addressDTO.getCity();</span>
+<span class="nc" id="L94">        String state = addressDTO.getState();</span>
+<span class="nc" id="L95">        String zipCode = addressDTO.getZipCode();</span>
+<span class="nc" id="L96">        Address address = new Address(street, city, state, zipCode);</span>
+
+<span class="nc" id="L98">        return address;</span>
+
+    }
+
+    /**
+     * Address to address dto address dto.
+     *
+     * @param address the address
+     * @return the address dto
+     */
+    public static AddressDTO AddressToAddressDTO(Address address) {
+<span class="nc" id="L109">        String street = address.getStreetAddress();</span>
+<span class="nc" id="L110">        String city = address.getCity();</span>
+<span class="nc" id="L111">        String state = address.getState();</span>
+<span class="nc" id="L112">        String zipCode = address.getZipCode();</span>
+
+<span class="nc" id="L114">        AddressDTO addressDTO = new AddressDTO(street, city, state, zipCode);</span>
+
+<span class="nc" id="L116">        return addressDTO;</span>
+    }
+
+    /**
+     * Get stores dto list.
+     *
+     * @param stores the stores
+     * @return the list
+     */
+    public static List&lt;StoreDTO&gt; getStoresDTO(List&lt;Store&gt; stores){
+
+<span class="nc" id="L127">        List&lt;StoreDTO&gt; storeDTOs = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">        for (Store store : stores) {</span>
+<span class="nc" id="L129">            StoreDTO storeDTO = StoreMapper.toDTO(store);</span>
+<span class="nc" id="L130">            storeDTOs.add(storeDTO);</span>
+<span class="nc" id="L131">        }</span>
+<span class="nc" id="L132">        return storeDTOs;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

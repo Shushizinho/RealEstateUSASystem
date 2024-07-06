@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AnnouncementController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.application.controller</a> &gt; <span class="el_source">AnnouncementController.java</span></div><h1>AnnouncementController.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.application.controller;
+
+import pt.ipp.isep.dei.esoft.project.application.controller.authorization.AuthenticationController;
+import pt.ipp.isep.dei.esoft.project.application.session.ApplicationSession;
+import pt.ipp.isep.dei.esoft.project.application.session.UserSession;
+import pt.ipp.isep.dei.esoft.project.domain.*;
+import pt.ipp.isep.dei.esoft.project.dto.*;
+import pt.ipp.isep.dei.esoft.project.repository.*;
+
+
+
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * A controller class for managing sale announcements.
+ */
+public class AnnouncementController {
+
+<span class="pc" id="L20">    private AnnouncementRepository announcementRepository = null;</span>
+<span class="pc" id="L21">    private PropertyTypeRepository propertyTypeRepository = null;</span>
+<span class="pc" id="L22">    private BusinessTypeRepository businessTypeRepository = null;</span>
+<span class="pc" id="L23">    private AuthenticationRepository authenticationRepository = null;</span>
+<span class="pc" id="L24">    private PropertyRepository propertyRepository=null;</span>
+<span class="pc" id="L25">    private StoreRepository storeRepository = null;</span>
+<span class="pc" id="L26">    private UserSession currentSession = null;</span>
+<span class="pc" id="L27">    private EmployeeRepository employeeRepository = null;</span>
+    /**
+     * The Address.
+     */
+<span class="pc" id="L31">    Address address= new Address(&quot;test&quot;,&quot;test&quot;,&quot;teste&quot;,&quot;teste&quot;);</span>
+    /**
+     * The Employ.
+     */
+<span class="pc" id="L35">    Employee employ = new Employee(&quot;Diogo&quot;, &quot;agent@this.app&quot;, 12321, &quot;3213123&quot;, address ,121212, new Store(10, &quot;PPROG&quot;, &quot;pprog@this.app&quot;, new Address(&quot;teste&quot;,&quot;teste&quot;,&quot;teste&quot;,&quot;teste&quot;),  000000000), List.of(new Role(2, AuthenticationController.ROLE_AGENT)));</span>
+    /**
+     * The Agent.
+     */
+<span class="pc" id="L39">    Agent agent = employ.getAssociatedAgent();</span>
+
+
+    /**
+     * Instantiates a new Announcement controller.
+     *
+     * @param propertyTypeRepository   the property type repository
+     * @param businessTypeRepository   the business type repository
+     * @param employeeRepository       the employee repository
+     * @param storeRepository          the store repository
+     * @param authenticationRepository the authentication repository
+     * @param propertyRepository       the property repository
+     */
+    public AnnouncementController(PropertyTypeRepository propertyTypeRepository,
+                                  BusinessTypeRepository businessTypeRepository,
+<span class="nc" id="L54">                                  EmployeeRepository employeeRepository, StoreRepository storeRepository, AuthenticationRepository authenticationRepository,PropertyRepository propertyRepository) {</span>
+<span class="nc" id="L55">        this.propertyTypeRepository = propertyTypeRepository;</span>
+<span class="nc" id="L56">        this.businessTypeRepository = businessTypeRepository;</span>
+<span class="nc" id="L57">        this.employeeRepository = employeeRepository;</span>
+<span class="nc" id="L58">        this.authenticationRepository = authenticationRepository;</span>
+<span class="nc" id="L59">        this.storeRepository = storeRepository;</span>
+<span class="nc" id="L60">        this.propertyRepository=propertyRepository;</span>
+<span class="nc" id="L61">    }</span>
+
+    /**
+     * Constructs a new SaleAnnouncementController with the necessary repositories.
+     */
+<span class="fc" id="L66">    public AnnouncementController() {</span>
+
+<span class="fc" id="L68">    getAnnouncementRepository();</span>
+<span class="fc" id="L69">    getPropertyTypeRepository();</span>
+<span class="fc" id="L70">    getBusinessTypeRepository();</span>
+<span class="fc" id="L71">    getAuthenticationRepository();</span>
+
+<span class="fc" id="L73">}</span>
+
+    /**
+
+     Returns the AnnouncementRepository instance, creating it if necessary.
+     @return the AnnouncementRepository instance.
+     */
+    private AnnouncementRepository getAnnouncementRepository() {
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">    if (announcementRepository == null) {</span>
+<span class="fc" id="L82">        Repositories repositories = Repositories.getInstance();</span>
+
+
+<span class="fc" id="L85">        announcementRepository = repositories.getAnnouncementRepository();</span>
+        }
+<span class="fc" id="L87">        return announcementRepository;</span>
+    }
+    /**
+
+     Returns the singleton instance of EmployeeRepository, creating it if it does not exist yet.
+     @return the EmployeeRepository instance
+     */
+    private EmployeeRepository getEmployeeRepository(){
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        if(employeeRepository == null){</span>
+<span class="nc" id="L96">            Repositories repositories = Repositories.getInstance();</span>
+<span class="nc" id="L97">            employeeRepository = repositories.getEmployeeRepository();</span>
+        }
+<span class="nc" id="L99">        return employeeRepository;</span>
+    }
+    /**
+
+     Returns the singleton instance of PropertyTypeRepository, creating it if it does not exist yet.
+     @return the PropertyTypeRepository instance
+     */
+
+
+private PropertyTypeRepository getPropertyTypeRepository(){
+
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">    if(propertyTypeRepository == null){</span>
+<span class="fc" id="L111">        Repositories repositories = Repositories.getInstance();</span>
+
+<span class="fc" id="L113">        propertyTypeRepository= repositories.getPropertyTypeRepository();</span>
+    }
+
+<span class="fc" id="L116">    return propertyTypeRepository;</span>
+}
+
+    private PropertyRepository getPropertyRepository(){
+
+<span class="nc bnc" id="L121" title="All 2 branches missed.">        if(propertyRepository == null){</span>
+<span class="nc" id="L122">            Repositories repositories = Repositories.getInstance();</span>
+
+<span class="nc" id="L124">            propertyRepository= repositories.getPropertyRepository();</span>
+        }
+
+<span class="nc" id="L127">        return propertyRepository;</span>
+    }
+
+    /**
+
+     Returns the BusinessTypeRepository instance, creating it if necessary.
+     @return the BusinessTypeRepository instance
+     */
+
+private BusinessTypeRepository getBusinessTypeRepository(){
+
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">    if( businessTypeRepository == null){</span>
+<span class="fc" id="L139">        Repositories repositories = Repositories.getInstance();</span>
+
+
+<span class="fc" id="L142">        businessTypeRepository =repositories.getBusinessTypeRepository();</span>
+    }
+
+<span class="fc" id="L145">    return businessTypeRepository;</span>
+}
+
+    /**
+     * Retrieves a list of all property types.
+     *
+     * @return a list of all property types.
+     */
+    public List&lt;PropertyType&gt; getPropertyTypes() {
+<span class="nc" id="L154">    PropertyTypeRepository propertyTypeRepository = getPropertyTypeRepository();</span>
+<span class="nc" id="L155">    return propertyTypeRepository.getPropertyTypes();</span>
+    }
+
+    /**
+     * Retrieves all available business types from the business type repository.
+     *
+     * @return a list of all available business types
+     */
+    public List&lt;BusinessType&gt; getBusinessTypes() {
+<span class="nc" id="L164">        BusinessTypeRepository businessTypeRepository = getBusinessTypeRepository();</span>
+<span class="nc" id="L165">        return businessTypeRepository.getBusinessTypes();</span>
+    }
+
+    /**
+
+     Returns the AuthenticationRepository object. If it has not been initialized yet, it initializes it using the
+     Repositories.getInstance() method and returns it.
+     @return the AuthenticationRepository object
+     */
+
+
+
+    private AuthenticationRepository getAuthenticationRepository() {
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">        if (authenticationRepository == null) {</span>
+<span class="fc" id="L179">            Repositories repositories = Repositories.getInstance();</span>
+
+            //Get the AuthenticationRepository
+<span class="fc" id="L182">            authenticationRepository = repositories.getAuthenticationRepository();</span>
+        }
+<span class="fc" id="L184">        return authenticationRepository;</span>
+    }
+
+    /**
+     * Creates a new property with the given parameters.
+     *
+     * @param propertyPrice              the price of the property
+     * @param propertyArea               the area of the property
+     * @param propertyAddress            the address of the property
+     * @param propertyDistanceToCentre   the distance of the property to the city centre
+     * @param propertyPhotographs        a list of URLs of photographs of the property
+     * @param propertyBedroomNumber      the property bedroom number
+     * @param propertyBathroomNumber     the property bathroom number
+     * @param propertyParkingSpaceNumber the property parking space number
+     * @param propertyEquipmentList      the property equipment list
+     * @param propertyType               the type of the property
+     * @param store                      the store where the property is listed
+     * @param client                     the Client who created the property
+     * @param date                       the date
+     * @return the created property
+     */
+    public Property createProperty(Double propertyPrice, Double propertyArea, Address propertyAddress,
+                                   Double propertyDistanceToCentre, List&lt;Photograph&gt; propertyPhotographs,
+                                   int propertyBedroomNumber, int propertyBathroomNumber, int propertyParkingSpaceNumber, List&lt;String&gt; propertyEquipmentList, PropertyType propertyType, Store store, Client client, DateTime date){
+
+<span class="nc" id="L209">        return getPropertyRepository().createProperty(propertyPrice, propertyArea, propertyAddress, propertyDistanceToCentre, propertyPhotographs, propertyType, store, client, date);</span>
+    }
+
+
+
+
+
+
+
+
+
+    /**
+     * Creates a new Property with the given parameters.
+     *
+     * @param propertyPrice              The price of the property.
+     * @param propertyArea               The area of the property.
+     * @param propertyAddress            The address of the property.
+     * @param propertyDistanceToCentre   The distance from the property to the city center.
+     * @param propertyPhotographs        The list of URLs of photographs of the property.
+     * @param propertyBedroomNumber      The number of bedrooms in the property.
+     * @param propertyBathroomNumber     The number of bathrooms in the property.
+     * @param propertyParkingSpaceNumber The number of parking spaces in the property.
+     * @param propertyEquipmentList      The list of equipment available in the property.
+     * @param propertyHasBasement        Whether or not the property has a basement.
+     * @param propertyHasLoft            Whether or not the property has a loft.
+     * @param propertySunExposure        The sun exposure of the property.
+     * @param propertyType               The type of the property.
+     * @param store                      The store to which the property is associated.
+     * @param client                     The Client who created the Property.
+     * @param date                       the date
+     * @return The newly created Property.
+     */
+    public Property createProperty(Double propertyPrice, Double propertyArea, Address propertyAddress,
+                                   Double propertyDistanceToCentre, List&lt;Photograph&gt; propertyPhotographs, Integer propertyBedroomNumber, Integer propertyBathroomNumber,
+                                   Integer propertyParkingSpaceNumber, List&lt;String&gt; propertyEquipmentList, Boolean propertyHasBasement, Boolean propertyHasLoft, String propertySunExposure,
+                                   PropertyType propertyType, Store store, Client client, DateTime date){
+
+
+
+
+
+<span class="nc" id="L250">        return getPropertyRepository().createProperty(propertyPrice, propertyArea, propertyAddress, propertyDistanceToCentre, propertyPhotographs, propertyBedroomNumber,</span>
+                propertyBathroomNumber, propertyParkingSpaceNumber, propertyEquipmentList, propertyHasBasement, propertyHasLoft,
+                propertySunExposure, propertyType, store, client, date);
+    }
+
+    /**
+     * Creates a new property with the given parameters and returns it.
+     *
+     * @param propertyPrice              The price of the property.
+     * @param propertyArea               The area of the property in square meters.
+     * @param propertyAddress            The address of the property.
+     * @param propertyDistanceToCentre   The distance to the city center in kilometers.
+     * @param propertyPhotographs        A list of URLs of photographs of the property.
+     * @param propertyBedroomNumber      The number of bedrooms in the property.
+     * @param propertyBathroomNumber     The number of bathrooms in the property.
+     * @param propertyParkingSpaceNumber The number of parking spaces available with the property.
+     * @param propertyEquipmentList      A list of equipment and amenities available with the property.
+     * @param propertyType               The type of the property (e.g. apartment, house, office).
+     * @param store                      The store where the property is listed for sale.
+     * @param client                     The Client who created the property listing.
+     * @return The created Property object.
+     */
+    public Property createProperty(Double propertyPrice, Double propertyArea, Address propertyAddress,
+                                   Double propertyDistanceToCentre, List&lt;Photograph&gt; propertyPhotographs, Integer propertyBedroomNumber, Integer propertyBathroomNumber,
+                                   Integer propertyParkingSpaceNumber, List&lt;String&gt; propertyEquipmentList,
+                                   PropertyType propertyType, Store store, Client client){
+
+<span class="nc" id="L277">        return getPropertyRepository().createProperty(propertyPrice, propertyArea, propertyAddress, propertyDistanceToCentre, propertyPhotographs, propertyBedroomNumber, propertyBathroomNumber, propertyParkingSpaceNumber, propertyEquipmentList, propertyType, store, client, new DateTime());</span>
+    }
+
+
+    /**
+     * Create announcement optional.
+     *
+     * @param announcementDTO the announcement dto
+     * @return the optional
+     */
+    public Optional&lt;Announcement&gt; createAnnouncement(AnnouncementDTO announcementDTO){
+
+<span class="nc" id="L289">        return getAnnouncementRepository().createAnnouncement( announcementDTO);</span>
+    }
+
+    /**
+     * Create property property.
+     *
+     * @param landDTO the land dto
+     * @return the property
+     */
+    public Property createProperty(LandDTO landDTO) {
+
+<span class="nc" id="L300">        return getPropertyRepository().createProperty(landDTO);</span>
+    }
+
+    /**
+     * Create property property.
+     *
+     * @param apartmentDTO the apartment dto
+     * @return the property
+     */
+    public Property createProperty(ApartmentDTO apartmentDTO) {
+
+<span class="nc" id="L311">        return getPropertyRepository().createProperty(apartmentDTO);</span>
+    }
+
+    /**
+     * Create property property.
+     *
+     * @param houseDTO the house dto
+     * @return the property
+     */
+    public Property createProperty(HouseDTO houseDTO) {
+
+<span class="nc" id="L322">        return getPropertyRepository().createProperty(houseDTO);</span>
+    }
+
+    /**
+     * Create sms.
+     *
+     * @param senderNumber    the sender number
+     * @param agentName       the agent name
+     * @param dateTime        the date time
+     * @param address         the address
+     */
+    public void createSMS(long senderNumber, String agentName, DateTimeDTO dateTime, AddressDTO address) {
+
+<span class="nc" id="L335">        getAnnouncementRepository().createSMS(senderNumber, agentName, dateTime, address);</span>
+
+<span class="nc" id="L337">    }</span>
+
+
+
+
+    /**
+     * Creates a new sale announcement with the given parameters.
+     *
+     * @param date         the formatted date of the announcement
+     * @param commission   the commission for the announcement
+     * @param businessType the business type of the announcement
+     * @param property     the property associated with the announcement
+     * @param listedPrice  the listed price of the property
+     * @param agent        the employee responsible for the announcement
+     * @return an optional containing the created sale announcement if successful, or an empty optional otherwise
+     */
+    public Optional&lt;SaleAnnouncement&gt; createSaleAnnouncement(DateTime date, double commission, BusinessType businessType, Property property, double listedPrice, Agent agent){
+
+<span class="nc" id="L355">        return getAnnouncementRepository().createSaleAnnouncement2( date, commission, businessType,property,listedPrice,agent);</span>
+    }
+
+    /**
+     * Creates a new rent announcement with the given parameters.
+     *
+     * @param date         the formatted date of the announcement
+     * @param commission   the commission for the announcement
+     * @param businessType the business type of the announcement
+     * @param property     the property associated with the announcement
+     * @param rentDuration the duration of the rent
+     * @param agent        the employee responsible for the announcement
+     * @return an optional containing the created rent announcement if successful, or an empty optional otherwise
+     */
+    public Optional&lt;RentAnnouncement&gt; createRentAnnouncement(DateTime date, double commission, BusinessType businessType, Property property, Integer rentDuration, Agent agent){
+
+<span class="nc" id="L371">        return getAnnouncementRepository().createRentAnnouncement2(date,commission,businessType,property,rentDuration, agent );</span>
+    }
+
+
+    /**
+     * Returns the PropertyType object that matches the given description.
+     *
+     * @param propertyTypeDescription a String representing the description of the desired PropertyType
+     * @return a PropertyType object that matches the given description, or null if no matching PropertyType is found
+     */
+    public PropertyType getPropertyTypeByDescription(String propertyTypeDescription) {
+
+
+
+<span class="nc" id="L385">        return getPropertyTypeRepository().getPropertyTypeByDescription(propertyTypeDescription);</span>
+
+    }
+
+
+    /**
+     * Returns the {@link BusinessType} object corresponding to the given description.
+     *
+     * @param businessTypeDescription the description of the business type to be retrieved
+     * @return the {@link BusinessType} object with the given description, or null if not found
+     */
+    public BusinessType getBusinessTypeByDescription(String businessTypeDescription) {
+
+
+<span class="nc" id="L399">        return getBusinessTypeRepository().getBusinessTypeByDescription(businessTypeDescription, true);</span>
+
+    }
+
+    /**
+     * Returns the Store with the given description.
+     *
+     * @param storeDescription the description of the Store to retrieve
+     * @return the Store with the given description, or null if no Store exists with that description
+     */
+    public Store getStoreByDescription(String storeDescription) {
+
+
+
+<span class="nc" id="L413">        return getStoreRepository().getStoreByDescription(storeDescription);</span>
+
+    }
+
+    /**
+
+     Retrieves the {@link StoreRepository} instance and creates it if it does not exist.
+     @return The {@link StoreRepository} instance.
+     */
+
+
+    private StoreRepository getStoreRepository() {
+<span class="nc bnc" id="L425" title="All 2 branches missed.">        if (storeRepository == null) {</span>
+<span class="nc" id="L426">            Repositories repositories = Repositories.getInstance();</span>
+
+
+<span class="nc" id="L429">            storeRepository = repositories.getStoreRepository();</span>
+        }
+<span class="nc" id="L431">        return storeRepository;</span>
+    }
+
+    /**
+     * Retrieves the agent (employee) associated with the current session.
+     *
+     * @return the agent (employee) associated with the current session
+     */
+    public Agent getAgentFromSession() {
+<span class="nc bnc" id="L440" title="All 2 branches missed.">        if (currentSession == null) {</span>
+<span class="nc" id="L441">            ApplicationSession appSession = ApplicationSession.getInstance();</span>
+
+            //Get the PropertyTypeRepository
+<span class="nc" id="L444">            currentSession = appSession.getCurrentSession();</span>
+        }
+<span class="nc" id="L446">        String email = currentSession.getUserEmail();</span>
+<span class="nc" id="L447">        EmployeeRepository employeeRepository1 = getEmployeeRepository();</span>
+<span class="nc" id="L448">        return employeeRepository1.getEmployeeByEmail(email).getAssociatedAgent();</span>
+    }
+
+
+
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

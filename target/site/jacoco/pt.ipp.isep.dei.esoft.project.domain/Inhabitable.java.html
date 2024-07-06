@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Inhabitable.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.domain</a> &gt; <span class="el_source">Inhabitable.java</span></div><h1>Inhabitable.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.domain;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Represents an Inhabitable Property.
+ */
+public class Inhabitable implements Serializable {
+    private int bedroomNumber;
+    private int bathroomNumber;
+    private int parkingSpaceNumber;
+
+    private Property property;
+<span class="pc" id="L16">    private List&lt;String&gt; equipmentList = new ArrayList&lt;&gt;();</span>
+
+    public Inhabitable(double price, double area, Address address, double distanceToCentre,
+                       List&lt;Photograph&gt; photographs, int bedroomNumber, int bathroomNumber,
+                       int parkingSpaceNumber, List&lt;String&gt; equipmentList,
+<span class="fc" id="L21">                       PropertyType propertyType, Store store, Client client, DateTime date) {</span>
+<span class="fc" id="L22">        this.property = new Property(price, area, address, distanceToCentre, photographs, propertyType, store, client, date);</span>
+<span class="fc" id="L23">        this.bedroomNumber = bedroomNumber;</span>
+<span class="fc" id="L24">        this.bathroomNumber = bathroomNumber;</span>
+<span class="fc" id="L25">        this.parkingSpaceNumber = parkingSpaceNumber;</span>
+<span class="fc" id="L26">        this.equipmentList = equipmentList;</span>
+<span class="fc" id="L27">    }</span>
+<span class="nc" id="L28">    public Inhabitable(Property property, int bedroomNumber, int bathroomNumber, int parkingSpaceNumber, List&lt;String&gt; equipmentList) {</span>
+<span class="nc" id="L29">        this.property = property;</span>
+<span class="nc" id="L30">        this.bedroomNumber = bedroomNumber;</span>
+<span class="nc" id="L31">        this.bathroomNumber = bathroomNumber;</span>
+<span class="nc" id="L32">        this.parkingSpaceNumber = parkingSpaceNumber;</span>
+<span class="nc" id="L33">        this.equipmentList = equipmentList;</span>
+<span class="nc" id="L34">    }</span>
+
+    public Property getProperty() {
+<span class="fc" id="L37">        return property;</span>
+    }
+
+    /**
+     * Clone method.
+     *
+     * @return A clone of the current Inhabitable Property.
+     */
+
+    @Override
+    public Inhabitable clone() {
+<span class="nc" id="L48">        return new Inhabitable(</span>
+<span class="nc" id="L49">                this.getProperty(),</span>
+                this.bedroomNumber,
+                this.bathroomNumber,
+                this.parkingSpaceNumber,
+                this.equipmentList
+        );
+//        this.agent = agent,
+//        this.client = client);
+    }
+
+    /**
+     * This method returns the number of Bedrooms of the current Property.
+     *
+     * @return      the Property's number of Bedrooms.
+     */
+
+    public int getBedroomNumber() {
+<span class="nc" id="L66">        return bedroomNumber;</span>
+    }
+
+    /**
+     * This method returns the number of Bathrooms of the current Property.
+     *
+     * @return      the Property's number of Bathrooms.
+     */
+
+    public int getBathroomNumber() {
+<span class="nc" id="L76">        return bathroomNumber;</span>
+    }
+
+    /**
+     * This method returns the number of Parking Spaces of the current Property.
+     *
+     * @return      the Property's number of Parking Spaces.
+     */
+    public int getParkingSpaceNumber() {
+<span class="nc" id="L85">        return parkingSpaceNumber;</span>
+    }
+
+    public List&lt;String&gt; getEquipmentList() {
+<span class="nc" id="L89">        return equipmentList;</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

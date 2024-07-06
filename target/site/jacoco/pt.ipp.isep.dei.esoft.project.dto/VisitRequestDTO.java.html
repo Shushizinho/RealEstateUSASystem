@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VisitRequestDTO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.dto</a> &gt; <span class="el_source">VisitRequestDTO.java</span></div><h1>VisitRequestDTO.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.dto;
+
+import pt.ipp.isep.dei.esoft.project.domain.*;
+import pt.ipp.isep.dei.esoft.project.mapper.PropertyMapper;
+import pt.ipp.isep.dei.esoft.project.mapper.VisitRequestMapper;
+import pt.ipp.isep.dei.esoft.project.repository.Repositories;
+import pt.ipp.isep.dei.esoft.project.repository.VisitRequestRepository;
+
+import java.util.List;
+
+/**
+ * The type Visit request dto.
+ */
+public class VisitRequestDTO {
+    private PropertyDTO property;
+
+    private DateTimeDTO preferredDate;
+
+    private List&lt;DateTime&gt; timeSlot;
+
+    private String clientName;
+
+    private long clientPhoneNumber;
+
+    private String ClientReply;
+
+    private Agent agent;
+
+    private int wasAccepted;
+
+
+    /**
+     * Constructs a new VisitRequest object with the provided parameters.
+     *
+     * @param property          The property for the visit request.
+     * @param preferredDate     The preferred date for the visit request.
+     * @param timeSlot          The time slots available for the visit request.
+     * @param clientName        The name of the client making the visit request.
+     * @param clientPhoneNumber The phone number of the client making the visit request.
+     */
+<span class="fc" id="L41">    public VisitRequestDTO(PropertyDTO property, DateTimeDTO preferredDate, List&lt;DateTime&gt; timeSlot, String clientName, long clientPhoneNumber) {</span>
+<span class="fc" id="L42">        this.property = property;</span>
+<span class="fc" id="L43">        this.preferredDate = preferredDate;</span>
+<span class="fc" id="L44">        this.timeSlot = timeSlot;</span>
+<span class="fc" id="L45">        this.clientName = clientName;</span>
+<span class="fc" id="L46">        this.clientPhoneNumber = clientPhoneNumber;</span>
+<span class="fc" id="L47">        this.ClientReply = &quot;&quot;;</span>
+<span class="fc" id="L48">        this.wasAccepted = 0;</span>
+<span class="fc" id="L49">        Announcement p = Repositories.getInstance().getAnnouncementRepository().getAnnouncementByProperty(PropertyMapper.toEntity(property));</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        if (p != null){</span>
+<span class="nc" id="L51">            this.agent = p.getAgent();</span>
+        }
+
+
+<span class="fc" id="L55">    }</span>
+
+    /**
+     * Instantiates a new Visit request dto.
+     *
+     * @param property          the property
+     * @param preferredDate     the preferred date
+     * @param timeSlot          the time slot
+     * @param clientName        the client name
+     * @param clientPhoneNumber the client phone number
+     * @param wasAccepted       the was accepted
+     */
+<span class="fc" id="L67">    public VisitRequestDTO(PropertyDTO property, DateTimeDTO preferredDate, List&lt;DateTime&gt; timeSlot, String clientName, long clientPhoneNumber, int wasAccepted) {</span>
+<span class="fc" id="L68">        this.property = property;</span>
+<span class="fc" id="L69">        this.preferredDate = preferredDate;</span>
+<span class="fc" id="L70">        this.timeSlot = timeSlot;</span>
+<span class="fc" id="L71">        this.clientName = clientName;</span>
+<span class="fc" id="L72">        this.clientPhoneNumber = clientPhoneNumber;</span>
+<span class="fc" id="L73">        this.ClientReply = &quot;&quot;;</span>
+<span class="fc" id="L74">        this.wasAccepted = wasAccepted;</span>
+<span class="fc" id="L75">        Announcement p = Repositories.getInstance().getAnnouncementRepository().getAnnouncementByProperty(PropertyMapper.toEntity(property));</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">        if (p != null){</span>
+<span class="nc" id="L77">            this.agent = p.getAgent();</span>
+        }
+<span class="fc" id="L79">    }</span>
+
+
+    /**
+     * This method allows to set the client reply of the current visit request.
+     *
+     * @param clientReply the client reply
+     */
+    public void setClientReply(String clientReply) {
+<span class="nc" id="L88">        ClientReply = clientReply;</span>
+<span class="nc" id="L89">    }</span>
+
+    /**
+     * This method returns the client reply of the current visit request.
+     *
+     * @return client replay
+     */
+    public String getClientReply() {
+<span class="nc" id="L97">        return ClientReply;</span>
+    }
+
+    /**
+     * This method returns the property of the current visit request.
+     *
+     * @return the Visit request's property.
+     */
+    public PropertyDTO getProperty() {
+<span class="fc" id="L106">        return property;</span>
+    }
+
+    /**
+     * This method returns the preferred date of the current visit request.
+     *
+     * @return the Visit request's preferred date.
+     */
+    public DateTimeDTO getPreferredDate() {
+<span class="fc" id="L115">        return preferredDate;</span>
+    }
+
+
+    /**
+     * This method returns the start time of the current visit request.
+     *
+     * @param i the
+     * @return the Visit request's time slot.
+     */
+    public DateTime getTimeSlot(int i) {
+<span class="fc" id="L126">        return timeSlot.get(i);</span>
+    }
+
+    /**
+     * This method returns the time slot for the current visit request.
+     *
+     * @return the Visit request's time slot.
+     */
+    public List&lt;DateTime&gt; getTimeSlot(){
+<span class="fc" id="L135">        return timeSlot;</span>
+    }
+
+
+    /**
+     * This method returns the client name of the current visit request.
+     *
+     * @return the Visit request's client name.
+     */
+    public String getClientName() {
+<span class="fc" id="L145">        return clientName;</span>
+    }
+
+
+    /**
+     * This method returns the client phone number of the current visit request.
+     *
+     * @return the Visit request's client phone number.
+     */
+    public long getClientPhoneNumber() {
+<span class="fc" id="L155">        return clientPhoneNumber;</span>
+    }
+
+    /**
+     * This method accepts the visit request
+     */
+    public void acceptVisitRequest(){
+<span class="nc" id="L162">        this.wasAccepted = 1;</span>
+<span class="nc" id="L163">    }</span>
+
+    /**
+     * This method decline the visit request
+     */
+    public void declineVisitRequest(){
+<span class="nc" id="L169">        this.wasAccepted = -1;</span>
+<span class="nc" id="L170">    }</span>
+
+
+    /**
+     * This method returns the value of wasAccepted for the current visit request
+     *
+     * @return wasAccepted for the current visit request
+     */
+    public int accepted(){
+<span class="fc" id="L179">        return wasAccepted;</span>
+    }
+
+    /**
+     * Clone method.
+     *
+     * @return a clone of the current visit request
+     */
+    public VisitRequestDTO clone() {
+<span class="fc" id="L188">        return new VisitRequestDTO(this.getProperty(), this.getPreferredDate(), this.getTimeSlot(), this.getClientName(),</span>
+<span class="fc" id="L189">                this.getClientPhoneNumber(), this.wasAccepted);</span>
+    }
+
+    /**
+     * To dto visit request.
+     *
+     * @param visitRequestDTO the visit request dto
+     * @return the visit request
+     */
+    public static VisitRequest toDTO(VisitRequestDTO visitRequestDTO) {
+<span class="fc" id="L199">        VisitRequestRepository.CreateVisitRequest(visitRequestDTO);</span>
+<span class="fc" id="L200">        VisitRequest visitRequest = VisitRequestMapper.toEntity(visitRequestDTO);</span>
+<span class="fc" id="L201">        return  visitRequest;</span>
+    }
+
+    public String toString(){
+<span class="fc" id="L205">        return String.format(&quot;=== Visit Request information ===&quot;+</span>
+                        &quot;\n--------------------------------------------------&quot; + &quot;\nProperty- %s&quot; +
+                        &quot;\n--------------------------------------------------&quot; + &quot;\nPreferredDate- %s&quot; +
+                        &quot;\n--------------------------------------------------&quot; + &quot;\nTimeSlot- %s-%s&quot; +
+                        &quot;\n--------------------------------------------------&quot;+ &quot;\nClient name- %s&quot; +
+                        &quot;\n--------------------------------------------------&quot; + &quot;\nClient phone number- %d&quot;,
+<span class="fc" id="L211">                property.toStringDTO(), this.preferredDate.toStringDTO(),this.getTimeSlot(0).getTimestamp(), this.getTimeSlot(1).getTimestamp(), this.clientName, this.clientPhoneNumber);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

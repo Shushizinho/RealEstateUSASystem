@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="942.0" style="-fx-background-color: transparent;" styleClass="..\styles\Styles.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.esoft.project.ui.gui.AnalyseDealsUI">
+   <children>
+      <Label id="titleLinear" alignment="CENTER" layoutX="248.0" layoutY="69.0" prefHeight="55.0" prefWidth="448.0" styleClass="..\styles\Styles.css" text="Choose the linear regression type" textAlignment="CENTER">
+         <font>
+            <Font size="28.0" />
+         </font>
+      </Label>
+      <Button fx:id="simpleButton" layoutX="387.0" layoutY="174.0" mnemonicParsing="false" onAction="#getViewOptions" prefHeight="43.0" prefWidth="170.0" text="Simple" textAlignment="CENTER">
+         <font>
+            <Font size="14.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="1.0" endY="0.6635071090047393" startX="1.0" startY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.17105263471603394" green="0.17105263471603394" blue="0.17105263471603394" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Button>
+      <Button fx:id="multipleButton" layoutX="387.0" layoutY="256.0" mnemonicParsing="false" onAction="#getViewAtributes" prefHeight="43.0" prefWidth="170.0" text="Multiple" textAlignment="CENTER">
+         <font>
+            <Font size="14.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="1.0" endY="0.6635071090047393" startX="1.0" startY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.17105263471603394" green="0.17105263471603394" blue="0.17105263471603394" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Button>
+   </children>
+</AnchorPane>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DateTimeDTO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.dto</a> &gt; <span class="el_source">DateTimeDTO.java</span></div><h1>DateTimeDTO.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.dto;
+
+import pt.ipp.isep.dei.esoft.project.domain.DateTime;
+import pt.ipp.isep.dei.esoft.project.domain.Pair;
+
+import java.util.Calendar;
+
+/**
+ * The type Date formatted dto.
+ */
+public class DateTimeDTO {
+    private int dayOfMonth;
+    private int month;
+    private int year;
+    private int hour;
+    private int minute;
+
+
+    private final Calendar date;
+
+
+    /**
+     * Instantiates a new Date formatted dto.
+     */
+<span class="fc" id="L25">    public DateTimeDTO() {</span>
+<span class="fc" id="L26">        this.date = Calendar.getInstance();</span>
+<span class="fc" id="L27">    }</span>
+
+    /**
+     * Instantiates a new Date formatted dto.
+     *
+     * @param date the date
+     */
+<span class="nc" id="L34">    public DateTimeDTO(Calendar date) {</span>
+<span class="nc" id="L35">        this.date = date;</span>
+<span class="nc" id="L36">    }</span>
+
+    /**
+     * Instantiates a new Date formatted dto.
+     *
+     * @param day   the day
+     * @param month the month
+     * @param year  the year
+     */
+<span class="fc" id="L45">    public DateTimeDTO(int day, int month, int year) {</span>
+<span class="fc" id="L46">        Calendar c = Calendar.getInstance();</span>
+<span class="fc" id="L47">        c.set(year, month-1, day);</span>
+<span class="fc" id="L48">        this.date = c;</span>
+<span class="fc" id="L49">    }</span>
+
+    /**
+     * Instantiates a new Date formatted dto.
+     *
+     * @param hour   the hour
+     * @param minute the minute
+     */
+<span class="nc" id="L57">    public DateTimeDTO(int hour, int minute){</span>
+<span class="nc" id="L58">        Calendar c = Calendar.getInstance();</span>
+<span class="nc" id="L59">        c.set(hour, minute);</span>
+<span class="nc" id="L60">        this.date = c;</span>
+<span class="nc" id="L61">    }</span>
+
+    /**
+     * Instantiates a new Date formatted dto.
+     *
+     * @param date      the date
+     * @param timestamp the timestamp
+     */
+<span class="nc" id="L69">    public DateTimeDTO(DateTime date, Pair&lt;Integer, Integer&gt; timestamp){</span>
+<span class="nc" id="L70">        Calendar c = Calendar.getInstance();</span>
+<span class="nc" id="L71">        c.set(date.getYear(), date.getMonth()-1, date.getDayOfMonth(), timestamp.getLeft(), timestamp.getRight());</span>
+<span class="nc" id="L72">        this.date = c;</span>
+<span class="nc" id="L73">    }</span>
+
+    /**
+     * Gets hour.
+     *
+     * @return the hour
+     */
+    public int getHour() {
+<span class="nc" id="L81">        return date.get(Calendar.HOUR_OF_DAY);</span>
+    }
+
+    /**
+     * Get minute int.
+     *
+     * @return the int
+     */
+    public int getMinute(){
+<span class="nc" id="L90">        return date.get(Calendar.MINUTE);</span>
+    }
+
+    /**
+     * This method returns the day of the month associated with the date.
+     *
+     * @return dayOfMonth int
+     */
+    public int getDayOfMonth(){
+<span class="fc" id="L99">        return date.get(Calendar.DAY_OF_MONTH);</span>
+    }
+
+    /**
+     * This method returns the month associated with the date.
+     *
+     * @return Month int
+     */
+    public int getMonth(){
+<span class="fc" id="L108">        return date.get(Calendar.MONTH)+1;</span>
+    }
+
+    /**
+     * This method returns the year associated with the date.
+     *
+     * @return Year int
+     */
+    public int getYear(){
+<span class="fc" id="L117">        return date.get(Calendar.YEAR);</span>
+    }
+
+    /**
+     * This method returns the current date.
+     *
+     * @return Date date
+     */
+    public Calendar getDate() {
+<span class="nc" id="L126">        return date;</span>
+    }
+
+    /**
+     * To string dto string.
+     *
+     * @return the string
+     */
+    public String toStringDTO() {
+<span class="fc" id="L135">        return getDayOfMonth()+&quot;/&quot;+getMonth()+&quot;/&quot;+getYear();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

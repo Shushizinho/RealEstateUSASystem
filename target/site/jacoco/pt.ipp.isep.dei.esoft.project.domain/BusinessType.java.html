@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BusinessType.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.domain</a> &gt; <span class="el_source">BusinessType.java</span></div><h1>BusinessType.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.domain;
+
+import java.io.Serializable;
+import java.util.Objects;
+/**
+ * Represents the type of Business associated with the property.
+ */
+public class BusinessType implements Serializable {
+
+    private final String descriptionProperty;
+
+    private final String descriptionAnnoucement;
+
+<span class="fc" id="L14">    private final String DESCRIPTIONANNOUNCEMENTOMISSION = &quot;none&quot;;</span>
+
+<span class="fc" id="L16">    public BusinessType(String descriptionProperty, String descriptionAnnoucement) {</span>
+<span class="fc" id="L17">        this.descriptionProperty = descriptionProperty;</span>
+<span class="fc" id="L18">                this.descriptionAnnoucement = descriptionAnnoucement;</span>
+<span class="fc" id="L19">    }</span>
+
+
+
+    /**
+     * Checks if the given object is equal to this Business Type object
+     * @param o the object to be compared with this Business Type object
+     * @return true if the given object is equal to this Business Type object, false otherwise
+     */
+    @Override
+    public boolean equals(Object o) {
+<span class="fc bfc" id="L30" title="All 2 branches covered.">        if (this == o) {</span>
+<span class="fc" id="L31">            return true;</span>
+        }
+<span class="fc bfc" id="L33" title="All 2 branches covered.">        if (!(o instanceof BusinessType)) {</span>
+<span class="fc" id="L34">            return false;</span>
+        }
+<span class="fc" id="L36">        BusinessType that = (BusinessType) o;</span>
+<span class="fc" id="L37">        return descriptionProperty.equals(that.descriptionProperty);</span>
+    }
+
+
+    /**
+     * Returns a hash code value for the Business Type  object.
+     *  The hash code is based on the value of the email field.
+     *
+     * @return the hash code value for this Business Type  object
+     */
+    @Override
+    public int hashCode() {
+<span class="fc" id="L49">        return Objects.hash(descriptionProperty);</span>
+    }
+
+    /**
+     * This method returns the description of the Business Type.
+     *
+     * @return The description of the Business Type.
+     */
+    public String getDescriptionProperty() {
+<span class="fc" id="L58">        return descriptionProperty;</span>
+    }
+
+    public String getDescriptionAnnoucement(){
+<span class="nc" id="L62">        return descriptionAnnoucement;</span>
+    }
+
+    /**
+     * Clone method.
+     *
+     * @return A clone of the current Business Type.
+     */
+    public BusinessType clone() {
+<span class="fc" id="L71">        return new BusinessType(this.descriptionProperty, this.descriptionAnnoucement);</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

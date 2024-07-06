@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BusinessTypeRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.repository</a> &gt; <span class="el_source">BusinessTypeRepository.java</span></div><h1>BusinessTypeRepository.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.repository;
+
+import pt.ipp.isep.dei.esoft.project.domain.BusinessType;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * A repository class for managing all Business Types.
+ */
+<span class="fc" id="L12">public class BusinessTypeRepository {</span>
+
+<span class="fc" id="L14">    private final List&lt;BusinessType&gt; businessTypes = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * This method returns an exsiting Business Type by its description.
+     *
+     * @param businessTypeDescription The description of the Business Type to be created.
+     * @param mode                    the mode
+     * @return The task category.
+     * @throws IllegalArgumentException if the Business Type does not exist, which should never happen.
+     */
+    public BusinessType getBusinessTypeByDescription(String businessTypeDescription, Boolean mode) {
+
+<span class="nc" id="L26">        BusinessType newBusinessType = null;</span>
+<span class="nc bnc" id="L27" title="All 2 branches missed.">        for ( BusinessType businessType: businessTypes ) {</span>
+<span class="nc bnc" id="L28" title="All 2 branches missed.">            if (mode) {</span>
+<span class="nc bnc" id="L29" title="All 2 branches missed.">                if (businessType.getDescriptionAnnoucement().compareTo(businessTypeDescription) == 0 ) newBusinessType = businessTypes.get(businessTypes.indexOf(businessType));</span>
+            } else {
+<span class="nc bnc" id="L31" title="All 2 branches missed.">                if (businessType.getDescriptionProperty().compareTo(businessTypeDescription) == 0 ) newBusinessType = businessTypes.get(businessTypes.indexOf(businessType));</span>
+            }
+<span class="nc" id="L33">        }</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">        if (newBusinessType == null) {</span>
+<span class="nc" id="L35">            throw new IllegalArgumentException(</span>
+                    &quot;Business Type for [&quot; + businessTypeDescription + &quot;] does not exist.&quot;);
+        }
+<span class="nc" id="L38">        return newBusinessType;</span>
+    }
+
+
+    /**
+     * Adds a new business type to the collection of business type managed by this repository.
+     *
+     * @param businessType the business type to be added to the collection.
+     * @return an Optional containing the added business type, or an empty Optional if the operation fails
+     */
+    public Optional&lt;BusinessType&gt; add(BusinessType businessType) {
+
+<span class="fc" id="L50">        Optional&lt;BusinessType&gt; newBusinessType = Optional.empty();</span>
+<span class="fc" id="L51">        boolean operationSuccess = false;</span>
+
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if (validateBusinessType(businessType)) {</span>
+<span class="fc" id="L54">            newBusinessType = Optional.of(businessType.clone());</span>
+<span class="fc" id="L55">            operationSuccess = businessTypes.add(newBusinessType.get());</span>
+        }
+
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">        if (!operationSuccess) {</span>
+<span class="nc" id="L59">            newBusinessType = Optional.empty();</span>
+        }
+
+<span class="fc" id="L62">        return newBusinessType;</span>
+    }
+    /**
+     * Validates if a given business type is valid to be added to the repository.
+     *
+     * @param businessType the businessType to be validated
+     * @return true if the businessType is valid for addition, false otherwise
+     */
+
+    private boolean validateBusinessType(BusinessType businessType) {
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">        boolean isValid = !businessTypes.contains(businessType);</span>
+<span class="fc" id="L73">        return isValid;</span>
+    }
+
+    /**
+     * Returns a defensive (immutable) copy of the list of Business Types.
+     *
+     * @return a read-only list of all business types in the system.
+     */
+    public List&lt;BusinessType&gt; getBusinessTypes() {
+        //This is a defensive copy, so that the repository cannot be modified from the outside.
+<span class="fc" id="L83">        return List.copyOf(businessTypes);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

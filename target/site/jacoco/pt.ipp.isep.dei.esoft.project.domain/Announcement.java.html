@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Announcement.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.domain</a> &gt; <span class="el_source">Announcement.java</span></div><h1>Announcement.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.domain;
+
+
+import java.io.Serializable;
+import java.util.Objects;
+
+/**
+ * A class representing a real estate announcement.
+ */
+
+public class Announcement implements Serializable {
+
+
+<span class="pc" id="L14">   private double listedPrice = 0.0;</span>
+<span class="pc" id="L15">   private Integer rentDuration = 0;</span>
+
+    private Agent agent;
+
+    /**
+     * The date of the announcement.
+     */
+    private DateTime date;
+
+    /**
+     * The commission for the real estate agent.
+     */
+    private double commission;
+
+
+    /**
+     * The business type of the property.
+     */
+    private BusinessType businessType;
+
+
+
+    /**
+     * The property being advertised.
+     */
+    private Property property;
+
+
+
+
+/*public Announcement(String title, double price, DateTime date, double commission, PropertyType propertyType, BusinessType businessType, Property property, Employee agent){
+    this.title=title;
+    this.price=price;
+    this.date=date;
+    this.commission=commission;
+    this.propertyType=propertyType;
+    this.businessType=businessType;
+    this.property= property;
+    this.agent=agent;
+}*/
+
+    /**
+     * Constructs a new Announcement object.
+     *
+     * @param agent        the employee responsible for the announcement
+     * @param date         the formatted date of the announcement
+     * @param commission   the commission for the announcement
+     * @param businessType the business type of the announcement
+     * @param property     the property associated with the announcement
+     */
+<span class="fc" id="L65">    public Announcement(Agent agent, DateTime date, double commission, BusinessType businessType, Property property ) {</span>
+<span class="fc" id="L66">        this.agent = agent;</span>
+<span class="fc" id="L67">        this.date = date;</span>
+<span class="fc" id="L68">        this.commission = commission;</span>
+<span class="fc" id="L69">        this.businessType = businessType;</span>
+<span class="fc" id="L70">        this.property = property;</span>
+
+<span class="fc" id="L72">    }</span>
+
+
+<span class="nc" id="L75">    public Announcement(Agent agent, DateTime date, double commission, BusinessType businessType, Property property, Integer rentDuration, double listedPrice) {</span>
+<span class="nc" id="L76">        this.agent = agent;</span>
+<span class="nc" id="L77">        this.date = date;</span>
+<span class="nc" id="L78">        this.commission = commission;</span>
+<span class="nc" id="L79">        this.businessType = businessType;</span>
+<span class="nc" id="L80">        this.property = property;</span>
+<span class="nc" id="L81">        this.rentDuration = rentDuration;</span>
+<span class="nc" id="L82">        this.listedPrice = listedPrice;</span>
+<span class="nc" id="L83">    }</span>
+
+<span class="fc" id="L85">    public Announcement(Agent agent, DateTime date, double commission, BusinessType businessType, Property property, double listedPrice) {</span>
+<span class="fc" id="L86">        this.agent = agent;</span>
+<span class="fc" id="L87">        this.date = date;</span>
+<span class="fc" id="L88">        this.commission = commission;</span>
+<span class="fc" id="L89">        this.businessType = businessType;</span>
+<span class="fc" id="L90">        this.property = property;</span>
+<span class="fc" id="L91">        this.listedPrice = listedPrice;</span>
+
+<span class="fc" id="L93">    }</span>
+
+
+
+  /*  public Announcement( AnnouncementRequest announcementRequest, double commission){
+        this.listedPrice = announcementRequest.getListedPrice();
+        this.rentDuration = announcementRequest.getRentDuration();
+
+        this.businessType= announcementRequest.getBusinessTypeObject();
+        this.agent = announcementRequest.getAgent();
+        this.date = announcementRequest.getDate();
+        this.commission = commission;
+        this.property = announcementRequest.getProperty();
+
+
+    }*/
+
+<span class="nc" id="L110">    public Announcement ( AnnouncementRequest announcementRequest, double commission) {</span>
+<span class="nc" id="L111">        this.commission=commission;</span>
+<span class="nc" id="L112">        this.businessType = announcementRequest.getBusinessTypeObject();</span>
+<span class="nc" id="L113">        this.property = announcementRequest.getProperty();</span>
+<span class="nc" id="L114">        this.rentDuration = announcementRequest.getRentDuration();</span>
+<span class="nc" id="L115">        this.agent = announcementRequest.getAgent();</span>
+<span class="nc" id="L116">        this.date = new DateTime();</span>
+<span class="nc" id="L117">        this.listedPrice = announcementRequest.getListedPrice();</span>
+
+<span class="nc" id="L119">    }</span>
+
+
+
+
+
+
+
+    /* public Announcement(String title, long phoneNumber, DateTime date, double commission, BusinessType businessType, PropertyType propertyType, Property property) {
+        this.title = title;
+        this.phoneNumber = phoneNumber;
+        this.date = date;
+        this.commission = commission;
+        this.businessType = businessType;
+        this.propertyType = propertyType;
+        this.property = property;
+    }*/
+
+<span class="nc" id="L137">    public Announcement() {</span>
+
+<span class="nc" id="L139">    }</span>
+
+
+    public double getListedPrice() {
+<span class="nc" id="L143">        return listedPrice;</span>
+    }
+
+    public void setListedPrice(double listedPrice) {
+<span class="nc" id="L147">        this.listedPrice = listedPrice;</span>
+<span class="nc" id="L148">    }</span>
+
+    public int getRentDuration() {
+<span class="nc" id="L151">        return rentDuration;</span>
+    }
+
+    public void setRentDuration(int rentDuration) {
+<span class="nc" id="L155">        this.rentDuration = rentDuration;</span>
+<span class="nc" id="L156">    }</span>
+
+    public Property getProperty(){
+
+<span class="fc" id="L160">        return property;</span>
+    }
+
+
+    public BusinessType getBusinessType(){
+
+<span class="fc" id="L166">        return businessType;</span>
+
+    }
+
+
+
+
+    /**
+     * Returns the date of the announcement.
+     *
+     * @return the date of the announcement
+     */
+
+    public DateTime getDate() {
+<span class="nc" id="L180">        return date;</span>
+    }
+
+    /**
+     * Sets the date of the announcement.
+     *
+     * @param date the date of the announcement
+     */
+
+    public void setDate(DateTime date) {
+<span class="nc" id="L190">        this.date = date;</span>
+<span class="nc" id="L191">    }</span>
+
+    /**
+     * Returns the commission for the real estate agent.
+     *
+     * @return the commission for the real estate agent
+     */
+    public double getCommission() {
+<span class="nc" id="L199">        return commission;</span>
+    }
+
+    /**
+     * Sets the commission for the real estate agent.
+     *
+     * @param commission the commission for the real estate agent
+     */
+
+    public void setCommission(double commission) {
+<span class="nc" id="L209">        this.commission = commission;</span>
+
+<span class="nc" id="L211">    }</span>
+
+
+    /**
+     * Returns the property object associated with this announcement.
+     *
+     * @return the property object associated with this announcement
+     */
+
+
+  /*  public Property getProperty() {
+        return property;
+    }
+*/
+
+    /**
+     * Returns the business type of the property in the announcement.
+     *
+     * @return the business type of the property
+     */
+
+  /*  public BusinessType getBusinessType() {
+        return businessType;
+    }
+*/
+
+/*
+
+    public void setBusinessType(BusinessType businessType) {
+        this.businessType = businessType;
+    }
+
+
+
+
+
+   /* public Employee getAgent() {
+        return agent;
+    }*/
+
+
+    public Agent getAgent(){
+
+
+
+<span class="nc" id="L256">        return agent;</span>
+    }
+
+    /**
+     * Creates and returns a new Announcement object that is a copy of this object.
+     *
+     * @return A new Announcement object that is a copy of this object
+     */
+
+    public Announcement clone() {
+<span class="nc" id="L266">        return new Announcement(this.agent, this.date, this.commission, this.businessType, this.property, this.rentDuration, this.listedPrice);</span>
+    }
+
+
+        /**
+         * Checks if the given object is equal to this Announcement object
+         * @param o the object to be compared with this Announcement object
+         * @return true if the given object is equal to this Announcement object, false otherwise
+         */
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L277" title="All 2 branches missed.">        if (this == o) {</span>
+<span class="nc" id="L278">            return true;</span>
+        }
+<span class="nc bnc" id="L280" title="All 4 branches missed.">        if (o == null || getClass() != o.getClass()) {</span>
+<span class="nc" id="L281">            return false;</span>
+        }
+<span class="nc" id="L283">        Announcement other = (Announcement) o;</span>
+<span class="nc bnc" id="L284" title="All 2 branches missed.">        return Double.compare(other.commission, commission) == 0  &amp;&amp;</span>
+<span class="nc bnc" id="L285" title="All 2 branches missed.">                Objects.equals(agent, other.agent) &amp;&amp;</span>
+<span class="nc bnc" id="L286" title="All 2 branches missed.">                Objects.equals(date, other.date) &amp;&amp;</span>
+<span class="nc bnc" id="L287" title="All 2 branches missed.">                Objects.equals(businessType, other.businessType) &amp;&amp;</span>
+<span class="nc bnc" id="L288" title="All 2 branches missed.">                Objects.equals(property, other.property);</span>
+    }
+
+        /**
+         * Returns a hash code value for the Announcement object. The hash code is computed
+         * based on the values of the agent, date, commission, businessType, property fields.
+         *
+         * @return the hash code value for this Announcement object
+         */
+
+
+
+
+    @Override
+        public int hashCode () {
+<span class="nc" id="L303">            return Objects.hash( agent, date, commission, businessType, property);</span>
+        }
+
+
+
+    @Override
+    public String toString() {
+<span class="nc" id="L310">        String result = &quot;Announcement{\n&quot;;</span>
+
+<span class="nc bnc" id="L312" title="All 2 branches missed.">        if (businessType.getDescriptionAnnoucement().equals(&quot;Rent&quot;)) {</span>
+<span class="nc" id="L313">            result += String.format(&quot;rentDuration=%d, listedPrice=%f&quot;, rentDuration, listedPrice);</span>
+<span class="nc bnc" id="L314" title="All 2 branches missed.">        } else if (businessType.getDescriptionAnnoucement().equals(&quot;Buy&quot;)) {</span>
+<span class="nc" id="L315">            result += String.format(&quot;listedPrice=%f&quot;, listedPrice);</span>
+        }
+
+<span class="nc" id="L318">        result += String.format(&quot;, agent=%s, date=%s, commission=%f, businessType=%s, property=%s}&quot;,</span>
+<span class="nc" id="L319">                agent, date, commission, businessType, property);</span>
+
+<span class="nc" id="L321">        return result;</span>
+    }
+
+
+
+
+
+
+
+
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

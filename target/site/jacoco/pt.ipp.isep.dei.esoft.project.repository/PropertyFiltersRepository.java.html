@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PropertyFiltersRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-template</a> &gt; <a href="index.source.html" class="el_package">pt.ipp.isep.dei.esoft.project.repository</a> &gt; <span class="el_source">PropertyFiltersRepository.java</span></div><h1>PropertyFiltersRepository.java</h1><pre class="source lang-java linenums">package pt.ipp.isep.dei.esoft.project.repository;
+
+import pt.ipp.isep.dei.esoft.project.domain.Filters;
+import pt.ipp.isep.dei.esoft.project.domain.Pair;
+import pt.ipp.isep.dei.esoft.project.dto.PairDTO;
+import pt.ipp.isep.dei.esoft.project.mapper.PairMapper;
+
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * A repository class for managing all Filters.
+ */
+<span class="fc" id="L16">public class PropertyFiltersRepository {</span>
+
+<span class="fc" id="L18">    private final List&lt;Filters&gt; filter = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L19">    private final List&lt;Pair&lt;Integer, Integer&gt;&gt; priceRanges = new ArrayList&lt;&gt;();</span>
+
+    /**
+     * Adds a new filter to the collection of filters managed by this repository.
+     *
+     * @param filters the filter to be added to the collection.
+     * @return an Optional containing the added filter, or an empty Optional if the operation fails
+     */
+    public Optional&lt;Filters&gt; add(Filters filters) {
+
+<span class="fc" id="L29">        Optional&lt;Filters&gt; newFilters = Optional.empty();</span>
+<span class="fc" id="L30">        boolean operationSuccess = false;</span>
+
+<span class="fc bfc" id="L32" title="All 2 branches covered.">        if (validateFilter(filters)) {</span>
+<span class="fc" id="L33">            newFilters = Optional.of(filters.clone());</span>
+<span class="fc" id="L34">            operationSuccess = filter.add(newFilters.get());</span>
+        }
+
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        if (!operationSuccess) {</span>
+<span class="fc" id="L38">            newFilters = Optional.empty();</span>
+        }
+
+<span class="fc" id="L41">        return newFilters;</span>
+    }
+    /**
+     * Validates if a given filter is valid to be added to the repository.
+     *
+     * @param filters the filter to be validated
+     * @return true if the filter is valid for addition, false otherwise
+     */
+
+    private boolean validateFilter(Filters filters) {
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        boolean isValid = !filter.contains(filters);</span>
+<span class="fc" id="L52">        return isValid;</span>
+    }
+
+    /**
+     * This method returns a defensive (immutable) copy of the list of Filters.
+     *
+     * @return The list of Property Filters.
+     */
+    public List&lt;Filters&gt; getFilters() {
+        //This is a defensive copy, so that the repository cannot be modified from the outside.
+<span class="fc" id="L62">        return List.copyOf(filter);</span>
+    }
+
+    /**
+     * Retrieves the list of price ranges.
+     *
+     * @return a list of price ranges
+     */
+    public List&lt;PairDTO&lt;Integer, Integer&gt;&gt; getPriceRanges() {
+<span class="nc" id="L71">        List&lt;PairDTO&lt;Integer, Integer&gt;&gt; copy = new ArrayList&lt;&gt;();</span>
+//        copy.addAll(List.copyOf(priceRanges));
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        for (Pair&lt;Integer, Integer&gt; pair: priceRanges) {</span>
+<span class="nc" id="L74">            copy.add(PairMapper.toDTO(pair));</span>
+<span class="nc" id="L75">        }</span>
+<span class="nc" id="L76">        copy.add(new PairDTO&lt;&gt;(getPriceRangeMax(), Integer.MAX_VALUE));</span>
+<span class="nc" id="L77">        return copy;</span>
+    }
+    /**
+     * Validates a price range.
+     *
+     * @param priceRange the price range to validate
+     * @return true if the price range is valid, false otherwise
+     */
+    private boolean validatePriceRange(Pair&lt;Integer, Integer&gt; priceRange) {
+<span class="nc bnc" id="L86" title="All 6 branches missed.">        if (priceRange.getLeft() &lt; 0 || (priceRange.getRight() &lt; priceRange.getLeft() &amp;&amp; priceRange.getRight()!=0)) return false;</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">        boolean isValid = !priceRanges.contains(priceRange);</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        for (Pair&lt;Integer, Integer&gt; checkPrice: priceRanges) {</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">            if (comparePriceRanges(checkPrice, priceRange)) isValid = false;</span>
+<span class="nc" id="L90">        }</span>
+<span class="nc" id="L91">        return isValid;</span>
+    }
+
+    /**
+     * Compares two price ranges.
+     *
+     * @param a the first price range to compare
+     * @param b the second price range to compare
+     * @return true if the price ranges overlap or intersect, false otherwise
+     */
+    public boolean comparePriceRanges(Pair&lt;Integer, Integer&gt; a, Pair&lt;Integer, Integer&gt; b){
+
+<span class="nc bnc" id="L103" title="All 4 branches missed.">            return ((a.getLeft() &lt; b.getLeft()) &amp;&amp; (a.getRight() &gt; b.getLeft()) ||</span>
+<span class="nc bnc" id="L104" title="All 4 branches missed.">                (b.getLeft() &lt; a.getLeft()) &amp;&amp; (b.getRight() &gt; a.getLeft()) ||</span>
+<span class="nc bnc" id="L105" title="All 4 branches missed.">                (a.getLeft() &lt; b.getRight()) &amp;&amp; (a.getLeft() &gt; b.getRight()) ||</span>
+<span class="nc bnc" id="L106" title="All 4 branches missed.">                (b.getLeft() &lt; a.getRight()) &amp;&amp; (b.getLeft() &gt; b.getRight()) );</span>
+
+    }
+
+    /**
+     * Retrieves the maximum value for a price range roof in the list of price ranges.
+     *
+     * @return the maximum value for a price range roof
+     */
+    public int getPriceRangeMax(){
+<span class="nc" id="L116">        int max = priceRanges.get(0).getRight();</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">        for (Pair&lt;Integer,Integer&gt;priceRange: priceRanges) {</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">            if (priceRange.getRight() &gt; max) max = priceRange.getRight();</span>
+<span class="nc" id="L119">        }</span>
+<span class="nc" id="L120">        return max;</span>
+    }
+
+    /**
+     * Adds a new price range to the list of price ranges.
+     *
+     * @param priceRange the price range to be added
+     * @return an optional containing the new price range if the addition is successful, otherwise an empty optional
+     */
+    public Optional&lt;Pair&lt;Integer, Integer&gt;&gt; addPriceRange(Pair&lt;Integer, Integer&gt; priceRange) {
+
+<span class="nc" id="L131">        Optional&lt;Pair&lt;Integer, Integer&gt;&gt; newPriceRanges = Optional.empty();</span>
+<span class="nc" id="L132">        boolean operationSuccess = false;</span>
+
+<span class="nc bnc" id="L134" title="All 2 branches missed.">        if (validatePriceRange(priceRange)) {</span>
+<span class="nc" id="L135">            newPriceRanges = Optional.of(priceRange.clone());</span>
+<span class="nc" id="L136">            operationSuccess = priceRanges.add(newPriceRanges.get());</span>
+        }
+
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        if (!operationSuccess) {</span>
+<span class="nc" id="L140">            newPriceRanges = Optional.empty();</span>
+        }
+
+<span class="nc" id="L143">        return newPriceRanges;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
