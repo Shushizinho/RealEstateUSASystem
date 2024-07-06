@@ -7,12 +7,17 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="project-template" />
+        <module name="RealStateUSASystem" />
         <module name="lei-23-s2-1dl-g54" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="RealStateUSASystem" target="11" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="RealStateUSASystem" options="-Xlint:all" />
       <module name="lei-23-s2-1dl-g54" options="-Xlint:all" />
       <module name="project-template" options="-Xlint:all" />
     </option>
