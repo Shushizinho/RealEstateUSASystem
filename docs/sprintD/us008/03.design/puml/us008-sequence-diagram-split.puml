@@ -1,0 +1,167 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title US008 Sequence Diagram
+autonumber
+
+actor "Agent" as Agent
+
+
+participant ":AnnouncementRequestUI" as UI
+participant ":AnnouncementRequestController" as CTRL
+participant ":Repositories" as MainRepository
+participant "Repository: \nRepositories" as Repository
+participant ":ApplicationSession" as _APP
+participant "appSession\n:ApplicationSession" as APP
+participant "currentSession\n:UserSession" as SESSION
+participant "employeeRepository:\nEmployeeRepository" as ER
+participant " announcementRequestRepository:\nAnnouncementRequestRepository" as ARR
+participant "AnnouncementRepository:\nAnnouncementRepository" as AnnouncementRepository
+participant "AnnouncementRequestMapper" as ARM
+participant "ListAnnouncementRequestDTO : List<AnnouncementRequestDTO>" as LARDTO
+participant "ListAnnouncementRequest : List<AnnouncementRequest>" as LAR
+participant "AnnouncementRequestDTO:AnnouncementRequestDTO" as ARDTO
+participant "Announcement:Announcement" as A
+
+
+
+
+participant "Agent" as AG
+
+
+    activate Agent
+
+    Agent -> UI : asks to see the list of property announcement requests
+    activate UI
+
+    UI -> CTRL** : create
+
+    UI -> CTRL : getAgentFromSession()
+    activate CTRL
+
+ref over CTRL
+get Agent From Session
+end ref
+
+    CTRL --> UI: agent
+    deactivate CTRL
+
+    UI -> CTRL: getAnnouncementsRequestsByAgent(agent)
+    activate CTRL
+
+ref over CTRL
+get AnnouncementRequestList
+end ref
+
+
+
+
+
+
+    CTRL -->UI : ListAnnouncementRequestDTO
+    deactivate CTRL
+
+    UI --> Agent : provides the list of announcement request responsible for that agent, sorted by the creation date, and asks to select one
+    deactivate UI
+
+    Agent -> UI : selects announcement request
+    activate UI
+
+    UI -> UI: keepData(AnnouncementRequestDTO)
+
+    UI --> Agent : ask if the user wants to post the property announcement
+    deactivate UI
+
+    Agent -> UI : provides the request data (yes/no)
+    activate UI
+
+alt if answer = yes
+
+ UI--> Agent: Asks if commission is in percentage or value
+ deactivate UI
+
+  Agent -> UI: inputs the pretend option
+       activate UI
+
+    UI --> Agent : request data (commission)
+    deactivate UI
+
+    Agent -> UI : provides the request data
+    activate UI
+
+    UI -> UI: keepData(commission)
+
+
+
+    UI --> Agent : request data confirmation
+    deactivate UI
+
+    Agent -> UI : confirms data
+    activate UI
+
+    UI -> UI: confirmCommission(Commission)
+    activate UI
+
+    UI --> UI
+    deactivate UI
+
+
+
+
+
+   UI->CTRL : createAnnouncement(AnnouncementRequestDTO, commission)
+       activate CTRL
+   ref over CTRL
+   create Announcement
+   end ref
+
+
+       CTRL --> UI : newAnnouncement
+       deactivate CTRL
+
+
+
+
+
+
+
+
+
+
+
+   else  if answer is no
+
+
+    UI --> Agent : Asks for a message why the request was declined
+    deactivate UI
+
+
+    Agent -> UI : Insert message
+    activate UI
+
+    UI -> CTRL : createEmail(String sender, String recipient, String subject, String message)
+    activate CTRL
+
+   ref over CTRL
+   create Email
+   end ref
+
+
+
+
+
+
+
+
+
+
+end group
+
+    UI --> Agent : Display operation success
+    deactivate UI
+
+
+
+@enduml

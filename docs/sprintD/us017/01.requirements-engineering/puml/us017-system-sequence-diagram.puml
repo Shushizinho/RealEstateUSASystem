@@ -1,0 +1,42 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+autonumber
+
+actor "Agent" as User
+participant ":System" as System
+
+activate User
+
+    User -> System : aks to list all deals made
+
+    activate System
+
+
+    System --> User :asks to order a list of properties by area in ascending or descendent order
+    deactivate System
+
+
+    User -> System : select ascending or descendent
+
+    activate System
+
+    System --> User : asks the sorting method
+    deactivate System
+
+
+    User -> System : select a sorting method
+
+    activate System
+
+    System --> User : shows list of properties according to the sorting method and order
+
+    deactivate System
+
+
+
+@enduml

@@ -1,0 +1,67 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title As an owner, I intend to submit a request for listing a property sale or rent, choosing the responsible agent.
+
+autonumber
+
+actor "Owner" as Owner
+participant ":System" as System
+
+activate Owner
+
+    Owner -> System : asks to fill the request form
+    activate System
+
+        System --> Owner : provides property type list and asks to select one
+    deactivate System
+
+    Owner -> System : selects property type from list
+    activate System
+
+        System --> Owner : provides store list and asks to select one
+    deactivate System
+
+    Owner -> System : selects store from list
+
+    activate System
+
+        System --> Owner : provides agents list from store and asks to select one
+    deactivate System
+
+    Owner -> System : selects agent from list
+    activate System
+    alt if property == land
+        System --> Owner : requests land data (price, area, address, distanceToCentre, photographs)
+'    deactivate System
+
+    Owner -> System : types requested data
+'    activate System
+    else if property == apartment
+        System --> Owner : requests apartment data (price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList)
+'    deactivate System
+
+    Owner -> System : types requested data
+'    activate System
+    else if property == house
+        System --> Owner : requests house data (price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList,\nhasBasement, hasLoft, sunExposure)
+'    deactivate System
+
+    Owner -> System : types requested data
+'    activate System
+    end
+        System --> Owner : provides business type list and asks to select one
+    deactivate System
+    Owner -> System: select business type
+    activate System
+    alt if business == rent
+        System --> Owner : requests data(rentDuration)
+    deactivate System
+    Owner -> System: types requested data
+    activate System
+    end
+    System --> Owner: displays operation success
+
+@enduml

@@ -1,0 +1,25 @@
+
+
+From: agent@this.app
+Recipient: null
+Subject: Your visit request was accepted
+
+It was accepted
+
+From: agent@this.app
+Recipient: client@gmail.com
+Subject: Your visit request was accepted
+
+5
+
+From: sender@example.com
+Recipient: receiver@example.com
+Subject: Test Email
+
+This is a test email.
+
+From: sender@example.com
+Recipient: receiver@example.com
+Subject: Test Email
+
+This is a test email.

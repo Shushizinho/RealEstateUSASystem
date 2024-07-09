@@ -1,0 +1,237 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+autonumber
+
+'hide footbox
+actor "Client UI" as CLN
+participant ":ReplyToAgentAboutVisitRequestUI" as UI
+participant ":ReplyToAgentAboutVisitRequestController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "Repositories\n:Repositories" as PLAT
+participant "employeeRepository:\nEmployeeRepository" as AGTR
+participant "VisitRequestRepository:\VisitRequestRepository" as VRR
+participant "ClientRepository:\ClientRepository" as CLR
+
+
+activate CLN
+
+    CLN -> UI : asks to see the agent's response to my visit requests
+
+        activate UI
+
+        UI -> CTRL** : createReplyToAgentAboutVisitRequestController
+
+        UI -> CTRL :  GetVisitRequests()
+
+        activate CTRL
+        CTRL -> RepositorySingleton : getInstance()
+
+
+                    activate RepositorySingleton
+
+                    RepositorySingleton --> CTRL: repositories
+                    deactivate RepositorySingleton
+
+                    CTRL -> PLAT : getVisitRequestRepository()
+                    activate PLAT
+
+                    PLAT --> CTRL : VisitRequestRepository
+                    deactivate PLAT
+
+
+                    CTRL -> VRR :getVisitRequest
+                    activate VRR
+
+                    VRR --> VRR : getVisitRequestAccepted()
+
+
+                    VRR --> CTRL : VisitRequests
+                    deactivate VRR
+
+
+                    CTRL --> UI : VisitRequests
+                    deactivate CTRL
+
+
+
+
+
+        UI --> CLN : show list of response (display property, date of the appointment, agent's name and phone number)
+        deactivate UI
+
+
+        CLN -> UI : select appointment
+
+
+
+        activate UI
+
+        UI --> UI : displayAppointment()
+
+        UI -> CTRL : getClientList()
+        activate CTRL
+
+        CTRL -> RepositorySingleton : getInstance()
+
+
+        activate RepositorySingleton
+
+        RepositorySingleton --> CTRL: repositories
+        deactivate RepositorySingleton
+
+        CTRL -> PLAT : getClientRepository()
+        activate PLAT
+
+        PLAT --> CTRL : ClientRepository
+
+        deactivate PLAT
+
+        CTRL -> CLR : getClients
+        activate CLR
+        CLR --> CLR : getClients()
+        CLR --> CTRL : clientList
+        deactivate CLR
+
+        CTRL --> UI : clientList
+        deactivate CTRL
+
+         UI -> CTRL : createEmail(clientEmail, agentEmail, subject, mesage)
+
+
+        activate CTRL
+        CTRL -> RepositorySingleton : getInstance()
+
+
+        activate RepositorySingleton
+
+        RepositorySingleton --> CTRL: repositories
+        deactivate RepositorySingleton
+
+        CTRL -> PLAT : getVisitRequestRepository()
+        activate PLAT
+
+        PLAT --> CTRL : RequestVisitRepository
+        deactivate PLAT
+
+
+        CTRL -> VRR :createEmail(sender, receiver, subject, message)
+        activate VRR
+
+        VRR --> VRR : createEmail(sender, receiver, subject, message)
+
+
+        deactivate CTRL
+
+
+        UI --> CLN : display property, date of the appointment, agent's name and phone number and asks to accept or reject it
+        deactivate VRR
+
+        deactivate UI
+
+
+
+        CLN -> UI : accept the appointment
+
+
+
+        activate UI
+
+        UI --> UI : keep(reply)
+
+        UI -> CTRL : setVisitRequestClientReply(reply)
+
+        activate CTRL
+         CTRL -> RepositorySingleton : getInstance()
+
+        activate RepositorySingleton
+
+        RepositorySingleton --> CTRL: repositories
+        deactivate RepositorySingleton
+
+        CTRL -> PLAT : getVisitRequestRepository()
+        activate PLAT
+
+        PLAT --> CTRL : RequestVisitRepository
+        deactivate PLAT
+        CTRL -> VRR : addVisitRequestClientReply(reply)
+
+        activate VRR
+
+        VRR --> VRR : setClientReply(reply)
+
+
+         VRR --> VRR : confirmClientReply(reply)
+
+        VRR --> CTRL : wasAccepted
+        deactivate VRR
+
+
+        CTRL --> UI : wasAccepted
+
+        deactivate CTRL
+
+        UI --> CLN : display success message
+
+        deactivate UI
+
+        opt appointment was rejected
+        CLN -> UI : reject the appointment
+
+        activate UI
+
+        UI --> CLN : asks the reason to reject the appointment
+
+        deactivate UI
+
+        CLN -> UI : write message
+
+        activate UI
+
+        UI --> UI : keep(reply)
+
+        UI -> CTRL : setVisitRequestClientReply(reply)
+
+        activate CTRL
+         CTRL -> RepositorySingleton : getInstance()
+
+
+        activate RepositorySingleton
+
+        RepositorySingleton --> CTRL: repositories
+        deactivate RepositorySingleton
+
+        CTRL -> PLAT : getVisitRequestRepository()
+        activate PLAT
+
+        PLAT --> CTRL : RequestVisitRepository
+        deactivate PLAT
+        CTRL -> VRR : setVisitRequestClientReply(reply)
+
+        activate VRR
+
+        VRR --> VRR : setClientReply(reply)
+
+        VRR --> VRR : confirmClientReply(reply)
+
+        VRR --> CTRL : wasAccepted
+        deactivate VRR
+
+
+        CTRL --> UI : wasAccepted
+
+        deactivate CTRL
+
+        UI --> CLN : display success message
+
+        deactivate UI
+
+        end
+
+        deactivate CLN
+
+@enduml

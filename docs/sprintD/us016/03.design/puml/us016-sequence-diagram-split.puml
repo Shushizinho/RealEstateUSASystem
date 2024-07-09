@@ -1,0 +1,108 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title As an Agent, I want to list real estate purchase orders to accept or decline a purchase order for a property
+
+autonumber
+
+actor "Agent" as AGT
+participant ":PurchaseOrdersUI" as UI
+participant ":PurchaseOrdersController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "announcementRepository\n:AnnouncementRepository" as LOC
+participant "buyOrdersRepository\n:BuyOrdersRepository" as REP
+
+
+activate AGT
+
+    AGT -> UI : asks to list purchase orders
+
+        activate UI
+
+            UI -> CTRL** : create
+
+            UI->CTRL : getSaleAnnouncements()
+
+                activate CTRL
+                    ref over CTRL
+                    get Sale Announcements List
+                    end ref
+
+                autonumber 4
+                CTRL-->UI : announcementList
+                deactivate CTRL
+
+            UI -> CTRL : getListOldestToNewest(announcementList,AnnouncementComparator)
+                activate CTRL
+
+
+
+            autonumber 6
+            CTRL --> UI : itemListSorted
+            deactivate CTRL
+
+            UI ->CTRL: getBuyOrders()
+
+                activate CTRL
+                    ref over CTRL
+                    get Buy Orders List
+                    end ref
+
+                autonumber 8
+            CTRL-->UI : buyOrdersList
+            deactivate CTRL
+
+            UI -> CTRL : getListDescendingOrder(buyOrdersList,BuyOrderComparator)
+                activate CTRL
+
+
+            autonumber 10
+            CTRL --> UI : itemListSorted
+            deactivate CTRL
+
+            UI --> AGT : provide properties list and respective offers
+        deactivate UI
+
+    group loop
+    AGT -> UI : selectes property and offer
+    activate UI
+
+        UI -> UI : selectBuyOrder()
+        activate UI
+
+        UI->UI : ValidateInput()
+        deactivate UI
+
+
+    UI--> AGT : asks if is to accept or decline offer
+    deactivate UI
+    end
+
+    group loop
+    AGT -> UI : submit answer
+    activate UI
+
+        UI -> UI : submitAnswer()
+        activate UI
+
+        UI->UI : ValidateAnswer()
+        deactivate UI
+    end
+
+        UI -> CTRL : createEmail(String sender, String receiver, String subject, String message)
+            activate CTRL
+                ref over CTRL
+                create email
+                end ref
+            CTRL --> UI : message
+        deactivate CTRL
+    UI --> AGT: displays operation success and send email to client
+    deactivate UI
+
+
+deactivate AGT
+
+@enduml

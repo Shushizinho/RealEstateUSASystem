@@ -1,0 +1,72 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+'left to right direction
+
+
+hide circle
+hide methods
+
+
+class Employee{
+}
+
+
+class Property {
+'    propertyType
+}
+class Person {
+    email
+    name
+}
+
+
+class Agent {
+
+}
+
+class Role{
+id
+description
+}
+
+class Address{
+    streetAddress
+    state
+    zipCode
+}
+
+class PurchaseOrder {
+    orderAmount
+    wasAccepted
+    creationDate
+}
+
+class Announcement {
+    listedPrice
+    date
+    businessType
+}
+
+class PropertyType{
+    description
+}
+
+Property "1" -- "1"  PropertyType : > has an
+Property "1" -- "1"  Address : > has an
+Address "1" -- "1"  Person : < has an
+
+Person <|-- Employee
+Employee <|-- Agent
+Role "1..*" -- "1" Employee : < has a
+
+Announcement  "1" - "1" PurchaseOrder : refers to <
+Announcement "*" - "1" Agent : creates <
+Announcement "1" -- "1" Property : refers to >
+
+
+
+@enduml

@@ -1,0 +1,50 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+autonumber 23
+
+participant ":PlaceOrderController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "propertyFiltersRepository:\nPropertyFiltersRepository" as PFR
+participant "pairMapper:\nPairMapper" as PAIRMAP
+participant "PairDTO" as PAIRDTO
+participant "Pair" as PAIR
+group Get Price Range List
+        --> CTRL : getPriceRanges()
+                 activate CTRL
+
+                 CTRL -> PLAT : getPropertyFiltersRepository()
+                 activate PLAT
+
+                     PLAT --> CTRL : propertyFiltersRepository
+                 deactivate PLAT
+
+                 CTRL -> PFR : getPriceRanges()
+                 loop for each pair in priceRanges
+                 activate PFR
+                 PFR->PAIRMAP : priceRangeToDTO(pair)
+                 activate PAIRMAP
+                 PAIRMAP --> PAIR : left = getLeft()
+                 activate PAIR
+                 deactivate PAIR
+                 PAIRMAP --> PAIR : right = getRight()
+                 activate PAIR
+                 deactivate PAIR
+                 PAIRMAP --> PAIRDTO** : create(left,right)
+                 PAIRMAP --> PFR : pairDTO
+                 deactivate PAIRMAP
+                 PFR -> PFR : pairDTOList.add(pairDTO)
+                 end
+                 PFR --> PAIRDTO** : create(getPriceRangeMax(), Integer.MAX_VALUE)
+                 PFR -> PFR : pairDTOList.add(pairDTO)
+                 PFR --> CTRL : pairDTOList
+
+                 deactivate PFR
+        <-- CTRL : priceRangeList
+        deactivate CTRL
+end group
+@enduml

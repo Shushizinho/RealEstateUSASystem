@@ -1,0 +1,487 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Unregistered UI" as UU
+participant ":PropertyListUI" as UI
+participant ":PropertyListController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "Repositories\n:Repositories" as PLAT
+participant "PropertyFiltersRepository:\PropertyFiltersRepository" as PFR
+participant "BusinessTypeRepository:\BusinessTypeRepository" as BTR
+participant "PropertyTypeRepository:\nPropertyTypeRepository" as PPTR
+participant "PropertyRepository:\PropertyRepository" as PR
+participant "AnnouncementRepository:\AnnouncementRepository" as AR
+
+activate UU
+
+    UU -> UI : asks to see list of properties
+
+    activate UI
+
+    UI -> CTRL** : CreateGetPropertiesListController
+
+
+    UI -> CTRL : getPropertyListByAnnouncement()
+
+    activate CTRL
+
+    CTRL -> RepositorySingleton : getInstance()
+
+                     activate RepositorySingleton
+
+                         RepositorySingleton --> CTRL: repositories
+                     deactivate RepositorySingleton
+
+                     CTRL -> PLAT : getAnnouncementRepository()
+                     activate PLAT
+
+                         PLAT -> CTRL : AnnouncementRepository
+                     deactivate PLAT
+
+                     CTRL -> AR : getPropertyListByAnnouncement()
+                     activate AR
+
+
+                        AR --> AR : getPropertyList()
+
+                         AR --> CTRL : propertyListByAnnouncement
+
+
+
+                     deactivate AR
+
+
+                     CTRL-->UI : propertyListByAnnouncement
+
+    deactivate CTRL
+
+    UI --> UU : show list of properties available and asks to filter
+
+    deactivate UI
+
+    UU -> UI : confirmation to filter the list
+
+        activate UI
+
+
+
+        UI -> CTRL : getBusinessType()
+        activate CTRL
+
+
+                 CTRL -> RepositorySingleton : getInstance()
+                 activate RepositorySingleton
+
+                     RepositorySingleton --> CTRL: repositories
+                 deactivate RepositorySingleton
+
+                 CTRL -> PLAT : getBusinessTypeRepository()
+                 activate PLAT
+
+                     PLAT -> CTRL : BusinessTypeRepository
+                 deactivate PLAT
+
+                 CTRL -> BTR : getBusinessType()
+                 activate BTR
+
+                     BTR --> CTRL : businessTypeList
+
+                 deactivate BTR
+
+
+                 CTRL-->UI : businessTypeList
+             deactivate CTRL
+
+
+
+            UI --> UU : show filters of type of business and asks to select one
+
+            deactivate UI
+
+                UU -> UI : select an option
+                activate UI
+                 UI --> UI : keep(businessType)
+
+
+
+
+            UI -> CTRL : getPropertyType()
+            activate CTRL
+
+
+                     CTRL -> RepositorySingleton : getInstance()
+                     activate RepositorySingleton
+
+                         RepositorySingleton --> CTRL: repositories
+                     deactivate RepositorySingleton
+
+                     CTRL -> PLAT : getPropertyTypeRepository()
+                     activate PLAT
+
+                         PLAT --> CTRL : PropertyTypeRepository
+                     deactivate PLAT
+
+                     CTRL -> PPTR : getPropertyType()
+                     activate PPTR
+
+                         PPTR --> CTRL : PropertyTypeList
+
+                     deactivate PPTR
+
+
+                     CTRL-->UI : PropertyTypeList
+                 deactivate CTRL
+                     UI --> UU : show filters of type of property and asks to select one
+            deactivate UI
+
+            deactivate UI
+
+
+                UU -> UI : select an option
+                activate UI
+                UI --> UI : keep(propertyType)
+
+            UI --> UU : request number of bedrooms
+            deactivate UI
+
+
+
+                UU -> UI : select number of bedrooms
+                activate UI
+                UI --> UI : keep(bedroomNo)
+            opt type of property, business type and number of bedrooms are null
+            
+            UI -> CTRL : getPropertiesByBusinessType(businessType)
+
+            activate CTRL
+
+            CTRL -> RepositorySingleton : getInstance()
+             activate RepositorySingleton
+
+                 RepositorySingleton --> CTRL: repositories
+             deactivate RepositorySingleton
+
+             CTRL -> PLAT : getAnnouncementRepository()
+             activate PLAT
+
+                 PLAT -> CTRL : AnnouncementRepository
+             deactivate PLAT
+
+
+            CTRL -> AR : getAllPropertiesByBusinessType(String businessType)
+
+            activate AR
+
+            loop each announcement
+            alt announcementBusinessType = businessType
+            AR --> AR : add(announcement)
+            end
+            end loop
+
+            AR --> CTRL : PropertiesOnSale
+            deactivate AR
+
+
+            CTRL --> UI : PropertiesOnSale
+            deactivate CTRL
+
+            UI --> UU : show list of all properties that are on sale and asks to filter by property filters
+            deactivate UI
+            UU -> UI : confirm
+
+            activate UI
+
+            UI -> CTRL : displayPropertyFiltersList ()
+                        activate CTRL
+
+
+                            CTRL -> RepositorySingleton : getInstance()
+                        activate RepositorySingleton
+
+                        RepositorySingleton --> CTRL: repositories
+                        deactivate RepositorySingleton
+
+                        CTRL -> PLAT : getPropertyFiltersRepository()
+
+                        activate PLAT
+
+                        PLAT --> CTRL: PropertyFiltersRepository
+                        deactivate PLAT
+
+                        CTRL -> PFR : getPropertyFilters()
+                        activate PFR
+
+                        PFR --> CTRL : ListOfPropertyFilters
+                        deactivate PFR
+
+
+                        CTRL --> UI : ListOfPropertyFilters
+                        deactivate CTRL
+
+            UI --> UU : show list of property filters
+            deactivate UI
+            UU -> UI : select a filter
+
+
+
+            activate UI
+
+
+
+            UI --> UI : add(choosenFilter)
+
+             UI --> CTRL : displayListOfProperties(PropertiesOnSale, choosenFilter)
+
+                        activate CTRL
+
+
+                         CTRL -> RepositorySingleton : getInstance()
+                        activate RepositorySingleton
+
+                            RepositorySingleton --> CTRL: repositories
+                        deactivate RepositorySingleton
+
+                        CTRL -> PLAT : getPropertyRepository()
+
+                        activate PLAT
+
+                            PLAT --> CTRL: PropertyRepository
+                        deactivate PLAT
+
+                        CTRL -> PR : sortPropertyList(choosenFilter, PropertiesOnSale)
+                        activate PR
+
+                        PR --> PR : sortPropertyList (choosenFilter)
+
+                        PR --> CTRL : ListOfProperties
+
+                        deactivate PR
+
+                        CTRL -> UI : ListOfProperties
+                        deactivate CTRL
+
+
+             UI -> CTRL : getPropertiesByBusinessType(businessType)
+                        activate CTRL
+
+                        CTRL -> RepositorySingleton : getInstance()
+                        activate RepositorySingleton
+
+                         RepositorySingleton --> CTRL: repositories
+                        deactivate RepositorySingleton
+
+                        CTRL -> PLAT : getAnnouncementRepository()
+                        activate PLAT
+
+                         PLAT -> CTRL : AnnouncementRepository
+                        deactivate PLAT
+                        CTRL -> AR : getAllPropertiesByBusinessType(String businessType)
+
+                        activate AR
+
+                        loop each announcement
+                        alt announcementBusinessType = businessType
+                        AR --> AR : add(announcement)
+                        end
+                        end loop
+
+                        AR --> CTRL : PropertiesOnRent
+                        deactivate AR
+
+
+                        CTRL --> UI : PropertiesOnRent
+                        deactivate CTRL
+            UI --> UU : shows list of properties according to the filters and show list of all properties that are on rent and asks to filter by property filters
+            deactivate UI
+            UU -> UI : confirm
+            activate UI
+
+             UI -> CTRL : getPropertyFilters ()
+                                    activate CTRL
+
+
+                                        CTRL -> RepositorySingleton : getInstance()
+                                    activate RepositorySingleton
+
+                                    RepositorySingleton --> CTRL: repositories
+                                    deactivate RepositorySingleton
+
+                                    CTRL -> PLAT : getPropertyFiltersRepository()
+
+                                    activate PLAT
+
+                                    PLAT --> CTRL: PropertyFiltersRepository
+                                    deactivate PLAT
+
+                                    CTRL -> PFR : getPropertyFilters()
+                                    activate PFR
+
+                                    PFR --> CTRL : ListOfPropertyFilters
+                                    deactivate PFR
+
+                                 CTRL --> UI : ListOfPropertyFilters
+                                    deactivate CTRL
+            UI --> UU : show list of property filters
+            deactivate UI
+            UU -> UI : select a filter
+            activate UI
+            UI --> UI : add(choosenFilter)
+
+                         UI --> CTRL :  displayListOfProperties(PropertiesOnRent, choosenFilter)
+
+                                    activate CTRL
+
+
+                                     CTRL -> RepositorySingleton : getInstance()
+                                    activate RepositorySingleton
+
+                                        RepositorySingleton --> CTRL: repositories
+                                    deactivate RepositorySingleton
+
+                                    CTRL -> PLAT : getPropertyRepository()
+
+                                    activate PLAT
+
+                                        PLAT --> CTRL: PropertyRepository
+                                    deactivate PLAT
+
+                                    CTRL -> PR : sortPropertyList(choosenFilter, PropertiesOnRent)
+                                    activate PR
+
+                                    PR --> PR : sortPropertyList (choosenFilter)
+
+                                    PR --> CTRL : ListOfProperties
+
+                                    deactivate PR
+
+
+                                    CTRL -> UI : ListOfProperties
+                                    deactivate CTRL
+
+            UI --> UU : shows list of properties
+            deactivate UI
+
+            end
+
+
+
+            UI -> CTRL : getPropertyFilters ()
+            activate UI
+
+
+            activate CTRL
+
+
+                CTRL -> RepositorySingleton : getInstance()
+            activate RepositorySingleton
+
+            RepositorySingleton --> CTRL: repositories
+            deactivate RepositorySingleton
+
+            CTRL -> PLAT : getPropertyFiltersRepository()
+
+            activate PLAT
+
+            PLAT --> CTRL: PropertyFiltersRepository
+            deactivate PLAT
+
+            CTRL -> PFR : getPropertyFilters()
+            activate PFR
+
+            PFR --> CTRL : ListOfPropertyFilters
+            deactivate PFR
+
+
+            CTRL --> UI : ListOfPropertyFilters
+            deactivate CTRL
+
+            UI --> UU : show list of property filters and asks to select one
+            deactivate UI
+
+
+                UU -> UI : select an option
+                activate UI
+                UI --> UI : add(choosenFilter)
+
+            UI --> CTRL : getPropertyList (properties, responseFiltersList)
+
+            activate CTRL
+
+
+             CTRL -> RepositorySingleton : getInstance()
+            activate RepositorySingleton
+
+                RepositorySingleton --> CTRL: repositories
+            deactivate RepositorySingleton
+
+            CTRL -> PLAT : getPropertyRepository()
+
+            activate PLAT
+
+                PLAT --> CTRL: PropertyRepository
+            deactivate PLAT
+
+            CTRL -> PR : getListOfProperties (properties, responseFiltersList)
+            activate PR
+
+            PR --> PR : getPropertyList (requestType, propertyType, bedroomNo)
+            PR --> PR : sortPropertyList (choosenFilter)
+
+            PR --> CTRL : properties
+
+            deactivate PR
+
+
+            CTRL -> UI : properties
+            deactivate CTRL
+
+            alt properties != null
+
+            UI --> CTRL :  getListOfPropertiesByPorpertyFilter(properties, propertyFilter)
+
+                       activate CTRL
+
+
+                        CTRL -> RepositorySingleton : getInstance()
+                       activate RepositorySingleton
+
+                           RepositorySingleton --> CTRL: repositories
+                       deactivate RepositorySingleton
+
+                       CTRL -> PLAT : getPropertyRepository()
+
+                       activate PLAT
+
+                           PLAT --> CTRL: PropertyRepository
+                       deactivate PLAT
+
+                       CTRL -> PR : sortPropertyList(answer, newProperty)
+                       activate PR
+
+
+
+                       PR --> CTRL : newProperty
+
+                       deactivate PR
+
+
+                       CTRL -> UI : newProperty
+                       deactivate CTRL
+
+                       UI-->UI: displayListOfProperties(newProperty)
+                       UI --> UU : shows list of properties
+                       end alt
+
+
+                       UI --> UU : shows insucess message
+            deactivate UI
+
+
+deactivate UU
+
+@enduml

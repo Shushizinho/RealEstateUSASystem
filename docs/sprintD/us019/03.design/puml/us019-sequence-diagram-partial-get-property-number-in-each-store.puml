@@ -1,0 +1,38 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":DivideStoresController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories:\nRepositories" as PLAT
+participant "propertyRepository:\nPropertyRepository" as pRep
+
+
+autonumber 29
+
+group Get Number of Properties in each Store from list
+        -> CTRL : getPropertyNumberInEach(selectedStoresList)
+        activate CTRL
+            CTRL -> RepositorySingleton : getInstance()
+                activate RepositorySingleton
+
+                    RepositorySingleton --> CTRL: repositories
+                deactivate RepositorySingleton
+
+                CTRL -> PLAT : getPropertyRepository()
+                    activate PLAT
+
+                    PLAT --> CTRL: propertyRepository
+                deactivate PLAT
+                loop each storeDTO in (storeListDTO)
+                CTRL -> pRep : getNumberPropertiesFromStore(store)
+                    activate pRep
+                    pRep --> CTRL : propertyNumber
+                    deactivate pRep
+                    CTRL -> CTRL: addToNumberPropertiesList(propertyNumber)
+                end
+                <-- CTRL: numberPropertiesList
+                deactivate CTRL
+end group
+@enduml

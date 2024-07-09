@@ -1,0 +1,41 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Administrator" as ADM
+participant ":ImportLegacySystemUI" as UI
+participant ":ImportLegacySystemController" as CTRL
+
+activate ADM
+ADM -> UI : asks to import a csv file
+activate UI
+
+UI-> CTRL** : create
+'ref over CTRL
+'    Get List of CSV Files
+'end ref
+UI --> ADM : show the list of all csv files in the resources folder
+deactivate UI
+
+ADM -> UI : choose an option to import the file
+activate UI
+
+UI -> CTRL : importFile(file)
+activate CTRL
+
+ref over CTRL
+    Legacy System Data Import and Entity Validation
+
+end ref
+
+CTRL --> UI: operationResult
+
+UI --> ADM : display operation success
+deactivate UI
+
+deactivate ADM
+@enduml

@@ -1,0 +1,207 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Network Manager" as NM
+participant ":ListEmployeesEveryStoreUI" as UI
+participant ":ListEmployeeEveryStoreController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "storeRepository:\nStoreRepository" as STRR
+participant "employeeRepository:\nEmployeeRepository" as EMPR
+participant "storeMapper:\nStoreMapper" as STRMAP
+participant "employeeMapper:\nEmployeeMapper" as EMPLMAP
+participant "storeListSorted:\nList<Store>" as LSTR
+participant "store:\nStore" as STOR
+participant "lStoreDTO:\nList<StoreDTO>" as LSTRDTO
+participant "storeDTO:\nStoreDTO" as STORDTO
+participant "employeeList:\nList<Employee>" as LEMP
+participant "employee:\nEmployee" as EMPL
+participant "employeeDTO:\nEmployeeDTO" as EMPLDTO
+participant "employeeListDTO:\nList<EmployeeDTO>" as LEMPDTO
+
+
+
+
+
+activate NM
+   NM -> UI :  asks to list all employees working in every store of the network
+
+    activate UI
+
+    UI-> CTRL** : create
+
+
+'        deactivate UI
+
+'        NM -> UI : select one or more roles for the employee
+
+'        activate UI
+
+         UI -> CTRL : getStoresOrderByProperty()
+                    activate CTRL
+                            CTRL -> RepositorySingleton : getInstance()
+                            activate RepositorySingleton
+
+                                RepositorySingleton --> CTRL: repositories
+                            deactivate RepositorySingleton
+
+                            CTRL -> PLAT : getStoreRepository()
+                            activate PLAT
+
+                                PLAT --> CTRL : storeRepository
+                            deactivate PLAT
+
+                            CTRL -> STRR : getStoresOrderByProperty()
+                            activate STRR
+
+                                STRR --> CTRL : storeListSorted
+                                deactivate STRR
+
+                                CTRL -> STRMAP: toDTO(storeListSorted)
+                                activate STRMAP
+
+                                STRMAP -> LSTRDTO**: create()
+
+                                loop for each object in storeListSorted
+                                    STRMAP -> LSTR: store = getStore()
+                                    activate LSTR
+                                    deactivate LSTR
+                                    STRMAP --> STOR : id = getId()
+                                    activate STOR
+                                    deactivate STOR
+                                    STRMAP -> STOR : designation = getDesignation()
+                                    activate STOR
+                                    deactivate STOR
+                                    STRMAP -> STOR : address = getAddress()
+                                    activate STOR
+                                    deactivate STOR
+                                    STRMAP -> STOR : email = getEmail()
+                                    activate STOR
+                                    deactivate STOR
+                                    STRMAP -> STOR : phoneNumber = getPhoneNumber()
+                                    activate STOR
+                                    deactivate STOR
+                                    STRMAP -> STORDTO** : create()
+
+                                    STRMAP --> LSTRDTO : add(storeDTO)
+                                    activate LSTRDTO
+                                    deactivate LSTRDTO
+                                    end loop
+
+                            STRMAP-->CTRL : storeListDTO
+                            deactivate STRMAP
+
+                        CTRL-->UI : storeListDTO
+                    deactivate CTRL
+
+
+
+                    UI -> CTRL : getEmployeeFromSpecificStore(storeDTO)
+                        activate CTRL
+                                        CTRL -> RepositorySingleton : getInstance()
+                                        activate RepositorySingleton
+
+                                            RepositorySingleton --> CTRL: repositories
+                                        deactivate RepositorySingleton
+
+                                        CTRL -> PLAT : getEmployeeRepository()
+                                        activate PLAT
+
+                                            PLAT --> CTRL : employeeRepository
+                                        deactivate
+
+                                        CTRL -> EMPR : getEmployeesOrderByName()
+                                        activate EMPR
+
+                                        EMPR --> CTRL: employeeList
+                                        deactivate EMPR
+
+                                        CTRL->LEMPDTO**: create()
+
+                                        loop for each object in employeeList
+
+                                        CTRL -> LEMP: employee = getEmployee()
+                                        activate LEMP
+                                        deactivate LEMP
+
+                                        CTRL -> EMPL : store = getStore()
+                                        activate EMPL
+                                        deactivate EMPL
+
+                                        CTRL -> STOR : equals(store)
+                                        activate STOR
+
+
+                                            STOR --> CTRL : answer
+                                        deactivate STOR
+
+                                        alt answer = true
+
+                                        CTRL -> EMPLMAP: toDTO(employee)
+                                        activate EMPLMAP
+
+                                        EMPLMAP --> EMPL : id = getId()
+                                        activate EMPL
+                                        deactivate EMPL
+
+                                        EMPLMAP -> EMPL : email = getEmail()
+                                        activate EMPL
+                                        deactivate EMPL
+
+                                        EMPLMAP -> EMPL : name = getName()
+                                        activate EMPL
+                                        deactivate EMPL
+
+                                        EMPLMAP -> EMPL : passportNumber = getPassportNumber()
+                                        activate EMPL
+                                        deactivate EMPL
+
+                                        EMPLMAP -> EMPL : phoneNumber = getPhoneNumber()
+                                        activate EMPL
+                                        deactivate EMPL
+
+                                        EMPLMAP -> EMPL : taxNumber = getTaxNumber()
+                                        activate EMPL
+                                        deactivate EMPL
+
+                                        EMPLMAP -> EMPL : address = getAddress()
+                                        activate EMPL
+                                        deactivate EMPL
+
+                                        EMPLMAP -> EMPL : role = getRoles()
+                                        activate EMPL
+                                        deactivate EMPL
+
+                                        EMPLMAP -> EMPL : store = getStore()
+                                        activate EMPL
+                                        deactivate EMPL
+                                        EMPLMAP -> EMPLDTO** : create()
+
+
+                                        EMPLMAP--> CTRL: employeeDTO
+                                        deactivate EMPLMAP
+
+
+                                        CTRL->LEMPDTO: add(employeeDTO)
+                                        activate LEMPDTO
+                                        deactivate LEMPDTO
+                                        end alt
+
+                                        end loop
+
+
+                            CTRL-->UI :  employeeListDTO
+                        deactivate CTRL
+
+
+        UI --> NM : show the list of all employees grouped by store
+        deactivate UI
+
+deactivate NM
+
+@enduml

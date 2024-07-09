@@ -7,6 +7,7 @@ import pt.ipp.isep.dei.esoft.project.domain.Property;
 import pt.ipp.isep.dei.esoft.project.domain.PropertyType;
 import pt.ipp.isep.dei.esoft.project.ui.console.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,59 +17,61 @@ public class GetPropertyListUI implements Runnable {
 
     private final GetPropertyListController controller = new GetPropertyListController();
 
+    private final String APPROVED = "yes";
 
-    private String businessType;
-    
-    private String propertyType;
-    
-    private String numberOfBedrooms;
+    private final String REJECTED = "no";
 
-    private String propertyFilter;
 
-    private List<Property> properties;
+    ArrayList<String> responseFiltersList = new ArrayList<>();
 
     private GetPropertyListController getController() {
         return controller;
     }
 
     public void run() {
-       properties = getPropertyListByAnnouncement();
+        List<Property> properties = getPropertyListByAnnouncement();
 
        displayListOfProperties(properties);
 
-       String confirmation = displayConfirmationToFilter();
+       if(displayConfirmationToFilter()) {
+           chooseFiltersOptions();
 
-       if(confirmation.equals("y")) {
-           businessType = (displayAndSelectBusinessType());
-           if (!businessType.equals("0")){
-               propertyType = (displayAndSelectPropertyType());
-               if (!propertyType.equals("0")){
-                   if (propertyType.equals("Land")) {
-                       numberOfBedrooms = "0";
-                   } else{
-                       numberOfBedrooms = (selectNumberOfBedrooms());
-                   }
-                    if (!numberOfBedrooms.equals("\\Cancel")){
-                        if (!verifyAnswers(businessType, propertyType, numberOfBedrooms) && numberOfBedrooms.equals("n"))  {
-                            displayAndSelectOtherSortOptions();
-                        } else {
-                            propertyFilter = (displayPropertyFiltersList());
-                            if (!propertyFilter.equals("0")){
-                                properties = getListOfProperties(properties, businessType, propertyType, numberOfBedrooms);
-                                if (properties.isEmpty()) {
-                                    System.out.println("\nThere are no properties with this filters");
-                                } else {
-                                    List<Property> p = getListOfPropertiesByPorpertyFilter(properties, propertyFilter);
-                                    displayListOfProperties(p);
-                                }
-                            }
-
-                        }
+            if (verifyAnswers(responseFiltersList))  {
+                displayAndSelectOtherSortOptions();
+            } else {
+                String propertyFilter = (displayPropertyFiltersList());
+                if (!propertyFilter.equals("0")){
+                    properties = getListOfProperties(properties, responseFiltersList);
+                    if (properties.isEmpty()) {
+                        System.out.println("\nThere are no properties with this filters");
+                    } else {
+                        List<Property> p = getListOfPropertiesByPorpertyFilter(properties, propertyFilter);
+                        displayListOfProperties(p);
                     }
-
-               }
-           }
+                }
+            }
        }
+    }
+
+    private void chooseFiltersOptions() {
+        String businessType = (displayAndSelectBusinessType());
+        if (!businessType.equals("0")){
+            responseFiltersList.add(businessType);
+            String propertyType = (displayAndSelectPropertyType());
+            if (!propertyType.equals("0")){
+                responseFiltersList.add(propertyType);
+                String numberOfBedrooms;
+                if (propertyType.equals("Land")) {
+                    numberOfBedrooms = "0";
+                } else{
+                    numberOfBedrooms = (selectNumberOfBedrooms());
+                }
+                if (!numberOfBedrooms.equals("\\Cancel")) {
+                    responseFiltersList.add(numberOfBedrooms);
+                }
+
+            }
+        }
     }
 
 
@@ -86,7 +89,7 @@ public class GetPropertyListUI implements Runnable {
      *
      * @return 1 if the user confirm and 0 is the user doesn't want to filter.
      */
-    public String displayConfirmationToFilter(){
+    public Boolean displayConfirmationToFilter(){
         return  displayOptionYesOrNo("\u001B[35mDo you wish to filter this list of properties?");
     }
 
@@ -96,18 +99,18 @@ public class GetPropertyListUI implements Runnable {
     private void displayAndSelectOtherSortOptions(){
         List<Property> pr1= displayPropertiesOnSale();
         System.out.println();
-        String resp = selectOtherSortOptions("\n\u001B[35mDo you pretend to sort all the properties that are on sale?");
-        if(!resp.equals("n")){
-            List<Property> p = getListOfPropertiesByPorpertyFilter(pr1, resp);
+        Boolean resp = selectOtherSortOptions("\n\u001B[35mDo you pretend to sort all the properties that are on sale?");
+        if(resp){
+            List<Property> p = getListOfPropertiesByPorpertyFilter(pr1, APPROVED);
             displayListOfProperties(p);
         }
-        if (resp.equals("n")){
+        if (!resp){
             List<Property> pr2 = displayPropertiesOnRent();
             System.out.println();
             if (!pr2.isEmpty()){
-                String response = selectOtherSortOptions("\n\u001B[35mDo you pretend to sort all the properties that are on rent?");
-                if (!response.equals("n")){
-                    List<Property> p = getListOfPropertiesByPorpertyFilter(pr2, response);
+                Boolean response = selectOtherSortOptions("\n\u001B[35mDo you pretend to sort all the properties that are on rent?");
+                if (response){
+                    List<Property> p = getListOfPropertiesByPorpertyFilter(pr2, REJECTED);
                     displayListOfProperties(p);
                 }
             }
@@ -145,31 +148,28 @@ public class GetPropertyListUI implements Runnable {
     /**
      * This method verify the given answers to the previous filters are valid.
      *
-     * @param businessType     the business type
-     * @param propertyType     the property type
-     * @param numberOfBedrooms the number of bedrooms
-     * @return true if none of the filters are null
+     * @return true if the filters are null or the option "Do not use this filter"
      */
-    public boolean verifyAnswers(String businessType, String propertyType, String numberOfBedrooms){
+    public boolean verifyAnswers(ArrayList<String> list){
         Integer bTSize = getController().getBusinessTypes().size()+1;
         Integer pTSize = getController().getPropertyType().size()+1;
-        return !businessType.equals(String.valueOf(bTSize)) && !propertyType.equals(String.valueOf(pTSize)) && !numberOfBedrooms.equals("n");
+
+        return (list.get(0).equals(String.valueOf(bTSize)) && list.get(1).equals(String.valueOf(pTSize)) && list.get(2).equals(REJECTED));
     }
 
 
     /**
      * This method display the property filters list and saves the chosen property filter.
      *
-     * @param s the s
+     * @param string the string
      * @return chosen property filter.
      */
-    public String selectOtherSortOptions (String s){
-        String response = displayOptionYesOrNo(s);
-        String description = null;
-        if (response.equals("y")){
-            description= displayPropertyFiltersList();
-        }else return String.valueOf(response);
-        return description;
+    public Boolean selectOtherSortOptions (String string){
+        Boolean response = displayOptionYesOrNo(string);
+        if (response){
+           displayPropertyFiltersList();
+        }
+        return response;
     }
 
 
@@ -179,29 +179,28 @@ public class GetPropertyListUI implements Runnable {
      * @param string the string
      * @return answer. string
      */
-    public String displayOptionYesOrNo(String string){
+    public Boolean displayOptionYesOrNo(String string){
         while(true){
             try {
                 System.out.println();
-                return Utils.readLineFromConsole(string + "(y/n):");
-
+                String response = Utils.readLineFromConsole(string + "(yes/no):");
+                assert response != null;
+                return response.equals(APPROVED);
             }catch ( Exception e){
                 System.out.println("\u001B[41mError, please type y or n\u001B[0m");
             }
         }
+
     }
 
 
     /**
      * This method gets the list of properties according to the chosen business type, property type and number of bedrooms
-     * @param businessType
-     * @param propertyType
-     * @param numberOfBedrooms
      * @return filtered list of properties
      */
-    private List<Property> getListOfProperties(List<Property> properties, String businessType, String propertyType, String numberOfBedrooms){
+    private List<Property> getListOfProperties(List<Property> properties, ArrayList<String> list){
 
-        List<Property> newProperty= getController().getPropertyRepository().getPropertyList(properties, businessType, propertyType, numberOfBedrooms);
+        List<Property> newProperty= getController().getPropertyRepository().getPropertyList(properties, list);
 
         return newProperty;
     }
@@ -215,8 +214,7 @@ public class GetPropertyListUI implements Runnable {
      * @return sorted list of properties.
      */
     public List<Property> getListOfPropertiesByPorpertyFilter(List<Property> newProperty, String answer){
-        newProperty = getController().getPropertyRepository().sortPropertyList(answer, newProperty);
-        return newProperty;
+        return getController().getPropertyRepository().sortPropertyList(answer, newProperty);
     }
 
     /**
@@ -336,13 +334,14 @@ public class GetPropertyListUI implements Runnable {
             try {
                 System.out.println("\u001B[36m#=======Select Number of Bedrroms =======#");
                 String useFilter = "b";
-                while (!useFilter.equals("y") && !useFilter.equals("n") && !useFilter.equals("0")) {
-                    useFilter = Utils.readLineFromConsole("Do you want to use this filter (y/n):");
-                    if (!useFilter.equals("y") && !useFilter.equals("n") && !useFilter.equals("0")) System.out.println("\u001B[41mInvalid Option.\u001B[0m");
+                while (!useFilter.equals(APPROVED)) {
+                    useFilter = Utils.readLineFromConsole("Do you want to use this filter (yes/no):");
+                    assert useFilter != null;
+                    if (!useFilter.equals(APPROVED) &&!useFilter.equals(REJECTED) && !useFilter.equals("0")) System.out.println("\u001B[41mInvalid Option.\u001B[0m");
                     else {
                         switch (useFilter){
-                            case "y": break;
-                            case "n": return "n";
+                            case APPROVED:break;
+                            case REJECTED: return REJECTED;
                             case "0": return "cancel";
                             default: System.out.println("\u001B[41mThis should be an unreachable statement. If you're seeing this, contact the programmer.\u001B[0m"); break;
                         }

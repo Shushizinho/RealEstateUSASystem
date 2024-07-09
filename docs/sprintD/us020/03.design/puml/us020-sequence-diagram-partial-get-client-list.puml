@@ -1,0 +1,40 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+autonumber
+participant ":ReplyToAgentAboutVisitRequestController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "Repositories\n:Repositories" as PLAT
+participant "ClientRepository:\ClientRepository" as CLR
+
+-> CTRL : getClientList()
+        activate CTRL
+
+        CTRL -> RepositorySingleton : getInstance()
+
+
+        activate RepositorySingleton
+
+        RepositorySingleton --> CTRL: repositories
+        deactivate RepositorySingleton
+
+        CTRL -> PLAT : getClientRepository()
+        activate PLAT
+
+        PLAT --> CTRL : ClientRepository
+
+        deactivate PLAT
+
+        CTRL -> CLR : getClients
+        activate CLR
+        CLR --> CLR : getClients()
+        CLR --> CTRL : clientList
+        deactivate CLR
+
+        <-- CTRL : clientList
+        deactivate CTRL
+@enduml

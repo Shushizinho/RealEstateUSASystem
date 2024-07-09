@@ -1,0 +1,33 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+autonumber
+
+actor "Agent" as Agent
+participant ":System" as System
+
+activate Agent
+
+    Agent -> System : asks to list purchase orders
+    activate System
+
+        System --> Agent : provide properties list and respective offers
+    deactivate System
+
+    Agent -> System : selectes property and offer
+    activate System
+
+        System --> Agent : asks if is to accept or decline offer
+    deactivate System
+
+    Agent -> System : submit answer
+        activate System
+
+        System --> Agent : displays operation success and send email to client
+    deactivate System
+
+@enduml

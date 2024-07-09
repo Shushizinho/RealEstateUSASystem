@@ -1,0 +1,35 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 40
+
+'hide footbox
+participant "store:\nStore" as STR
+participant "Apartment" as APROP
+
+
+     -> STR: createProperty(price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList,\npropertyType, store, agent, client)
+                                                     activate STR
+
+    autonumber 40.1
+            STR -> APROP**: create(price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList,\npropertyType, store, agent, client)
+                                activate STR
+                                    STR -> STR: validateProperty(property)
+                                    activate STR
+                                        STR --> STR
+                                    deactivate STR
+                                        STR --> STR
+                                deactivate STR
+
+
+
+    autonumber 41
+
+    <-- STR  : property
+
+    deactivate STR
+
+
+@enduml

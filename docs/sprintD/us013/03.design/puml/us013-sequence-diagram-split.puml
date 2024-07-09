@@ -1,0 +1,126 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Network Manager" as NM
+participant ":ListEmployeesEveryStoreUI" as UI
+participant ":ListEmployeeEveryStoreController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "storeRepository:\nStoreRepository" as STRR
+participant "employeeRepository:\nEmployeeRepository" as EMPR
+participant "storeMapper:\nStoreMapper" as STRMAP
+participant "employeeMapper:\nEmployeeMapper" as EMPLMAP
+participant "storeListSorted:\nList<Store>" as LSTR
+participant "store:\nStore" as STOR
+participant "lStoreDTO:\nList<StoreDTO>" as LSTRDTO
+participant "storeDTO:\nStoreDTO" as STORDTO
+participant "employeeList:\nList<Employee>" as LEMP
+participant "employee:\nEmployee" as EMPL
+participant "employeeDTO:\nEmployeeDTO" as EMPLDTO
+participant "employeeListDTO:\nList<EmployeeDTO>" as LEMPDTO
+
+
+
+
+
+activate NM
+   NM -> UI :  asks to list all employees working in every store of the network
+
+    activate UI
+
+    UI-> CTRL** : create
+
+
+'        deactivate UI
+
+'        NM -> UI : select one or more roles for the employee
+
+'        activate UI
+
+         UI -> CTRL : getStoresOrderByProperty()
+                    activate CTRL
+
+                            ref over CTRL
+                            Get Store List sorted by Number of Propertys
+
+                            end ref
+
+                                CTRL -> STRMAP: toDTO(storeListSorted)
+                                activate STRMAP
+
+                                ref over STRMAP
+                                Create StoreDTO
+
+                                end ref
+
+                            STRMAP-->CTRL : storeListDTO
+                            deactivate STRMAP
+
+                        CTRL-->UI : storeListDTO
+                    deactivate CTRL
+
+
+
+                    UI -> CTRL : getEmployeeFromSpecificStore(storeDTO)
+                        activate CTRL
+                                        ref over CTRL
+                                        Get Employee List Sorted by Name
+
+                                        end ref
+                                        CTRL->LEMPDTO**: create()
+
+                                        loop for each object in employeeList
+
+                                        CTRL -> LEMP: employee = getEmployee()
+                                        activate LEMP
+                                        deactivate LEMP
+
+                                        CTRL -> EMPL : store = getStore()
+                                        activate EMPL
+                                        deactivate EMPL
+
+                                        CTRL -> STOR : equals(store)
+                                        activate STOR
+
+
+                                            STOR --> CTRL : answer
+                                        deactivate STOR
+
+                                        alt answer = true
+
+                                        CTRL -> EMPLMAP: toDTO(employee)
+                                        activate EMPLMAP
+
+                                        ref over EMPLMAP
+                                        Create EmployeeDTO
+
+                                        end ref
+                                        EMPLMAP--> CTRL: employeeDTO
+                                        deactivate EMPLMAP
+
+
+                                        CTRL->LEMPDTO: add(employeeDTO)
+                                        activate LEMPDTO
+                                        deactivate LEMPDTO
+                                        end alt
+
+                                        end loop
+'                                        EMPLMAP--> CTRL: employeeListDTO
+                                        deactivate EMPLMAP
+
+
+                            CTRL-->UI :  employeeListDTO
+                        deactivate CTRL
+
+
+        UI --> NM : show the list of all employees grouped by store
+        deactivate UI
+
+deactivate NM
+
+@enduml

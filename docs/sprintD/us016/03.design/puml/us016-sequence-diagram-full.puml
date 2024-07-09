@@ -1,0 +1,112 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title As an Agent, I want to list real estate purchase orders to accept or decline a purchase order for a property
+
+autonumber
+
+actor "Agent" as AGT
+participant ":ListBookingRequestUI" as UI
+participant ":ListBookingRequestController" as CTRL
+'participant ":Repositories" as RepositorySingleton
+'participant "repositories\n:Repositories" as PLAT
+'participant "visitRequestRepository\n:VisitRequestRepository" as REP
+participant "Configuration" as Config
+participant "EmailFilter" as EmFilter
+participant "GmailFilter" as GmFilter
+participant "HotmailFilter" as HmFilter
+participant "YahooFilter" as YhFilter
+
+
+
+activate AGT
+
+    group loop
+    AGT -> UI : selectes request
+    activate UI
+
+        UI -> UI : selectRequest()
+        activate UI
+
+        UI->UI : ValidateInput()
+        deactivate UI
+
+
+    UI--> AGT : asks what message wants to write
+    deactivate UI
+    end
+
+    group loop
+    AGT -> UI : submit answer
+    activate UI
+
+        UI -> UI : submitAnswer()
+        activate UI
+
+        UI->UI : ValidateAnswer()
+        deactivate UI
+
+        end
+
+        UI -> CTRL : createEmail(String sender, String receiver, String subject, String message)
+
+        activate CTRL
+
+            CTRL -> Config : createEmail(String sender, String receiver, String subject, String message)
+                activate Config
+
+                alt filter =
+                Config -> EmFilter : createEmail(String sender, String receiver, String subject, String message)
+                    activate EmFilter
+
+                        EmFilter -> GmFilter: createEmail(String sender, String receiver, String subject, String message)
+                            activate GmFilter
+
+                            GmFilter -> EmFilter : message
+                        deactivate GmFilter
+
+                    EmFilter --> Config : message
+                deactivate EmFilter
+                end alt
+
+                alt filter = t
+                Config -> EmFilter : createEmail(String sender, String receiver, String subject, String message)
+                    activate EmFilter
+
+                        EmFilter -> HmFilter: createEmail(String sender, String receiver, String subject, String message)
+                            activate HmFilter
+
+                            HmFilter -> EmFilter : message
+                        deactivate HmFilter
+
+                    EmFilter --> Config : message
+                deactivate EmFilter
+                end alt
+
+                alt filter = t
+                Config -> EmFilter : createEmail(String sender, String receiver, String subject, String message)
+                    activate EmFilter
+
+                        EmFilter -> YhFilter: createEmail(String sender, String receiver, String subject, String message)
+                            activate YhFilter
+
+                            YhFilter -> EmFilter : message
+                        deactivate YhFilter
+
+                    EmFilter --> Config : message
+                deactivate EmFilter
+                end alt
+                Config --> CTRL : message
+            deactivate Config
+
+
+        CTRL --> UI : message
+        deactivate CTRL
+    UI --> AGT: displays operation success and send email to client
+    deactivate UI
+
+deactivate AGT
+
+@enduml

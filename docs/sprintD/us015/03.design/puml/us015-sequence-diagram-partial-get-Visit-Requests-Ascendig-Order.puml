@@ -1,0 +1,147 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+
+
+
+
+participant ":ListBookingRequestsController" as CTRL
+participant ":Repositories" as MainRepository
+participant "Repository: \nRepositories" as Repository
+
+participant "employeeRepository:\nEmployeeRepository" as ER
+participant " visitRequestRepository:\nVisitRequestRepository" as VRR
+
+
+
+
+participant "VisitRequestMapper" as VRM
+participant "visitRequestDTO:VisitRequestDTO" as VVRDTO
+participant "ListVisitRequestDTO : List<VisitRequestDTO>" as VRDTO
+participant "visitRequestsByAgentInPeriodSorted : List<VisitRequest>" as VR
+
+
+autonumber
+
+
+ -> CTRL: getVisitRequestsByAgent(String agent,DateTime begin,DateTime end )
+       activate CTRL
+
+
+      CTRL -> MainRepository : getInstance()
+         activate MainRepository
+
+         MainRepository -->CTRL : Repositories
+         deactivate MainRepository
+
+         CTRL -> VRR: getVisitRequestRepository()
+         activate VRR
+
+         VRR --> CTRL: visitRequestRepository
+         deactivate VRR
+
+         CTRL -> VRR : getVisitRequestsByAgentInPeriod(String email, DateTime begin, DateTime end)
+         activate VRR
+      VRR -> ConfigProperties: configureSortingAlgorithm()
+         activate ConfigProperties
+
+         ConfigProperties --> VRR: sortingAlgorithm
+
+         deactivate ConfigProperties
+
+
+         alt if( sortAlgorithm = "BubbleSort")
+
+
+       VRR -> VRR: sort(visitRequestsList)
+       activate VRR
+
+        VRR --> VRR: sort(visitRequestsList)
+              deactivate VRR
+
+
+              else alt if( sortAlgorithm = "InsertionSort")
+
+               VRR -> VRR: sort(visitRequestsList)
+                     activate VRR
+
+                      VRR --> VRR: sort(visitRequestsList)
+                            deactivate VRR
+
+
+
+
+
+
+
+
+
+         end group
+
+
+
+         VRR --> CTRL: visitRequestsByAgentInPeriodSorted
+         deactivate VRR
+
+          CTRL -> VRM: getVisitRequestsDTO(visitRequestsByAgentInPeriod)
+             activate VRM
+
+        VRM -> VRDTO**: create()
+
+      loop for each object in ListVisitRequest
+
+
+
+    VRM-> VR: clientName = getClientName()
+    activate VR
+    deactivate VR
+
+     VRM-> VR: property = getProperty()
+     activate VR
+     deactivate VR
+
+     VRM-> VR: preferredDate = getPreferredDate()
+     activate VR
+     deactivate VR
+
+
+     VRM-> VR: address = getAddress()
+     activate VR
+     deactivate VR
+
+
+
+
+     VRM-> VR: clientPhoneNumber = getClientPhoneNumber()
+     activate VR
+     deactivate VR
+
+
+
+     VRM-> VR: timeSlot = getTimeSlot()
+      activate VR
+     deactivate VR
+
+      VRM-> VRM: VisitRequestDTO= toDTO(VisitRequest)
+            activate VRM
+
+            VRM --> VVRDTO**: create()
+            deactivate VRM
+
+
+            VRM -> VRDTO: add(VisitRequestDTO)
+            activate VRDTO
+            deactivate VRDTO
+
+
+
+            end group
+
+
+            VRM --> CTRL: visitRequestsDTOListSorted
+            deactivate VRM
+
+            <-- CTRL:visitRequestsDTOListSorted
+            deactivate CTRL
+
+@enduml

@@ -1,0 +1,45 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 1
+
+participant ":PropertyListController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "Repositories\n:Repositories" as PLAT
+participant "PropertyRepository:\PropertyRepository" as PR
+
+
+-> CTRL : getPropertyList (requestType, propertyType, bedroomNo, choosenFilter)
+
+activate CTRL
+    group get ListOfProperties
+
+     CTRL -> RepositorySingleton : getInstance()
+    activate RepositorySingleton
+
+        RepositorySingleton --> CTRL: repositories
+    deactivate RepositorySingleton
+
+    CTRL -> PLAT : getPropertyRepository()
+
+    activate PLAT
+
+        PLAT --> CTRL: PropertyRepository
+    deactivate PLAT
+
+    CTRL -> PR : getPropertyList (requestType, propertyType, bedroomNo, choosenFilter)
+    activate PR
+
+    PR --> PR : getPropertyList (requestType, propertyType, bedroomNo)
+    PR --> PR : sortPropertyList (choosenFilter)
+
+    PR --> CTRL : ListOfProperties
+
+    deactivate PR
+    <-- CTRL : ListOfProperties
+deactivate CTRL
+@enduml

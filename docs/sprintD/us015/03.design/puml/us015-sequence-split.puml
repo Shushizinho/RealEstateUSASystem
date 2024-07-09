@@ -1,0 +1,88 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+autonumber
+
+actor "Agent" as Agent
+
+
+participant ":ListBookingRequestsUI" as UI
+participant ":ListBookingRequestsController" as CTRL
+
+
+
+
+
+
+
+
+
+
+
+
+
+    activate Agent
+
+  Agent -> UI : asks for the list of all booking requests made for myself
+    activate UI
+
+    UI -> CTRL** : create
+
+
+
+
+
+      UI --> Agent : asks for the start date to view booking requests
+            deactivate UI
+
+
+         Agent -> UI : selects the start date
+         activate UI
+
+
+
+         UI --> Agent : asks for the end date to view booking requests
+         deactivate UI
+
+
+          Agent -> UI : selects the end date
+           activate UI
+
+    UI -> CTRL : getAgentFromSession()
+       activate CTRL
+
+      ref over CTRL
+      get Agent From Session
+      end ref
+       CTRL --> UI: agent
+       deactivate CTRL
+
+       UI -> CTRL: getVisitRequestsByAgent(String agent,DateTime begin,DateTime end )
+       activate CTRL
+
+
+     ref over CTRL
+     get Visit Requests List Ascending Order
+     end ref
+
+            CTRL --> UI : visitRequestsDTOListSorted
+            deactivate CTRL
+
+
+
+
+
+
+
+
+     UI --> Agent : show the list of booking requests based on the selected date and sorted in ascending order and displays operation success
+      deactivate UI
+
+
+
+
+
+@enduml

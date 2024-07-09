@@ -1,0 +1,178 @@
+@startuml
+
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+
+hide circle
+hide methods
+
+class Agent {
+
+}
+
+
+class AnnouncementRequest{
+rentDuration
+date
+status
+
+
+}
+
+class Store{
+id
+designation
+address
+email
+phoneNumber
+
+}
+
+
+
+
+
+class Announcement{
+listedPrice
+rentDuration
+date
+}
+
+class Inhabitable{
+bedroomNumber
+bathroomNumber
+parkingSpaces
+hasEquipment
+}
+
+class House{
+hasBasement
+hasLoft
+sunExposure
+
+}
+
+class Address{
+streetAddress
+state
+zipCode
+
+}
+
+
+
+class BusinessType{
+description
+}
+
+class PropertyType{
+description
+}
+class Property{
+price
+area
+address
+distanceToCentre
+}
+
+class Employee{
+
+
+}
+class Client {
+
+}
+
+class Photograph{
+URI
+}
+
+class Person{
+email
+name
+passportNumber
+taxNumber
+phoneNumber
+}
+
+class Role{
+id
+description
+}
+
+class Commission{
+value
+typeCommission
+
+}
+
+
+
+
+
+
+
+AnnouncementRequest "*" -- "1" Agent : intends to see <
+AnnouncementRequest "1" -- "1" Announcement: can become >
+
+
+
+AnnouncementRequest"*" --> "1"BusinessType: cataloged as >
+
+Announcement "1" -- "1" Commission: has a >
+
+
+
+Store"1" --> "1" Address
+AnnouncementRequest "1"-- "1" Property: refers to >
+
+Inhabitable  <|--  House
+
+Store"1" -- "*" Employee: works on a <
+
+Property  <|--  Inhabitable
+
+Employee  <|-- Agent
+
+Person  <|-- Client
+
+Person <|- Employee
+
+
+
+
+
+Role "1..*" -- "1" Employee: has <
+
+Client"1" -- "*" AnnouncementRequest: > creates
+
+
+
+Property"*" --- "1"Store: listed under >
+
+Property"1" --- "1..30" Photograph: has >
+
+
+
+Person "1" - "1" Address: has an >
+Property "1" --> "1" Address
+
+Property "*" --- "1" PropertyType: cataloged as >
+
+
+
+
+
+
+
+
+
+
+
+@enduml

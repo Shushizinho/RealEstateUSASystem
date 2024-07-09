@@ -1,0 +1,35 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+title As a system Administrator, I want to register a new store.
+
+autonumber
+
+actor "Administrator" as Administrator
+participant ":System" as System
+
+activate Administrator
+
+    Administrator -> System : asks to register a new store
+    activate System
+
+'        System --> Administrator : provide store manager list
+'    deactivate System
+'
+'    Administrator -> System : selectes and sends store manager from list
+'    activate System
+
+        System --> Administrator: request store data (ID, name, address, \nemail,phoneNumber)
+    deactivate System
+
+    Administrator -> System : submit data of the new store
+        activate System
+
+        System --> Administrator : displays operation success
+    deactivate System
+
+@enduml

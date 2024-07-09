@@ -1,0 +1,44 @@
+@startuml
+
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+participant ":PurchaseOrdersController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "purchaseOrdersRepository\n:PurchaseOrdersRepository" as REP
+
+autonumber 1
+
+    -> CTRL : createEmail(String sender, String receiver, String subject, String message)
+        activate CTRL
+
+            CTRL->RepositorySingleton: getInstance()
+            activate RepositorySingleton
+
+            RepositorySingleton --> CTRL: Repositories
+            deactivate RepositorySingleton
+
+            CTRL -> PLAT: getBuyOrdersRepository
+            activate PLAT
+
+            PLAT --> CTRL: BuyOrderRepository
+            deactivate PLAT
+
+            CTRL --> REP:createEmail(String sender, String receiver, String subject, String message)
+            activate REP
+
+                REP -> REP : createEmail(String sender, String receiver, String subject, String message)
+                    activate REP
+
+                    REP --> REP
+                deactivate REP
+
+            REP --> CTRL:message
+            deactivate REP
+
+         <-- CTRL: message
+        deactivate CTRL
+@enduml

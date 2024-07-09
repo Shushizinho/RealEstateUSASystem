@@ -1,0 +1,40 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 1
+participant ":PropertyListController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "Repositories\n:Repositories" as PLAT
+participant "BusinessTypeRepository:\nBusinessTypeRepository" as BTR
+
+-> CTRL : getRequestTypes()
+activate CTRL
+
+
+        CTRL -> RepositorySingleton : getInstance()
+    activate RepositorySingleton
+
+    RepositorySingleton --> CTRL: repositories
+    deactivate RepositorySingleton
+
+    CTRL -> PLAT : getRequestTypeRepository()
+    activate PLAT
+
+        PLAT -> CTRL : RequestTypeRepository
+    deactivate PLAT
+
+    CTRL -> BTR : getRequestTypes()
+    activate BTR
+
+        BTR --> CTRL : requestTypeList
+    autonumber 8
+    deactivate BTR
+
+<-- CTRL : requestTypeList
+deactivate CTRL
+
+@enduml

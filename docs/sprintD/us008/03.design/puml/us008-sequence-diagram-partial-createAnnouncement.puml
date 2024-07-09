@@ -1,0 +1,82 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+
+
+participant ":AnnouncementRequestController" as CTRL
+participant ":Repositories" as MainRepository
+participant "Repository: \nRepositories" as Repository
+participant "employeeRepository:\nEmployeeRepository" as ER
+participant " announcementRequestRepository:\nAnnouncementRequestRepository" as ARR
+participant "AnnouncementRepository:\nAnnouncementRepository" as AnnouncementRepository
+participant "AnnouncementRequestMapper" as ARM
+participant "AnnouncementRequestDTO:AnnouncementRequestDTO" as ARDTO
+
+participant "Announcement:Announcement" as A
+
+
+
+ ->CTRL : createAnnouncement(AnnouncementRequestDTO, commission, listedPrice)
+       activate CTRL
+
+
+       CTRL -> MainRepository : getInstance()
+            activate MainRepository
+
+            MainRepository -->CTRL : Repositories
+            deactivate MainRepository
+
+
+       CTRL -> Repository : getAnnouncementRepository()
+       activate Repository
+
+       Repository --> CTRL : announcementRepository
+       deactivate Repository
+
+       CTRL -> AnnouncementRepository : createAnnouncement(AnnouncementRequestDTO,commission, listedPrice)
+       activate AnnouncementRepository
+
+
+
+       AnnouncementRepository -> ARM:announcementToEntity(AnnouncementRequestDTO,commission, listedPrice)
+       activate ARM
+
+
+
+
+
+
+
+
+
+
+
+
+        ARM -> A**: create( announcement request, commission, listedPrice)
+
+        ARM --> AnnouncementRepository: announcement
+        deactivate ARM
+
+
+
+              AnnouncementRepository -> AnnouncementRepository: validateAnnouncement(announcement)
+              activate AnnouncementRepository
+
+              AnnouncementRepository -> AnnouncementRepository: add(announcement)
+               activate AnnouncementRepository
+
+               AnnouncementRepository --> AnnouncementRepository
+               deactivate AnnouncementRepository
+
+
+               AnnouncementRepository --> AnnouncementRepository
+                              deactivate AnnouncementRepository
+
+       AnnouncementRepository --> CTRL : newAnnouncement
+       deactivate AnnouncementRepository
+
+
+
+@enduml

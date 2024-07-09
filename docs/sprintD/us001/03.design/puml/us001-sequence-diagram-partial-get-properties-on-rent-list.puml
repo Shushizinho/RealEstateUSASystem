@@ -1,0 +1,48 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 1
+participant ":PropertyListController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "Repositories\n:Repositories" as PLAT
+participant "AnnouncementRepository:\AnnouncementRepository" as AR
+
+
+  -> CTRL : getPropertiesByBusinessType(businessType)
+
+            activate CTRL
+
+            CTRL -> RepositorySingleton : getInstance()
+             activate RepositorySingleton
+
+                 RepositorySingleton --> CTRL: repositories
+             deactivate RepositorySingleton
+
+             CTRL -> PLAT : getAnnouncementRepository()
+             activate PLAT
+
+                 PLAT -> CTRL : AnnouncementRepository
+             deactivate PLAT
+
+
+            CTRL -> AR : getAllPropertiesByBusinessType(String businessType)
+
+            activate AR
+
+            loop each announcement
+            alt announcementBusinessType = businessType
+            AR --> AR : add(announcement)
+            end
+            end loop
+
+            AR --> CTRL : PropertiesOnRent
+            deactivate AR
+
+
+            <-- CTRL : PropertiesOnRent
+            deactivate CTRL
+@enduml

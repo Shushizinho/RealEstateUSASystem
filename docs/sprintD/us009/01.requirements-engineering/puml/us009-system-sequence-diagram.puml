@@ -1,0 +1,112 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+autonumber
+
+actor "Client" as User
+participant ":System" as System
+
+activate User
+
+    User -> System : asks to post a visit request
+
+    activate System
+
+    System --> User : show list of all properties and asks to select one
+    deactivate System
+
+
+    User -> System : select a property
+
+    activate System
+
+    System --> User : request preferred date
+
+    deactivate System
+
+    User -> System : insert preferred date
+
+    activate System
+
+    System --> User : request time slot
+
+    deactivate System
+
+    User -> System : insert time slot
+
+    activate System
+
+    System --> User : asks to confirmation to submit data
+
+    deactivate System
+
+    User -> System : confirmation to submit data
+
+    activate System
+
+
+    System --> User : show success message and asks to add another time slot
+
+    deactivate System
+    group loop [while confirm to add time slot]
+
+        User -> System : confirmation to submit another time slot
+
+        activate System
+
+        System --> User : request time slot
+
+        deactivate System
+
+        User -> System : insert time slot
+
+        activate System
+
+        System --> User : asks to confirmation to submit data
+
+        deactivate System
+
+        User -> System : confirmation to submit data
+
+        activate System
+
+        System --> User : show success message and asks to add another time slot
+
+
+    end
+
+    group loop [while confirm to add date]
+
+     System --> User : asks to add another date
+    deactivate System
+
+    User -> System : confirmation to submit another date
+
+            activate System
+
+            System --> User : request date
+
+            deactivate System
+
+            User -> System : insert date
+
+            activate System
+
+            System --> User : asks to confirmation to submit data
+
+            deactivate System
+
+            User -> System : confirmation to submit data
+
+            activate System
+
+            System --> User : show success message and asks to add another date or time slot
+        end
+
+    deactivate System
+
+@enduml

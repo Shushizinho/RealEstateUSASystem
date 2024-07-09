@@ -1,0 +1,24 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+'title As a network manager, I want to list all employees working in every store of the network
+title System Sequence Diagram (SSD)
+
+autonumber
+
+actor "Network Manager" as SNM
+participant ":System" as System
+
+activate SNM
+
+    SNM -> System : asks to list all employees working in every store of the network
+    activate System
+
+        System --> SNM : show the list of all employees grouped by store
+    deactivate System
+
+@enduml

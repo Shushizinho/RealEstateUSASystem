@@ -1,0 +1,47 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 29
+
+'hide footbox
+participant ":RegisterEmployeeController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "propertyTypeRepository:\nPropertyTypeRepository" as PPTR
+
+
+     -> CTRL: getPropertyTypeByDescription(propertyTypeDescription)
+
+    activate CTRL
+
+    autonumber 29.1
+            CTRL -> RepositorySingleton : getInstance()
+                            activate RepositorySingleton
+
+                                RepositorySingleton --> CTRL: repositories
+                            deactivate RepositorySingleton
+
+                            CTRL -> PLAT : getPropertyTypeRepository()
+                            activate PLAT
+
+                                PLAT -> CTRL : PropertyTypeRepository
+                            deactivate PLAT
+
+                            CTRL -> PPTR : getPropertyTypeByDescription(propertyTypeDescription)
+                            activate PPTR
+
+                                PPTR --> CTRL : propertyType
+                            deactivate PPTR
+
+
+
+    autonumber 30
+
+    <-- CTRL  : propertyType
+
+    deactivate CTRL
+
+
+@enduml

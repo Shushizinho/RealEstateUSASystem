@@ -1,0 +1,108 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+hide circle
+hide methods
+
+
+class Address{
+    streetAddress
+    city
+    state
+    zipCode
+}
+
+class Property {
+    price
+    area
+    distanceToCentre
+}
+
+class Photograph{
+    uri
+}
+
+class Store{
+    id
+    designation
+    adress
+    email
+    phoneNumber
+}
+
+class Person{
+    email
+    name
+    passportNumber
+    phoneNumber
+    taxNumber
+    adress
+}
+
+class DataTime{
+    date
+}
+
+class Client{
+    person
+}
+
+class Inhabitable {
+    bedroomNumber
+    bathroomNumber
+    parkingSpaces
+    hasEquipment
+}
+
+
+class House {
+    hasBasement
+    hasLoft
+    sunExposure
+}
+
+
+
+class PropertyType {
+    description
+}
+
+
+
+
+class VisitRequest{
+  property
+  preferredDate
+  timeSlot
+  clientName
+  clientPhoneNumber
+  clientReply
+  agent
+  wasAccepted
+}
+
+
+
+Client "1" - "*" VisitRequest : request >
+VisitRequest "1" -- "1" Property : refers to >
+Property "1" -- "1" Address : refers to <
+Property "1" -- "1..30" Photograph : refers to <
+Property "1"-- "1" Store : listed under <
+
+Property "1" - "1" DataTime : refers to <
+Property "1"-- "1"Client : refers to <
+Person "1" -- "1" Client : is a <
+Property "1" <|-- "1" Inhabitable : has a
+
+
+Inhabitable "1" <|-- "1" House : is a
+PropertyType "1" -- "1" Property: cataloged as <
+
+
+
+
+@enduml

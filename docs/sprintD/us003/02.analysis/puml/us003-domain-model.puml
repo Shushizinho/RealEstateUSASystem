@@ -1,0 +1,57 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam nodesep 150
+
+'left to right direction
+
+hide circle
+hide methods
+
+'title Domain Model: US013
+
+class Administrator {
+
+}
+
+'note right: Test
+
+class Employee {
+    email
+    name
+    passportNumber
+    taxNumber
+    phoneNumber
+ }
+
+
+ class Role {
+    id
+    description
+ }
+
+ class Address{
+     streetAddress
+     city
+     state
+     zipCode
+ }
+
+ class Store {
+     id
+     designation
+     email
+     phoneNumber
+
+  }
+
+
+Address  <-   Employee
+Address  <-   Store
+Employee  -->  Store
+Role "1..*" <-- "1" Employee
+
+
+Employee "*" - "1" Administrator:  create by
+@enduml

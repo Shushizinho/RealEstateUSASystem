@@ -1,0 +1,101 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+
+
+autonumber 3
+
+participant ":PurchaseOrdersController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "announcementRepository\n:AnnouncementRepository" as LOC
+participant "AnnouncementMapper" as stMa
+participant "ListAnnouncementDTO:List<AnnouncementDTO>" as listStDTO
+participant "ListAnnouncement:List<Announcement>" as listSt
+participant "AnnouncementDTO:announcementDTO" as stDTO
+
+ autonumber 1
+
+         ->CTRL : getSaleAnnouncements()
+
+             activate CTRL
+
+                 CTRL -> RepositorySingleton: getInstance()
+                 activate RepositorySingleton
+
+                 RepositorySingleton --> CTRL: Repositories
+                 deactivate RepositorySingleton
+
+                 CTRL -> PLAT: getAnnouncementRepository
+                 activate PLAT
+
+                 PLAT --> CTRL: announcementRepository
+                 deactivate PLAT
+
+                 CTRL -> LOC : getAnnouncements()
+                     activate LOC
+
+                         LOC -> listSt**
+
+                         LOC --> CTRL : announcementList
+                     deactivate LOC
+
+                     CTRL -> stMa : getAnnouncementsDTO(announcementList)
+                     activate stMa
+
+                     loop for each object in ListAnnouncement
+
+                         stMa -> listStDTO** : create()
+
+                         stMa -> listSt : listedPrice = getListedPrice()
+                         activate listSt
+                         deactivate listSt
+
+                         stMa -> listSt : rentDuration = getRentDuration()
+                         activate listSt
+                         deactivate listSt
+
+                         stMa -> listSt : agent = getAgent()
+                         activate listSt
+                         deactivate listSt
+
+                         stMa -> listSt : date = getDate()
+                         activate listSt
+                         deactivate listSt
+
+                         stMa -> listSt : comission = getComission()
+                         activate listSt
+                         deactivate listSt
+
+                         stMa -> listSt : businessType = getBusinessType()
+                         activate listSt
+                         deactivate listSt
+
+                         stMa -> listSt : property = getProperty()
+                         activate listSt
+                         deactivate listSt
+
+                         stMa -> stMa :AnnouncementDTO=toDTO(announcement)
+                         activate stMa
+
+                             stMa -> stDTO** : create()
+                         deactivate stMa
+
+                         stMa -> listStDTO : add(AnnouncementDTO)
+                         activate listStDTO
+                            listStDTO -> stMa
+                         deactivate listStDTO
+
+                         end
+                         stMa --> CTRL : announcementListDTO
+                     deactivate stMa
+
+
+             <--CTRL : announcementListDTO
+         deactivate CTRL
+
+@enduml

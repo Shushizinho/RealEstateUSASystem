@@ -1,0 +1,97 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+autonumber
+actor "Store Manager" as SM
+participant ":AnalyseDealsUI" as UI
+participant ":AnalyseDealsController" as CTRL
+
+
+
+activate SM
+
+    SM -> UI : request to analyse deals
+
+    activate UI
+    UI -> CTRL** : createAnalyseDealsController()
+
+
+    UI --> UI : displayRegressionModel
+
+    deactivate CTRL
+
+    UI --> SM : request regression model (simple linear or multi-linear)
+
+
+    deactivate UI
+
+
+    SM -> UI : select regression model
+
+    activate UI
+    UI --> UI : keep (regressionModel)
+
+    UI --> CTRL : displayIndependentVariables ()
+    activate CTRL
+    ref over CTRL
+    get independent variables
+    end ref
+    CTRL --> UI : IndependentVariablesList
+    deactivate CTRL
+
+
+    UI --> SM : request the independent variable(s) from the list of property information
+    deactivate UI
+    loop (once) if simple linear\n(while number of selected variables < number of total variables and\n selected variable != 0) if multi-linear
+
+
+    SM -> UI : select the independent variable
+
+    activate UI
+
+
+
+    UI --> UI : keep (IndependentVariable)
+
+    UI --> UI : addToList(IndependentVariable)
+    end
+
+     UI --> UI : getStore (store)
+
+    UI -> CTRL: getDealsFromStore(store)
+    activate CTRL
+     ref over CTRL
+        get deals from store
+     end ref
+
+    CTRL --> UI : dealsList
+    deactivate CTRL
+
+    UI -> CTRL: getValueFromDeals(dealsList)
+        activate CTRL
+         ref over CTRL
+            get deals values
+         end ref
+
+        CTRL --> UI : ValuesList
+        deactivate CTRL
+
+    UI --> UI : RegressionAnalysis (SelectedVariablesList, ValuesList)
+
+
+
+
+    UI --> SM :shows a prediction of the value of a\n property based on the value of the independent variable(s)
+
+    deactivate UI
+
+
+deactivate SM
+
+@enduml

@@ -1,0 +1,73 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing true
+skinparam linetype ortho
+'skinparam linetype orto
+
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class  AnalyseDealsUI {
+}
+
+class AnalyseDealsController {
+   + displayIndependentVariables()
+   + getDealsFromStore(store)
+   + getValueFromDeals(dealsList)
+}
+
+
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getPurchaseOrderRepository()
+    + getPropertyRepository()
+}
+
+class PropertyRepository{
+    + getIndependentVariables()
+}
+
+class PurchaseOrderRepository{
+   + getDealsValue(dealsList)
+   + getDealsByStore(store)
+   + addToList(orderAmount)
+}
+
+class PurchaseOrder{
+    - Double orderAmount;
+    - Announcement announcement;
+    - Client client;
+    - Integer wasAccepted;
+    - DateTime creationDate
+    + getOrderAmount()
+}
+
+
+
+
+
+
+
+
+
+Repositories --> Repositories : instance
+
+AnalyseDealsUI .> AnalyseDealsController
+
+AnalyseDealsController .-> Repositories : repositories
+
+AnalyseDealsController --> PurchaseOrderRepository
+
+AnalyseDealsController --> PropertyRepository
+
+PurchaseOrderRepository --> PurchaseOrder
+
+
+
+
+@enduml

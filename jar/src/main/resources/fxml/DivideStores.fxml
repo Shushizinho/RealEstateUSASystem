@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="543.0" prefWidth="942.0" styleClass="root" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.ipp.isep.dei.esoft.project.ui.gui.DivideStoresGUI">
+   <top>
+      <Pane prefHeight="46.0" prefWidth="722.0" styleClass="anchorPane" BorderPane.alignment="CENTER" />
+   </top>
+   <bottom>
+      <ButtonBar fx:id="buttonbar" prefHeight="68.0" prefWidth="761.0" styleClass="buttonbar" stylesheets="@../styles/Styles.css" BorderPane.alignment="CENTER">
+         <buttons>
+            <Button minWidth="0.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="530.0" text="PlaceHolder" textAlignment="CENTER" visible="false">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <textFill>
+                  <LinearGradient endX="1.0" endY="0.6635071090047393" startX="1.0" startY="1.0">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.17105263471603394" green="0.17105263471603394" blue="0.17105263471603394" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="1.0" green="1.0" blue="1.0" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </textFill>
+            </Button>
+            <Button fx:id="cancelButton" disable="true" mnemonicParsing="false" onAction="#buttonClick" prefHeight="43.0" text="Confirm">
+               <textFill>
+                  <LinearGradient endX="1.0" endY="0.7014218009478672" startX="1.0" startY="0.9383886255924171">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.17105263471603394" green="0.17105263471603394" blue="0.17105263471603394" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="1.0" green="1.0" blue="1.0" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </textFill>
+            </Button>
+            <Button fx:id="closeButton" minWidth="0.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="530.0" text="Close" textAlignment="CENTER" >
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <textFill>
+                  <LinearGradient endX="1.0" endY="0.6635071090047393" startX="1.0" startY="1.0">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.17105263471603394" green="0.17105263471603394" blue="0.17105263471603394" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="1.0" green="1.0" blue="1.0" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </textFill>
+            </Button>
+         </buttons>
+      </ButtonBar>
+   </bottom>
+   <center>
+      <AnchorPane id="anchorPaneMain" fx:id="anchorPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label id="titleLinear" alignment="CENTER" layoutX="177.0" layoutY="14.0" prefHeight="55.0" prefWidth="571.0" styleClass="..\styles\Styles.css" text="Select the Stores to be divided among two sublists" textAlignment="CENTER">
+               <font>
+                  <Font size="28.0" />
+               </font>
+            </Label>
+            <AnchorPane layoutX="24.0" layoutY="110.0" maxWidth="890.0" minWidth="890.0" prefWidth="890.0">
+               <children>
+                  <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxWidth="890.0" minViewportWidth="890.0" minWidth="890.0" pannable="true" prefHeight="300.0" prefViewportWidth="890.0" vbarPolicy="ALWAYS">
+                     <content>
+                        <VBox id="contentBox" fx:id="contentBox" prefHeight="300.0" prefWidth="100.0" />
+                     </content></ScrollPane>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

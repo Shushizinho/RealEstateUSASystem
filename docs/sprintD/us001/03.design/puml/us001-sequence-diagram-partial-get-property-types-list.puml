@@ -1,0 +1,41 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 1
+participant ":PropertyListController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "Repositories\n:Repositories" as PLAT
+participant "PropertyTypeRepository:\nPropertyTypeRepository" as PPTR
+
+-> CTRL : getPropertyType()
+      activate CTRL
+
+
+                 CTRL -> RepositorySingleton : getInstance()
+
+                 activate RepositorySingleton
+
+                     RepositorySingleton --> CTRL: repositories
+                 deactivate RepositorySingleton
+
+                 CTRL -> PLAT : getPropertyTypeRepository()
+                 activate PLAT
+
+                     PLAT -> CTRL : PropertyTypeRepository
+                 deactivate PLAT
+
+                 CTRL -> PPTR : getPropertyType()
+                 activate PPTR
+
+                     PPTR --> CTRL : PropertyTypeList
+
+                 deactivate PPTR
+
+
+<-- CTRL : PropertyTypeList
+deactivate CTRL
+@enduml

@@ -1,0 +1,76 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+title US008- As an agent, I intend to see the list of property announcement requests made to myself, so that I can post the announcement.
+
+autonumber
+
+actor "Agent" as Agent
+participant ":System" as System
+
+activate Agent
+
+     Agent -> System : asks to see the list of property announcement requests
+    activate System
+
+
+    System --> Agent: provides the list of announcement request responsible for that agent, sorted by the creation date, and asks to select one
+    deactivate System
+
+     Agent -> System: selects announcement request
+     activate System
+
+
+     System --> Agent: ask if the user wants to post the property announcement
+     deactivate System
+
+     Agent -> System: provides the request data (yes/no)
+     activate System
+
+   alt  if answer = yes
+
+   System --> Agent: asks if commission is in percentage or fixed
+             deactivate System
+
+       Agent -> System: inputs the pretend option
+       activate System
+
+      System --> Agent: request data(commission)
+          deactivate System
+
+      Agent -> System: provides the request data
+      activate System
+
+       System --> Agent: request data confirmation
+     deactivate System
+
+    Agent -> System: confirms data
+     activate System
+
+
+
+
+
+
+      else  if answer = no
+
+     System --> Agent: asks for a message why the request was declined
+     deactivate System
+
+     Agent -> System: insert message
+      activate System
+
+
+
+end
+
+
+
+     System --> Agent:display operation success
+
+
+
+@enduml

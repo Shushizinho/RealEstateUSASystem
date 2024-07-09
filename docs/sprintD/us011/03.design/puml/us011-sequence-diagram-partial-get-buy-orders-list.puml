@@ -1,0 +1,93 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+
+
+autonumber 3
+
+participant ":PurchaseOrdersController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "purchaseOrdersRepository\n:PurchaseOrdersRepository" as REP
+participant "PurchaseOrdersMapper" as pMa
+participant "ListPurchaseOrdersDTO:List<PurchaseOrdersDTO>" as listPDTO
+participant "ListPurchaseOrders:List<PurchaseOrders>" as listP
+participant "PurchaseOrdersDTO:purchaseOrdersDTO" as pDTO
+
+'hide footbox
+autonumber 1
+                    ->CTRL: getBuyOrders()
+
+                        activate CTRL
+
+                            CTRL->RepositorySingleton: getInstance()
+                               activate RepositorySingleton
+
+                               RepositorySingleton --> CTRL: Repositories
+                               deactivate RepositorySingleton
+
+                               CTRL -> PLAT: getBuyOrdersRepository
+                               activate PLAT
+
+                               PLAT --> CTRL: BuyOrderRepository
+                               deactivate PLAT
+
+                               CTRL -> REP : getBuyOrders(saleAnnouncement)
+                                   activate REP
+
+                                       REP -> listP**
+
+                                       REP --> CTRL : buyOrderList
+                                   deactivate REP
+
+                                   CTRL -> pMa : getBuyOrdersDTO(buyOrderList)
+                                   activate pMa
+
+                                   loop for each object in ListBuyOrder
+
+                                       pMa -> listPDTO** : create()
+
+                                       pMa -> listP : orderAmount = getOrderAmount()
+                                       activate listP
+                                       deactivate listP
+
+                                       pMa -> listP : announcement = getAnnouncement()
+                                       activate listP
+                                       deactivate listP
+
+                                       pMa -> listP : client = getClient()
+                                       activate listP
+                                       deactivate listP
+
+                                       pMa -> listP : wasAccepted = getWasAccepted()
+                                       activate listP
+                                       deactivate listP
+
+                                       pMa -> listP : creationDate = getCreationDate()
+                                       activate listP
+                                       deactivate listP
+
+                                       pMa -> pMa :BuyOrderDTO=toDTO(buyOrder)
+                                       activate pMa
+
+                                           pMa -> pDTO** : create()
+                                       deactivate pMa
+
+                                       pMa -> listPDTO : add(BuyOrderDTO)
+                                       activate listPDTO
+
+                                          listPDTO -> pMa
+                                       deactivate listPDTO
+
+                                       end
+                                       pMa --> CTRL : buyOrderListDTO
+                                   deactivate pMa
+
+                    <--CTRL : buyOrdersListDTO
+                    deactivate CTRL
+
+@enduml

@@ -1,0 +1,37 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+
+hide circle
+hide methods
+
+'title Domain Model: US007
+
+
+class Client {
+     email
+     name
+     passportNumber
+     taxNumber
+     phoneNumber
+ }
+
+  class Address{
+       streetAddress
+       city
+       state
+       zipCode
+  }
+
+
+
+Address  <- Client
+
+
+
+
+@enduml

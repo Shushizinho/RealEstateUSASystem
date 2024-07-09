@@ -1,0 +1,113 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+hide circle
+hide methods
+
+class Announcement {
+    listedPrice
+    rentDuration
+    date
+    commission
+
+}
+
+class Property {
+price
+area
+distanceToCentre
+
+
+
+}
+class PropertyType{
+description
+}
+
+class Address{
+streetAddress
+state
+zipCode
+
+}
+
+class Photographs{
+uri
+}
+
+
+class PurchaseOrder{
+    orderAmount
+    wasAccepted
+    creationDate
+}
+
+class StoreManager {
+    email
+    name
+    passportNumber
+    taxNumber
+    phoneNumber
+}
+
+class BusinessType{
+description
+}
+
+class Inhabitable{
+bedroomNumber
+bathroomNumber
+parkingSpaces
+hasEquipment
+}
+
+class House{
+hasBasement
+hasLoft
+sunExposure
+
+}
+
+class Store{
+id
+designation
+email
+phoneNumber
+
+}
+
+class Commission {
+value
+typeCommission
+}
+
+
+
+StoreManager "1" - "*" PurchaseOrder : request >
+PurchaseOrder "1" - "1" Announcement: refers to >
+Announcement "1" -- "1" Property : refers to >
+Property "1" -- "1" Address: > has an
+
+Property "*" -- "1" PropertyType : cataloged as >
+
+Property "*" -- "1..30" Photographs: has >
+
+Property  <|--  Inhabitable
+
+Inhabitable  <|--  House
+
+Announcement "*" --"1" BusinessType: cataloged as >
+Announcement "1" --"1" Commission: has a >
+
+StoreManager"1" -- "1" Store: > has a
+
+
+
+
+
+
+@enduml

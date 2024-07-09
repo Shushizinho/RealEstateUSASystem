@@ -1,0 +1,30 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+'title As an unregistered user, I want to register in the system to buy, sell or rent properties.
+title System Sequence Diagram (SSD)
+
+autonumber
+
+actor "Unregistered User" as UU
+participant ":System" as System
+
+
+activate UU
+
+    UU -> System : asks to register in the system
+    activate System
+
+        System --> UU : request data to create a new client ( name, passportNumber, taxNumber, \n address, email, phoneNumber)
+    deactivate System
+
+    UU -> System : submit data of the new client
+         activate System
+
+        System --> UU : displays operation success
+    deactivate System
+
+@enduml

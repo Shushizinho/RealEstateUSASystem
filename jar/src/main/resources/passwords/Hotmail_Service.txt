@@ -1,0 +1,7 @@
+
+
+From: agent@this.app
+Recipient: client@hotmail.com
+Subject: Your visit request was decline
+
+decline

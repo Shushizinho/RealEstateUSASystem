@@ -1,0 +1,97 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+'skinparam linetype polyline
+
+
+
+title Domain Model: US004 - Submit request for listing a property sale/rent
+
+hide circle
+hide methods
+
+class Property {
+    price
+    area
+    distanceToCentre
+    photographs
+}
+class House {
+    hasBasement
+    hasLoft
+    sunExposure
+}
+class Agent {
+}
+
+class AnnouncementRequest{
+    rentDuration
+}
+class BusinessType {
+    description
+}
+class PropertyType {
+    description
+}
+class Employee{
+    email
+    name
+    passportNumber
+    taxNumber
+    phoneNumber
+}
+
+class Store {
+    id
+    designation
+    email
+    phoneNumber
+}
+
+class Client {
+    email
+    name
+    passportNumber
+    taxNumber
+    phoneNumber
+}
+
+class Inhabitable {
+    bedroomNumber
+    bathroomNumber
+    parkingSpaces
+    hasEquipment
+}
+
+
+class Role{
+    id
+    description
+}
+class Address{
+    streetAddress
+    state
+    zipCode
+}
+AnnouncementRequest "1" -- "1" Agent : sent to >
+AnnouncementRequest "1" -- "1" Property : refers to >
+AnnouncementRequest "1" -- "1" BusinessType : cataloged as >
+Agent "*" -- "0..1" Store: part of >
+Client "1" - "*" Property : creates >
+
+Property "*" -- "1" PropertyType: cataloged as >
+Property "*" - "1" Store: listed under >
+Inhabitable "1" -- "1" House: < is a
+
+Property "1" -- "1" Inhabitable: < is a
+Employee "1" - "1..*" Role : has a
+Employee "1" -- "1" Agent: > plays as
+
+
+
+Address "1" ----- "1" Property: < has an
+Address "1" -- "1" Employee: < has an
+Address "1" -- "1" Client: < has an
+Address "1" --- "1" Store: < has an
+@enduml

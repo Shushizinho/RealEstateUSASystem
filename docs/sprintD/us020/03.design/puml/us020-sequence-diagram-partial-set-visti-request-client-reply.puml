@@ -1,0 +1,44 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+participant ":ReplyToAgentAboutVisitRequestController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "Repositories\n:Repositories" as PLAT
+participant ":VisitRequestRepository:\VisitRequestRepository" as VRR
+
+autonumber
+
+-> CTRL : addVisitRequestClientReply(reply)
+
+        activate CTRL
+
+         CTRL -> RepositorySingleton : getInstance()
+
+
+        activate RepositorySingleton
+
+        RepositorySingleton --> CTRL: repositories
+        deactivate RepositorySingleton
+
+        CTRL -> PLAT : getVisitRequestRepository()
+        activate PLAT
+
+        PLAT --> CTRL : RequestVisitRepository
+        deactivate PLAT
+        CTRL -> VRR : setVisitRequestClientReply(reply)
+
+        activate VRR
+
+        VRR --> VRR : setClientReply(reply)
+
+        VRR --> CTRL : wasAccepted
+        deactivate VRR
+
+        <-- CTRL  : wasAccepted
+
+        deactivate CTRL
+@enduml

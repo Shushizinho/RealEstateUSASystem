@@ -1,0 +1,35 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+participant "dataIntegrityChecker:\nDataIntegrityChecker" as CHECKER
+participant "storeRepository:\nStoreRepository" as STRR
+
+participant "store:\nStore" as STOR
+
+ -> CHECKER : submitStoreData(storeValues)
+activate CHECKER
+
+CHECKER -> STRR : createStore(storeValues, address)
+activate STRR
+STRR -> STOR** : create(id, designation, address, email, phoneNumber)
+
+STRR -> STRR : add(store)
+activate STRR
+STRR -> STRR : validateStore(store)
+activate STRR
+STRR --> STRR:
+deactivate STRR
+STRR --> STRR:
+deactivate STRR
+STRR --> CHECKER: store
+deactivate STRR
+
+<-- CHECKER  : store
+deactivate CHECKER
+
+
+@enduml

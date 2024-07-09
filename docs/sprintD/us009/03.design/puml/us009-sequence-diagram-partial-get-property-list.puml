@@ -1,0 +1,47 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+participant ":CreateVisitRequestController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "Repositories\n:Repositories" as PLAT
+participant "AnnouncementRepository:\AnnouncementRepository" as AR
+
+ -> CTRL : getPropertyListByAnnouncement()
+    activate CTRL
+
+
+        CTRL -> RepositorySingleton : getInstance()
+
+        activate RepositorySingleton
+
+            RepositorySingleton --> CTRL: repositories
+        deactivate RepositorySingleton
+
+        CTRL -> PLAT : getAnnouncementRepository()
+        activate PLAT
+
+            PLAT -> CTRL : AnnouncementRepository
+        deactivate PLAT
+
+        CTRL -> AR : getPropertyListByAnnouncement()
+        activate AR
+
+
+           AR --> AR : getPropertyList()
+       autonumber 3.6
+            AR --> CTRL : propertyListByAnnouncement
+
+
+
+        deactivate AR
+
+
+        <-- CTRL : propertyListByAnnouncement
+
+    deactivate CTRL
+@enduml

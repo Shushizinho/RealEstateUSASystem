@@ -1,0 +1,36 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 36
+
+'hide footbox
+participant "store:\nStore" as STR
+participant "Land" as LPROP
+
+
+     -> STR: createProperty(price, area, address, distanceToCentre, photographs, propertyType, store, agent, client)
+                           activate STR
+
+    autonumber 36.1
+            STR -> LPROP**: create(price, area, address, distanceToCentre, photographs, propertyType, store, agent, client)
+                                STR -> STR: addProperty(property)
+                                activate STR
+                                    STR -> STR: validateProperty(property)
+                                    activate STR
+                                        STR --> STR
+                                    deactivate STR
+                                        STR --> STR
+                                deactivate STR
+
+
+
+    autonumber 37
+
+    <-- STR  : property
+
+    deactivate STR
+
+
+@enduml

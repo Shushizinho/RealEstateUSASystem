@@ -1,0 +1,52 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+'hide footbox
+participant "storeMapper:\nStoreMapper" as STRMAP
+participant "employeeMapper:\nEmployeeMapper" as EMPLMAP
+participant "storeListSorted:\nList<Store>" as LSTR
+participant "store:\nStore" as STOR
+participant "lStoreDTO:\nList<StoreDTO>" as LSTRDTO
+participant "storeDTO:\nStoreDTO" as STORDTO
+
+autonumber
+
+             -> STRMAP: toDTO(storeListSorted)
+            activate STRMAP
+
+            STRMAP -> LSTRDTO**: create()
+
+            loop for each object in storeListSorted
+                STRMAP -> LSTR: store = getStore()
+                activate LSTR
+                deactivate LSTR
+                STRMAP --> STOR : id = getId()
+                activate STOR
+                deactivate STOR
+                STRMAP -> STOR : designation = getDesignation()
+                activate STOR
+                deactivate STOR
+                STRMAP -> STOR : address = getAddress()
+                activate STOR
+                deactivate STOR
+                STRMAP -> STOR : email = getEmail()
+                activate STOR
+                deactivate STOR
+                STRMAP -> STOR : phoneNumber = getPhoneNumber()
+                activate STOR
+                deactivate STOR
+                STRMAP -> STORDTO** : create()
+
+                STRMAP --> LSTRDTO : add(storeDTO)
+                activate LSTRDTO
+                deactivate LSTRDTO
+                end loop
+
+        <--STRMAP : storeListDTO
+        deactivate STRMAP
+
+
+@enduml

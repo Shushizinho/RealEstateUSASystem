@@ -1,0 +1,185 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing true
+skinparam linetype polyline
+'skinparam linetype orto
+
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class ApplicationSession
+{
+    + static getInstance()
+    + getCurrentSession()
+}
+
+class UserSession
+{
+    + getUserEmail()
+}
+
+
+class Address{
+     - String streetAddress
+     - String state
+     - Integer zipCode
+}
+
+
+class Person{
+    - String name
+'    - Integer passportNumber
+'    - String taxNumber
+    - String email
+'    - Long phoneNumber
+}
+
+class Employee{
+
+}
+
+class Announcement{
+    - DateTime data
+'    - Double commission
+    - Double listedPrice
+    - BusinessType businessType
+'    -Integer rentDuration
+}
+
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getAuthenticationRepository()
+    + getpurchaseOrderRepository()
+    + getAnnouncementRepository()
+}
+
+class purchaseOrderRepository {
+    + getBuyOrders()
+'    + placeOrder(orderAmount, propertyDescription)
+'    - addOffer(order)
+'    - validateOffer(order)
+}
+
+class announcementRepository{
+    + getAnnouncements()
+}
+
+class PurchaseOrder {
+    - Double orderAmount
+    - int wasAccepted
+    - DateTime creationDate
+}
+
+class Property {
+'    -double price
+'    -double area
+'    -double distanceToCentre
+'    -List <Photograph> photographs
+'    PropertyType propertyType
+'    DateTime date
+}
+
+class Client {
+}
+
+
+class Agent {
+
+}
+
+class AnnouncementMapper {
++AnnouncementDTO toDTO(Announcement announcement)
++List<AnnouncementDTO> getAnnouncementsDTO(List<Announcement> announcement )
++List<AnnouncementDTO> getAnnouncementsToDto(String announcementList)
+
+}
+
+class AnnouncementDTO{
+    - AgentDTO agent
+    - DateTimeDTO date
+    - Double commission
+    - Double listedPrice
+    - BusinessTypeDTO businessType
+    - PropertyDTO property
+    -Integer rentDuration
+    +AnnouncementDTO(AgentDTO agent, DateTimeDTO date, double commission,\n BusinessTypeDTO businessType, PropertyDTO property, Integer rentDuration, double listedPrice)
+}
+
+class PurchaseOrderMapper {
++PurchaseOrderDTO toDTO(PurchaseOrder purchaseOrder)
++List<PurchaseOrderDTO> getPurchaseOrdersDTO(List<PurchaseOrder> purchaseOrder )
++List<PurchaseOrderDTO> getPurchaseOrdersToDto(String purchaseOrderList)
+}
+
+class PurchaseOrderDTO {
+    - Double orderAmount
+    - DateTimedto creationDate
+    - int wasAccepted
+    -ClientDTO client
+
+}
+
+class Role {
+-Integer id
+-String description
+}
+
+class PropertyType{
+-String description
+}
+
+class PurchaseOrdersController {
+    + PurchaseOrdersController(propertyRepository, userRepository)
+    - getEmployeeFromSession()
+    - getAnnouncements()
+    -getOrdersBuyAnnouncement(Announcement)
+    - createEmail(String sender, String receiver, String subject, String message)
+    - setAcceptedPurchaseOrder(purchaseOrder)
+    - getListOldestToNewest(announcement, announcementComparator)
+}
+
+
+class PurchaseOrdersUI {
+}
+
+ApplicationSession -> ApplicationSession : instance
+PurchaseOrdersUI .> PurchaseOrdersController
+ApplicationSession --> "1" UserSession : userSession
+PurchaseOrdersController .> ApplicationSession
+PurchaseOrdersController ..> UserSession
+PurchaseOrdersController .> Repositories : repositories
+Repositories -> Repositories : instance
+PurchaseOrdersController --> Agent : Agent
+Agent -> Employee : implements
+Address "1" <-- "1"  Person : has an
+Person <|- Employee
+Property "1" <- "1"  Address : has an
+PurchaseOrdersController ...> purchaseOrderRepository : purchaseOrderRepository
+Repositories --> "1" purchaseOrderRepository
+Repositories --> "1" announcementRepository
+announcementRepository --> "*" Announcement
+Announcement "1" --> "1" Property : refers to
+Announcement"1" <-- "1"PurchaseOrder : refers to
+purchaseOrderRepository -> "*" PurchaseOrder
+PurchaseOrdersController ...> announcementRepository : AnnouncementMapper
+announcementRepository -> AnnouncementMapper : AnnouncementMapper
+PurchaseOrdersController ..> AnnouncementMapper : AnnouncementMapper
+AnnouncementMapper .> AnnouncementDTO
+AnnouncementDTO -> Announcement
+Announcement -> Agent
+PurchaseOrdersController ..> PurchaseOrderMapper : PurchaseOrderMapper
+Person <|-- Client
+PurchaseOrder"0..*" --> "1"Client
+PurchaseOrderMapper .> PurchaseOrderDTO
+PurchaseOrderDTO -> PurchaseOrder
+Property "*" --> "1"PropertyType
+Role"1" <-- "*"Employee : has a
+
+
+
+@enduml

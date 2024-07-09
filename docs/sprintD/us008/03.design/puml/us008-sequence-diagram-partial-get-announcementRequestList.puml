@@ -1,0 +1,147 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+participant ":AnnouncementRequestController" as CTRL
+participant ":Repositories" as MainRepository
+participant "Repository: \nRepositories" as Repository
+
+
+
+participant " announcementRequestRepository:\nAnnouncementRequestRepository" as ARR
+participant "AnnouncementRepository:\nAnnouncementRepository" as AnnouncementRepository
+participant "AnnouncementRequestMapper" as ARM
+participant "ListAnnouncementRequestDTO : List<AnnouncementRequestDTO>" as LARDTO
+participant "AnnouncementRequestsByAgentSortedList : List<AnnouncementRequest>" as LAR
+participant "AnnouncementRequestDTO:AnnouncementRequestDTO" as ARDTO
+
+
+ -> CTRL: getAnnouncementsRequestsByAgent(agent)
+    activate CTRL
+
+
+
+
+
+     CTRL -> MainRepository : getInstance()
+     activate MainRepository
+
+     MainRepository -->CTRL : Repositories
+     deactivate MainRepository
+
+
+
+    CTRL -> Repository : getAnnouncementRequestRepository()
+    activate Repository
+
+    Repository --> CTRL : announcementRequestRepository
+    deactivate Repository
+
+    CTRL -> ARR : getAnnouncementsRequestsAgentSort(agent)
+    activate ARR
+
+
+
+
+
+
+
+
+    ARR --> CTRL : announcementRequestsByAgentSorted
+    deactivate ARR
+
+    CTRL -> ARM: getAnnouncementRequestsDTO(announcementRequestsByAgent)
+    activate ARM
+
+    ARM -> LARDTO**: create()
+
+
+    group loop
+
+    ARM-> LAR: businessType = getBusinessTypeObject()
+    activate LAR
+    deactivate LAR
+
+     ARM-> LAR: property = getProperty()
+     activate LAR
+     deactivate LAR
+
+     ARM-> LAR: date = getDate()
+     activate LAR
+     deactivate LAR
+
+
+     ARM-> LAR: client = getClient()
+     activate LAR
+     deactivate LAR
+
+     opt if businessType = Rent
+
+     ARM-> LAR: rentDuration = getRentDuration()
+     activate LAR
+     deactivate LAR
+
+     end
+
+
+
+
+
+     ARM-> LAR: Agent = getAgent()
+      activate LAR
+     deactivate LAR
+
+
+
+
+      ARM-> ARM: AnnouncementRequestDTO= toDTO(announcementRequest)
+       activate ARM
+
+       ARM --> ARDTO**: create()
+       deactivate ARM
+
+       ARM --> LARDTO: add(AnnouncementRequestDTO)
+       activate LARDTO
+       deactivate LARDTO
+
+
+
+       end group
+
+       ARM --> CTRL: ListAnnouncementRequestDTO
+       deactivate ARM
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@enduml

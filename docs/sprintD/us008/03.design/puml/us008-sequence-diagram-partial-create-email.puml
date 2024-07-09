@@ -1,0 +1,51 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+
+participant ":AnnouncementRequestController" as CTRL
+participant ":Repositories" as MainRepository
+participant "Repository: \nRepositories" as Repository
+participant "employeeRepository:\nEmployeeRepository" as ER
+participant " announcementRequestRepository:\nAnnouncementRequestRepository" as ARR
+
+
+participant "AnnouncementRequestDTO:AnnouncementRequestDTO" as ARDTO
+
+
+autonumber
+ -> CTRL : createEmail(String sender, String recipient, String subject, String message)
+    activate CTRL
+
+     CTRL -> MainRepository : getInstance()
+     activate MainRepository
+
+      MainRepository -->CTRL : Repositories
+     deactivate MainRepository
+
+
+     CTRL -> Repository : getAnnouncementRequestRepositoryRepository()
+     activate Repository
+
+     Repository --> CTRL : announcementRepository
+      deactivate Repository
+
+    CTRL -> ARR:createEmail(String sender, String recipient, String subject, String message)
+    deactivate CTRL
+    activate ARR
+
+    ARR -> ARDTO:sender = getAgent().getEmployee().getEmail()
+    activate ARDTO
+    deactivate ARDTO
+
+     ARR -> ARDTO:recipient = getClient().getEmail()
+     activate ARDTO
+     deactivate ARDTO
+
+     ARR -> ARR:createEmail(String sender, String recipient, String subject, String message)
+    activate ARR
+
+    ARR --> ARR
+    deactivate ARR
+
+
+@enduml

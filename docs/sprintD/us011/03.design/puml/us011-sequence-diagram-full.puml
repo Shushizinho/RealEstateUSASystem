@@ -1,0 +1,277 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title As an Agent, I want to list real estate purchase orders to accept or decline a purchase order for a property
+
+autonumber
+
+actor "Agent" as AGT
+participant ":PurchaseOrdersUI" as UI
+participant ":PurchaseOrdersController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "announcementRepository\n:AnnouncementRepository" as LOC
+participant "purchaseOrderRepository\n:PurchaseOrderRepository" as REP
+participant "AnnouncementMapper" as stMa
+participant "ListAnnouncementDTO:List<AnnouncementDTO>" as listStDTO
+participant "ListAnnouncement:List<Announcement>" as listSt
+participant "AnnouncementDTO:announcementDTO" as stDTO
+participant "PurchaseOrdersMapper" as pMa
+participant "ListPurchaseOrdersDTO:List<PurchaseOrdersDTO>" as listPDTO
+participant "ListPurchaseOrders:List<PurchaseOrders>" as listP
+participant "PurchaseOrdersDTO:purchaseOrdersDTO" as pDTO
+
+
+
+activate AGT
+
+    AGT -> UI : asks to list purchase orders
+
+        activate UI
+
+            UI -> CTRL** : create
+
+            UI->CTRL : getSaleAnnouncements()
+
+                activate CTRL
+                autonumber 3.1
+                    CTRL -> RepositorySingleton: getInstance()
+                    activate RepositorySingleton
+
+                    RepositorySingleton --> CTRL: Repositories
+                    deactivate RepositorySingleton
+
+                    CTRL -> PLAT: getAnnouncementRepository
+                    activate PLAT
+
+                    PLAT --> CTRL: announcementRepository
+                    deactivate PLAT
+
+                    CTRL -> LOC : getAnnouncements()
+                        activate LOC
+
+                            LOC -> listSt**
+
+                            LOC --> CTRL : announcementList
+                        deactivate LOC
+
+                        CTRL -> stMa : getAnnouncementsDTO(announcementList)
+                        activate stMa
+
+                        loop for each object in ListAnnouncement
+
+                            stMa -> listStDTO** : create()
+
+                            stMa -> listSt : listedPrice = getListedPrice()
+                            activate listSt
+                            deactivate listSt
+
+                            stMa -> listSt : rentDuration = getRentDuration()
+                            activate listSt
+                            deactivate listSt
+
+                            stMa -> listSt : agent = getAgent()
+                            activate listSt
+                            deactivate listSt
+
+                            stMa -> listSt : date = getDate()
+                            activate listSt
+                            deactivate listSt
+
+                            stMa -> listSt : comission = getComission()
+                            activate listSt
+                            deactivate listSt
+
+                            stMa -> listSt : businessType = getBusinessType()
+                            activate listSt
+                            deactivate listSt
+
+                            stMa -> listSt : property = getProperty()
+                            activate listSt
+                            deactivate listSt
+
+                            stMa -> stMa :AnnouncementDTO=toDTO(announcement)
+                            activate stMa
+
+                                stMa -> stDTO** : create()
+                            deactivate stMa
+
+                            stMa -> listStDTO : add(AnnouncementDTO)
+                            activate listStDTO
+                               listStDTO -> stMa
+                            deactivate listStDTO
+
+                            end
+                            stMa --> CTRL : announcementListDTO
+                        deactivate stMa
+
+                autonumber 4
+                CTRL-->UI : saleAnnouncementListDTO
+                deactivate CTRL
+
+            UI -> CTRL : getListOldestToNewest(announcementList,AnnouncementComparator)
+                activate CTRL
+
+             '   autonumber 5.1
+             '   CTRL->CTRL : sort(announcementList,AnnouncementComparator)
+             '   activate CTRL
+
+              '  CTRL->CTRL
+              '  deactivate CTRL
+
+            autonumber 6
+            CTRL --> UI : itemListSorted
+            deactivate CTRL
+
+            UI ->CTRL: getBuyOrders(saleAnnouncement)
+
+                activate CTRL
+                autonumber 7.1
+                    CTRL->RepositorySingleton: getInstance()
+                    activate RepositorySingleton
+
+                    RepositorySingleton --> CTRL: Repositories
+                    deactivate RepositorySingleton
+
+                    CTRL -> PLAT: getBuyOrdersRepository
+                    activate PLAT
+
+                    PLAT --> CTRL: BuyOrderRepository
+                    deactivate PLAT
+
+                    CTRL -> REP : getBuyOrders(saleAnnouncement)
+                        activate REP
+            
+                            REP -> listP**
+            
+                            REP --> CTRL : buyOrderList
+                        deactivate REP
+            
+                        CTRL -> pMa : getBuyOrdersDTO(buyOrderList)
+                        activate pMa
+            
+                        loop for each object in ListBuyOrder
+            
+                            pMa -> listPDTO** : create()
+            
+                            pMa -> listP : orderAmount = getOrderAmount()
+                            activate listP
+                            deactivate listP
+            
+                            pMa -> listP : announcement = getAnnouncement()
+                            activate listP
+                            deactivate listP
+            
+                            pMa -> listP : client = getClient()
+                            activate listP
+                            deactivate listP
+            
+                            pMa -> listP : wasAccepted = getWasAccepted()
+                            activate listP
+                            deactivate listP
+            
+                            pMa -> listP : creationDate = getCreationDate()
+                            activate listP
+                            deactivate listP
+            
+                            pMa -> pMa :BuyOrderDTO=toDTO(buyOrder)
+                            activate pMa
+            
+                                pMa -> pDTO** : create()
+                            deactivate pMa
+            
+                            pMa -> listPDTO : add(BuyOrderDTO)
+                            activate listPDTO
+
+                               listPDTO -> pMa
+                            deactivate listPDTO
+            
+                            end
+                            pMa --> CTRL : buyOrderListDTO
+                        deactivate pMa
+                autonumber 8
+            CTRL-->UI : buyOrdersListDTO
+            deactivate CTRL
+
+            UI -> CTRL : getListDescendingOrder(buyOrdersList,BuyOrderComparator)
+                activate CTRL
+
+               ' autonumber 9.1
+               ' CTRL->CTRL : sort(buyOrdersList,BuyOrderComparator)
+               ' activate CTRL
+
+               ' CTRL->CTRL
+               ' deactivate CTRL
+            autonumber 10
+            CTRL --> UI : itemListSorted
+            deactivate CTRL
+
+            UI --> AGT : provide properties list and respective offers
+        deactivate UI
+
+    group loop
+    AGT -> UI : selectes property and offer
+    activate UI
+
+        UI -> UI : selectBuyOrder()
+        activate UI
+
+        UI->UI : ValidateInput()
+        deactivate UI
+
+
+    UI--> AGT : asks if is to accept or decline offer
+    deactivate UI
+    end
+
+    group loop
+    AGT -> UI : submit answer
+    activate UI
+
+        UI -> UI : submitAnswer()
+        activate UI
+
+        UI->UI : ValidateAnswer()
+        deactivate UI
+
+        end
+
+        UI --> CTRL : createEmail(String sender, String receiver, String subject, String message)
+        activate CTRL
+        autonumber 19.1
+            CTRL->RepositorySingleton: getInstance()
+            activate RepositorySingleton
+
+            RepositorySingleton --> CTRL: Repositories
+            deactivate RepositorySingleton
+
+            CTRL -> PLAT: getBuyOrdersRepository
+            activate PLAT
+
+            PLAT --> CTRL: BuyOrderRepository
+            deactivate PLAT
+
+            CTRL --> REP:createEmail(String sender, String receiver, String subject, String message)
+            activate REP
+
+                REP -> REP : createEmail(String sender, String receiver, String subject, String message)
+                    activate REP
+
+                    REP --> REP
+                deactivate REP
+
+            REP --> CTRL:message
+            deactivate REP
+        autonumber 20
+        CTRL --> UI: message
+        deactivate CTRL
+
+    UI --> AGT: displays operation success and send email to client
+    deactivate UI
+
+
+deactivate AGT
+
+@enduml

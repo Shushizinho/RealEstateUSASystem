@@ -1,0 +1,33 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+autonumber 12
+
+participant "employee\n:Employee" as REP
+participant "store:\nStore" as Str
+        -> REP: createStore(ID, name, address, email,\n phoneNumber)
+                    activate REP
+                    group Create Store
+                    autonumber 12.1
+
+                       REP -> Str** : create(ID, name, address, email,\n phoneNumber)
+
+                       REP -> REP: addStore (store)
+
+
+                       activate REP
+                           REP -> REP: validateStore(store)
+                           activate REP
+                               REP --> REP
+                           deactivate REP
+
+                           REP --> REP
+                       deactivate REP
+                    end group
+                    autonumber 13
+                    <-- REP: store
+
+@enduml

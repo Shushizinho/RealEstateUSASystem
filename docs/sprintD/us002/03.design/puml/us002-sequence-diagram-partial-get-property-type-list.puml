@@ -1,0 +1,81 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 2
+
+'hide footbox
+participant ":AnnouncementController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "propertyTypeRepository:\nPropertyTypeRepository" as PTR
+participant "PropertyTypeMapper" as PTM
+participant "PropertyTypeDTOList : List<PropertyTypeDTO>" as PTDTO
+participant "PropertyTypeDTO : PropertyTypeDTO" as PTTDTO
+participant "PropertyTypeList : List<PropertyType>" as PTL
+
+     -> CTRL: getPropertyTypes()
+
+    activate CTRL
+
+    autonumber 3.1
+            CTRL -> RepositorySingleton : getInstance()
+            activate RepositorySingleton
+
+                RepositorySingleton --> CTRL: repositories
+            deactivate RepositorySingleton
+
+            CTRL -> PLAT : getPropertyTypeRepository()
+            activate PLAT
+
+                PLAT -> CTRL : propertyTypeRepository
+            deactivate PLAT
+
+            CTRL -> PTR : getPropertyTypes()
+            activate PTR
+
+                PTR --> CTRL : propertyTypeList
+            deactivate PTR
+
+
+              CTRL -> PTM: toDTO(propertyTypeList)
+                         activate PTM
+
+
+                       PTM -> PTDTO**: create()
+
+                       loop for each object in PropertyTypeList
+
+                             PTM-> PTL: Description = getDescription()
+                             activate PTL
+                             deactivate PTL
+
+                              PTM-> PTM: PropertyTypeDTO= toDTO(propertyType)
+                              activate PTM
+
+                              PTM --> PTTDTO**: create()
+                              deactivate PTM
+
+
+                              PTM -> PTDTO: add(PropertyTypeDTO)
+                              activate PTDTO
+                              deactivate PTDTO
+
+
+
+                       end group
+
+             PTM --> CTRL: propertyTypeListDTO
+                              deactivate PTM
+
+
+   <-- CTRL: propertyTypeListDTO
+   deactivate CTRL
+
+
+
+
+
+
+@enduml

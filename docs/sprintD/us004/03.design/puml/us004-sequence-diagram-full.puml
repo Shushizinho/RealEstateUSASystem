@@ -1,0 +1,459 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title As an owner, I intend to submit a request for listing a property sale or rent, choosing the responsible agent.
+
+autonumber
+
+actor "Client" as Client
+participant ":CreatePropertyUI" as UI
+participant ":CreatePropertyController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "businessTypeRepository:\nBusinessTypeRepository" as BNTR
+participant "propertyTypeRepository:\nPropertyTypeRepository" as PPTR
+participant "storeRepository:\nStoreRepository" as STRR
+participant "employeeRepository:\nEmployeeRepository" as AGTR
+participant ":ApplicationSession" as _APP
+participant "appSession\n:ApplicationSession" as APP
+participant "currentSession\n:UserSession" as SESSION
+participant "clientRepository:\nClientRepository" as CLI
+participant "store:\nStore" as STR
+participant "Land" as LPROP
+participant "Apartment" as APROP
+participant "House" as HPROP
+participant "AnnouncementRequest" as ANR
+
+activate Client
+
+    Client -> UI : asks to fill the request form
+    activate UI
+
+        UI -> CTRL** : create
+                UI -> CTRL : getPropertyTypes()
+                activate CTRL
+                    group Get Property Type List
+                    autonumber 3.1
+                        CTRL -> RepositorySingleton : getInstance()
+                        activate RepositorySingleton
+
+                            RepositorySingleton --> CTRL: repositories
+                        deactivate RepositorySingleton
+
+                        CTRL -> PLAT : getPropertyTypeRepository()
+                        activate PLAT
+
+                            PLAT -> CTRL : propertyTypeRepository
+                        deactivate PLAT
+
+                        CTRL -> PPTR : getPropertyTypes()
+                        activate PPTR
+
+                            PPTR --> CTRL : propertyTypeList
+                        deactivate PPTR
+
+                    end group
+                    autonumber 4
+                            CTRL-->UI : propertyTypeList
+                deactivate CTRL
+        UI --> Client : provides property type list and asks to select either one or none
+        deactivate UI
+
+    Client -> UI : selects property type
+    activate UI
+
+                UI -> UI : keepPropertyType(propertyTypeDescription)
+                UI -> CTRL : getStores()
+                activate CTRL
+                autonumber 8.1
+                    group Get Stores List
+                        CTRL -> RepositorySingleton : getInstance()
+                        activate RepositorySingleton
+
+                            RepositorySingleton --> CTRL: repositories
+                        deactivate RepositorySingleton
+
+                        CTRL -> PLAT : getStoreRepository()
+                        activate PLAT
+
+                            PLAT -> CTRL : storeRepository
+                        deactivate PLAT
+
+                        CTRL -> STRR : getStores()
+                        activate STRR
+
+                            STRR --> CTRL : storeList
+                        deactivate STRR
+
+                    end group
+                    autonumber 9
+                    CTRL-->UI : storeList
+                deactivate CTRL
+        UI --> Client : provides store list and asks to select either one or none
+    deactivate UI
+
+    Client -> UI : selects store from list
+
+    activate UI
+                UI -> UI : keepStore(storeDescription)
+                            UI -> CTRL : store = getStoreByDescription(storeDescription)
+                            activate CTRL
+                            autonumber 13.1
+                            group Get Store
+                                CTRL -> RepositorySingleton : getInstance()
+                                activate RepositorySingleton
+
+                                    RepositorySingleton --> CTRL: repositories
+                                deactivate RepositorySingleton
+
+                                CTRL -> PLAT : getStoreRepository()
+                                activate PLAT
+
+                                    PLAT -> CTRL : StoreRepository
+                                deactivate PLAT
+
+                                CTRL -> STRR : getStoreByDescription(storeDescription)
+                                activate STRR
+
+                                    STRR --> CTRL : store
+                                deactivate STRR
+
+                            end group
+                            autonumber 14
+                            CTRL --> UI : store
+                        deactivate CTRL
+                        UI -> CTRL : getAgentsFromStore(store)
+                                    activate CTRL
+                                    autonumber 15.1
+                                        group Get Agents List
+
+                                            CTRL -> RepositorySingleton : getInstance()
+                                            activate RepositorySingleton
+
+                                                RepositorySingleton --> CTRL: repositories
+                                            deactivate RepositorySingleton
+
+                                            CTRL -> PLAT : getEmployeeRepository()
+                                            activate PLAT
+
+                                                PLAT -> CTRL : employeeRepository
+                                            deactivate PLAT
+
+                                            CTRL -> AGTR : getAgentsFromStore(store)
+                                            activate AGTR
+
+                                                AGTR --> CTRL : agentsList
+                                            deactivate AGTR
+
+                                        end group
+                                        autonumber 16
+                                            CTRL-->UI : agentsList
+                                        deactivate CTRL
+        UI --> Client : provides agents list from store and asks to select either one or none
+    deactivate UI
+
+    Client -> UI : selects agent from list
+    activate UI
+                UI -> UI : keepAgent(agentDescription)
+    alt if property == land
+        UI --> Client : requests land data (price, area, address, distanceToCentre, photographs)
+'    deactivate UI
+
+    Client -> UI : types requested data
+                UI -> UI : keepData(price, area, address, distanceToCentre, photographs)
+'    activate UI
+    else if property == apartment
+        UI --> Client : requests apartment data (price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList)
+'    deactivate UI
+
+    Client -> UI : types requested data
+                UI -> UI : keepData(price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList)
+'    activate UI
+    else if property == house
+        UI --> Client : requests house data (price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList,\nhasBasement, hasLoft, sunExposure)
+'    deactivate UI
+
+    Client -> UI : types requested data
+                UI -> UI : keepData(price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList,\nhasBasement, hasLoft, sunExposure)
+'    activate UI
+    end
+    UI -> CTRL : propertyType = getPropertyTypeByDescription(propertyTypeDescription)
+        activate CTRL
+            autonumber 29.1
+            group Get Property Type
+                CTRL -> RepositorySingleton : getInstance()
+                activate RepositorySingleton
+
+                    RepositorySingleton --> CTRL: repositories
+                deactivate RepositorySingleton
+
+                CTRL -> PLAT : getPropertyTypeRepository()
+                activate PLAT
+
+                    PLAT -> CTRL : PropertyTypeRepository
+                deactivate PLAT
+
+                CTRL -> PPTR : getPropertyTypeByDescription(propertyTypeDescription)
+                activate PPTR
+
+                    PPTR --> CTRL : propertyType
+                deactivate PPTR
+
+            end group
+            autonumber 30
+            CTRL --> UI : propertyType
+
+        deactivate CTRL
+        UI -> CTRL : agent = getAgentByDescription(agentDescription)
+            activate CTRL
+            autonumber 31.1
+                group Get Agent
+                    CTRL -> RepositorySingleton : getInstance()
+                    activate RepositorySingleton
+
+                        RepositorySingleton --> CTRL: repositories
+                    deactivate RepositorySingleton
+
+                    CTRL -> PLAT : getEmployeeRepository()
+                    activate PLAT
+
+                        PLAT -> CTRL : EmployeeRepository
+                    deactivate PLAT
+
+                    CTRL -> STRR : getAgentByDescription(agentDescription)
+                    activate STRR
+
+                        STRR --> CTRL : agent
+                    deactivate STRR
+
+                end group
+                autonumber 32
+                CTRL --> UI : agent
+
+            deactivate CTRL
+     UI -> CTRL : client = getClientFromSession()
+                 group Get Client from Session
+                 autonumber 33.1
+                         activate CTRL
+
+                             CTRL -> _APP: getInstance()
+                             activate _APP
+                                 _APP -> CTRL: appSession
+                             deactivate _APP
+
+
+                             CTRL -> APP: getCurrentSession()
+                             activate APP
+
+                                 APP --> CTRL: currentSession
+                             deactivate APP
+
+                             CTRL -> SESSION: email = getUserEmail()
+                             activate SESSION
+
+                                 SESSION --> CTRL: email
+                             deactivate SESSION
+                             CTRL -> RepositorySingleton : getInstance()
+                             activate RepositorySingleton
+
+                                 RepositorySingleton --> CTRL: repositories
+                             deactivate RepositorySingleton
+
+                             CTRL -> PLAT : getClientRepository()
+                             activate PLAT
+
+                                 PLAT -> CTRL : clientRepository
+                             deactivate PLAT
+                             CTRL -> CLI: client = getClientByEmail(email)
+                             activate CLI
+
+                                 CLI --> CTRL : client
+                             deactivate CLI
+                     autonumber 34
+                 end group
+                 CTRL --> UI : client
+             deactivate CTRL
+    alt if property == land
+        UI -> CTRL: createProperty(price, area, address, distanceToCentre, photographs,\npropertyType, store, agent, client)
+        activate CTRL
+
+            CTRL -> STR : createProperty(price, area, address, distanceToCentre, photographs, propertyType, store, agent, client)
+            activate STR
+                autonumber 36.1
+                    group Create Land Object
+                    STR -> LPROP**: create(price, area, address, distanceToCentre, photographs, propertyType, store, agent, client)
+                    STR -> STR: addProperty(property)
+                    activate STR
+                        STR -> STR: validateProperty(property)
+                        activate STR
+                            STR --> STR
+                        deactivate STR
+                            STR --> STR
+                    deactivate STR
+                    end group
+                autonumber 37
+                  STR -> CTRL : property
+                deactivate STR
+              CTRL -> UI : property
+        deactivate CTRL
+    else if property == apartment
+        UI -> CTRL: createProperty(price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList,\npropertyType, store, agent, client)
+        activate CTRL
+
+            CTRL -> STR : createProperty(price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList,\npropertyType, store, agent, client)
+            activate STR
+                autonumber 40.1
+                    group Create Apartment Object
+                    STR -> APROP**: create(price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList,\npropertyType, store, agent, client)
+                    activate STR
+                        STR -> STR: validateProperty(property)
+                        activate STR
+                            STR --> STR
+                        deactivate STR
+                            STR --> STR
+                    deactivate STR
+                    end group
+                autonumber 41
+                  STR -> CTRL : property
+                deactivate STR
+              CTRL -> UI : property
+        deactivate CTRL
+    else if property == house
+        UI -> CTRL: createProperty(price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList,\nhasBasement, hasLoft, sunExposure, propertyType, store, agent, client)
+        activate CTRL
+
+            CTRL -> STR : createProperty(price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList,\nhasBasement, hasLoft, sunExposure, propertyType, store, agent, client)
+            activate STR
+                autonumber 44.1
+                    group Create House Object
+                    STR -> HPROP**: create(price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList,\nhasBasement, hasLoft, sunExposure, propertyType, store, agent, client)
+                    activate STR
+                        STR -> STR: validateProperty(property)
+                        activate STR
+                            STR --> STR
+                        deactivate STR
+                            STR --> STR
+                    deactivate STR
+                    end group
+                autonumber 45
+                  STR -> CTRL : property
+                deactivate STR
+              CTRL -> UI : property
+        deactivate CTRL
+    end
+        UI -> CTRL : getBusinessTypes()
+                activate CTRL
+                    group Get Business Type List
+                        autonumber 47.1
+                        CTRL -> RepositorySingleton : getInstance()
+                        activate RepositorySingleton
+
+                            RepositorySingleton --> CTRL: repositories
+                        deactivate RepositorySingleton
+
+                        CTRL -> PLAT : getBusinessTypeRepository()
+                        activate PLAT
+
+                            PLAT -> CTRL : businessTypeRepository
+                        deactivate PLAT
+
+                        CTRL -> BNTR : getBusinessTypes()
+                        activate BNTR
+
+                            BNTR --> CTRL : businessTypeList
+                        deactivate BNTR
+
+                    end group
+                    autonumber 48
+                        CTRL-->UI : businessTypeList
+                    deactivate CTRL
+        UI --> Client : provides business type list and asks to select one
+    deactivate UI
+    Client -> UI: select business type
+    activate UI
+                UI -> UI : keepBusinessType(businessTypeDescription)
+    UI -> CTRL : store = getBusinessTypeByDescription(businessTypeDescription)
+                                activate CTRL
+                                autonumber 52.1
+                                group Get Business Type
+                                    CTRL -> RepositorySingleton : getInstance()
+                                    activate RepositorySingleton
+
+                                        RepositorySingleton --> CTRL: repositories
+                                    deactivate RepositorySingleton
+
+                                    CTRL -> PLAT : getBusinessTypeRepository()
+                                    activate PLAT
+
+                                        PLAT -> CTRL : businessTypeRepository
+                                    deactivate PLAT
+
+                                    CTRL -> BNTR : getBusinessTypeByDescription(businessTypeDescription)
+                                    activate BNTR
+
+                                        BNTR --> CTRL : businessType
+                                    deactivate BNTR
+
+                                end group
+                                autonumber 53
+                                CTRL --> UI : store
+                                    deactivate CTRL
+    alt if business == rent
+        UI --> Client : requests data(rentDuration)
+    deactivate UI
+    Client -> UI: types requested data
+    activate UI
+                UI -> UI : keepRentDuration(rentDuration)
+    UI -> CTRL: createAnnouncementRequest(rentDuration, businessType, property, agent, client)
+    activate CTRL
+    CTRL -> STR: createAnnouncementRequest(rentDuration, businessType, property, agent, client)
+    activate STR
+    group Create Announcement Request (Rent)
+               autonumber 58.1
+               STR -> ANR**: create(rentDuration, businessType, property, agent, client)
+
+               STR -> STR: addAnnouncement(announcementRequest)
+               activate STR
+                   STR -> STR: validateAnnouncement(announcementRequest)
+                   activate STR
+                       STR --> STR
+                   deactivate STR
+                   STR --> STR
+
+           deactivate STR
+   end group
+   autonumber 59
+    STR --> CTRL: announcementRequest
+    deactivate STR
+    CTRL --> UI: announcementRequest
+    deactivate CTRL
+    else
+    UI -> CTRL: createAnnouncementRequest(businessType, property, agent, client)
+    activate CTRL
+        CTRL -> STR: createAnnouncementRequest(businessType, property, agent, client)
+        activate STR
+        group Create Announcement Request (Sale)
+                   autonumber 62.1
+                   STR -> ANR**: create(businessType, property, agent, client)
+
+                   STR -> STR: addAnnouncement(announcementRequest)
+                   activate STR
+                       STR -> STR: validateAnnouncement(announcementRequest)
+                       activate STR
+                           STR --> STR
+                       deactivate STR
+                       STR --> STR
+
+               deactivate STR
+       end group
+   autonumber 63
+        STR --> CTRL: announcementRequest
+        deactivate STR
+        CTRL --> UI: announcementRequest
+        deactivate CTRL
+    end
+    UI --> Client: displays operation success
+
+@enduml

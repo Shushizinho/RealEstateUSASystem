@@ -1,0 +1,58 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+autonumber
+
+
+participant ":DealListController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "Repositories\n:Repositories" as PLAT
+participant "purchaseOrderRepository:\nPurchaseOrderRepository" as OR
+
+
+
+-> CTRL : getDeals
+    activate CTRL
+
+
+        CTRL -> RepositorySingleton : getInstance()
+
+        activate RepositorySingleton
+
+        RepositorySingleton --> CTRL: repositories
+        deactivate RepositorySingleton
+
+       CTRL -> PLAT : getPurchaseOrderRepository()
+     activate PLAT
+
+         PLAT --> CTRL : PurchaseOrderRepository
+     deactivate PLAT
+
+       CTRL -> OR : getDealsFromOrder()
+           activate OR
+
+
+             OR -> OR : getPurchaseOrders()
+
+             opt  for each purchase order
+             alt if purchase order was accepted
+
+             OR --> OR : add (property)
+             end
+
+             end opt
+
+             OR --> CTRL : dealsList
+             deactivate OR
+
+        
+
+
+           <-- CTRL : dealsList
+
+           deactivate CTRL
+@enduml

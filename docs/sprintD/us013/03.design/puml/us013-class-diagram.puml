@@ -1,0 +1,138 @@
+                                                                                                                                                                                @startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing true
+skinparam linetype polyline
+'skinparam linetype orto
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+
+class Store {
+    - Integer id
+    - String designation
+    - String email
+    - Integer phoneNumber
+}
+
+class Employee {
+    - String name
+    - String email
+    - Integer passportNumber
+    - String taxNumber
+    - Integer phoneNumber
+    + getStore()
+}
+
+class Role{
+    - Integer id
+    - String designation
+}
+
+class Address{
+    - String streetAddress
+    - String state
+    - String city
+    - String zipCode
+}
+
+class EmployeeDTO {
+    - Integer id
+    - String name
+    - String email
+    - Integer passportNumber
+    - String taxNumber
+    - Integer phoneNumber
+    - StoreDTO store
+}
+
+class StoreDTO {
+    - Integer id
+    - String designation
+    - String email
+    - Integer phoneNumber
+}
+
+class EmployeeMapper {
+    + toDTO(employee: Employee): EmployeeDTO
+}
+
+class StoreMapper {
+    + toDTO(store: Store): StoreDTO
+}
+
+class EmployeeRepository {
+    + getEmployees(): List<Employee>
+}
+
+class PropertyRepository {
+    + getProperties(): List<Property>
+}
+
+class Repositories {
+    - Repositories()
+    + getInstance(): Repositories
+    + getEmployeeRepository(): EmployeeRepository
+    + getPropertyRepository(): PropertyRepository
+    + getStoreRepository(): StoreRepository
+}
+
+class ListEmployeesEveryStoreController {
+    + ListEmployeesEveryStoreController()
+    + getListAscendingOrder(items: List<T>, comparator: Comparator<T>): List<T>
+    + getEmployeeFromSpecificStore(store: Store): List<Employee>
+    + getPropertyFromSpecificStore(store: Store): List<Property>
+}
+
+class Property {
+    - Integer price
+    - Integer area
+    - String distanceToCentre
+    + getStore()
+}
+
+class PropertyDTO {
+    - Integer price
+    - Integer area
+    - String distanceToCentre
+    - StoreDTO store
+}
+
+class PropertyMapper {
+    + toDTO(property: Property): PropertyDTO
+}
+
+class ListEmployeesEveryStoreUI {
+}
+
+Repositories -> Repositories : instance
+
+ListEmployeesEveryStoreUI .> ListEmployeesEveryStoreController
+
+ListEmployeesEveryStoreController .> Repositories : repositories
+
+Repositories --> "1" PropertyRepository
+Repositories --> "1" EmployeeRepository
+
+EmployeeRepository "1" --> "*" Employee : employee
+PropertyRepository "1" --> "*" Property : property
+
+Employee o- Store
+Employee o- Address
+Store o-- Address
+Property o-- Address
+Store -o Property
+
+EmployeeMapper --> Employee : mapToDTO(employee)
+StoreMapper --> Store : mapToDTO(store)
+PropertyMapper --> Property : mapToDTO(property)
+
+Employee --> EmployeeDTO : creates
+Store --> StoreDTO : creates
+Property --> PropertyDTO : creates
+
+
+
+
+@enduml

@@ -1,0 +1,62 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+'title Domain Model
+
+'class Platform {
+'  -description
+'}
+
+class Client {
+    email
+    name
+    passportNumber
+    taxNumber
+    phoneNumber
+    address
+}
+
+class PurchaseOrder {
+    amount
+    wasAccepted
+    creationDate
+}
+
+class Announcement {
+    announcementRequest
+    listedPrice
+    rentDuration
+    agent
+    date
+    commission
+}
+class Store {
+    id
+    designation
+    email
+    phoneNumber
+}
+class Property {
+    price
+    area
+    distanceToCentre
+    photographs
+    address
+    propertyType
+}
+Client "1" -- "*" PurchaseOrder: places >
+PurchaseOrder "1" - "1" Announcement: refers to >
+Announcement "1" -- "1" Property : refers to >
+Property "*" - "1" Store: listed under >
+
+@enduml

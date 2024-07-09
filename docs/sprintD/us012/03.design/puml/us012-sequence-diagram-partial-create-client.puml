@@ -1,0 +1,34 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+ autonumber
+
+
+participant "dataIntegrityChecker:\nDataIntegrityChecker" as CHECKER
+participant "clientRepository:\nClientRepository" as CLR
+participant "client:\nClient" as CLI
+
+  -> CHECKER : submitClientData(clientValues, address)
+
+ activate CHECKER
+ CHECKER -> CLR : createClient(clientValues, password)
+ activate CLR
+ CLR -> CLI** : create(name, email, passportNumber, taxNumber, address, phoneNumber)
+
+ CLR -> CLR : add(client)
+ activate CLR
+ CLR -> CLR : validateClient(client)
+ activate CLR
+ CLR --> CLR:
+ deactivate CLR
+ CLR --> CLR:
+ deactivate CLR
+ CLR --> CHECKER: client
+ deactivate CLR
+
+ <-- CHECKER : client
+ deactivate CHECKER
+
+@enduml

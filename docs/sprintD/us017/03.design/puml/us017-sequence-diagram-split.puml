@@ -1,0 +1,94 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+autonumber
+actor "Network Manager" as NM
+participant ":GetDealListUI" as UI
+participant ":GetDealListController" as CTRL
+
+
+
+activate NM
+
+
+    NM -> UI : aks to list all deals made
+
+    activate UI
+    UI -> CTRL** : createGetDealListController()
+
+    UI -> CTRL : getDeals()
+    activate CTRL
+    ref over CTRL
+    Get deals list
+    end ref
+    autonumber 4
+    CTRL --> UI : dealsList
+
+
+    deactivate CTRL
+
+    UI --> UI : displayAndRequestOrder()
+
+    UI --> NM : asks list of all properties by area and ascending or descendent order
+
+
+    deactivate UI
+
+
+    NM -> UI : select ascending or descendent
+
+    activate UI
+    UI --> UI : keep (order)
+
+    UI --> UI : displayAndRequestMethod()
+
+    UI --> NM : asks the sorting method
+    deactivate UI
+
+
+    NM -> UI : select a sorting method
+
+    activate UI
+
+    UI --> UI : keep (method)
+    alt method = BubbleSort
+    UI -> CTRL : getBubbleSort(propertyList)
+               activate CTRL
+              ref over CTRL
+              sort deals by Bubble sort
+              end ref
+       CTRL --> UI : sortedDealsList
+       deactivate CTRL
+     end
+
+       alt method = InsertionSort
+       UI -> CTRL : getInsertionSort (propertyList)
+       activate CTRL
+       autonumber 14.1
+        ref over CTRL
+         sort deals by Insertion sort
+         end ref
+       CTRL --> UI : sortedDealsList
+       deactivate CTRL
+       end
+
+      autonumber 15
+        deactivate CTRL
+
+
+    UI --> UI : displaySortedDeals(sortedProperties, order)
+
+    UI --> NM : shows list of properties according to the sorting method and order
+
+    deactivate UI
+
+
+deactivate NM
+
+@enduml

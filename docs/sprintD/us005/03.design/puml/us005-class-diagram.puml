@@ -1,0 +1,97 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing true
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 10
+
+'left to right direction
+
+class ApplicationSession
+{
+    + static getInstance()
+    + getCurrentSession()
+}
+
+class UserSession
+{
+    + getUserEmail()
+}
+
+class Administrator {}
+
+class Address{
+     - String streetAddress
+     - String state
+     - Integer zipCode
+}
+
+class Store {
+    - Integer ID
+    - String designation
+    - String address
+    - String email
+    - Integer phoneNumber
+}
+
+interface Employee{
+    - String name
+    - Integer passportNumber
+    - String taxNumber
+    - Address address
+    - String email
+    - Integer phoneNumber
+    - addStore(store)
+    - validateStore(store)
+    + createStore(ID, name, location, emailAddress, phoneNumber)
+
+    }
+
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getEmployeeRepository()
+
+}
+
+
+
+
+class employeeRepository{
+
+}
+
+class CreateStoreController {
+    + CreateStoreController(employeeRepository, userRepository)
+    + createStore(ID, name, location, emailAddress,\nphoneNumber)
+    - getEmployeeFromSession()
+}
+
+
+class CreateStoreUI {
+}
+
+ApplicationSession -> ApplicationSession : instance
+CreateStoreUI .> CreateStoreController
+ApplicationSession --> "1" UserSession : userSession
+CreateStoreController ..> ApplicationSession
+CreateStoreController ..> UserSession
+Store --> Administrator : createdBy
+Store <-- StoreManager : manages
+CreateStoreController ..> Repositories : repositories
+Repositories -> Repositories : instance
+CreateStoreController -> StoreManager : storeManager
+StoreManager ..> Employee : implements
+Administrator .> Employee : implements
+Repositories --> "1" employeeRepository
+CreateStoreController ..> employeeRepository : employeeRepository
+employeeRepository "1" --> "*" Employee
+
+Address "1" <- "1"  Employee : has an
+Address "1" <- "1"  Store : has an
+
+
+@enduml

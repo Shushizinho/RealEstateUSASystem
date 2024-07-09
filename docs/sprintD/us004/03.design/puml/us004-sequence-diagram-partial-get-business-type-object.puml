@@ -1,0 +1,47 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 52
+
+'hide footbox
+participant ":RegisterEmployeeController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "businessTypeRepository:\nBusinessTypeRepository" as BNTR
+
+
+     -> CTRL: getBusinessTypeByDescription(businessTypeDescription)
+
+    activate CTRL
+
+    autonumber 52.1
+           CTRL -> RepositorySingleton : getInstance()
+                                               activate RepositorySingleton
+
+                                                   RepositorySingleton --> CTRL: repositories
+                                               deactivate RepositorySingleton
+
+                                               CTRL -> PLAT : getBusinessTypeRepository()
+                                               activate PLAT
+
+                                                   PLAT -> CTRL : businessTypeRepository
+                                               deactivate PLAT
+
+                                               CTRL -> BNTR : getBusinessTypeByDescription(businessTypeDescription)
+                                               activate BNTR
+
+                                                   BNTR --> CTRL : businessType
+                                               deactivate BNTR
+
+
+
+    autonumber 53
+
+    <-- CTRL  : businessType
+
+    deactivate CTRL
+
+
+@enduml

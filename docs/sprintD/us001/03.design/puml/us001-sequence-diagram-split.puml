@@ -1,0 +1,237 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+actor "Unregistered User" as UU
+participant ":GetPropertyListUI" as UI
+participant ":PropertyListController" as CTRL
+
+
+activate UU
+
+    UU -> UI : asks to see list of properties
+
+    activate UI
+
+    UI -> CTRL** : CreateGetPropertiesListController
+
+    UI -> CTRL : getPropertyListByAnnouncement()
+
+
+
+        activate CTRL
+
+        ref over CTRL
+        get property list by announcement
+        end
+        CTRL-->UI : propertyListByAnnouncement
+        deactivate CTRL
+
+        UI --> UU : show list of properties available and asks to filter
+
+        deactivate UI
+
+
+
+        UU -> UI : confirmation to filter the list
+
+    activate UI
+
+
+
+    UI -> CTRL : getRequestType()
+    activate CTRL
+
+         autonumber 4.1
+             ref over CTRL
+             get business type List
+             end ref
+             autonumber 4
+
+
+
+             CTRL-->UI : requestTypeList
+         deactivate CTRL
+
+
+
+        UI --> UU : show filters of type of business and asks to select one
+
+        deactivate UI
+
+            UU -> UI : select an option
+            activate UI
+             UI --> UI : add(requestType)
+
+
+
+
+        UI -> CTRL : getPropertyType()
+        activate CTRL
+
+             ref over CTRL
+                get property types List
+             end ref
+                 CTRL-->UI : PropertyTypeList
+             deactivate CTRL
+                 UI --> UU : show filters of type of property and asks to select one
+        deactivate UI
+
+        deactivate UI
+
+
+            UU -> UI : select an option
+            activate UI
+            UI --> UI : add(propertyType))
+
+
+        UI --> UU : request number of bedrooms
+        deactivate UI
+
+
+
+            UU -> UI : select number of bedrooms
+            activate UI
+            UI --> UI : add(bedroomNo)
+
+
+
+    opt  Type of business, property and number of bedrooms are null
+                UI -> CTRL : getAllPropertiesOnSale
+
+                activate CTRL
+                ref over CTRL
+                    get PropertiesOnSale
+                 end ref
+
+                autonumber 17
+                CTRL --> UI : PropertiesOnSale
+                deactivate CTRL
+
+                UI --> UU : show list of all properties that are on sale and asks to filter by property filters
+                deactivate UI
+                UU -> UI : confirm
+
+                activate UI
+
+                UI -> CTRL : getPropertyFilters ()
+                            activate CTRL
+
+                            ref over CTRL
+                                get ListOfPropertyFilters
+                             end ref
+
+                            autonumber 21
+                            CTRL --> UI : ListOfPropertyFilters
+                            deactivate CTRL
+
+                UI --> UU : show list of property filters
+                deactivate UI
+                UU -> UI : select a filter
+
+
+
+                activate UI
+
+
+
+                UI --> UI : add(choosenFilter)
+
+                 UI --> CTRL : getPropertyList (requestType, propertyType, bedroomNo, choosenFilter)
+
+                            activate CTRL
+
+                            ref over CTRL
+                                get ListOfProperties
+                             end ref
+
+                            autonumber 26
+                            CTRL -> UI : ListOfProperties
+                            deactivate CTRL
+
+
+                 UI -> CTRL : getAllPropertiesOnRent()
+                            activate CTRL
+                            ref over CTRL
+                                get PropertiesOnRent
+                             end ref
+                             CTRL --> UI : PropertiesOnRent
+                            deactivate CTRL
+                UI --> UU : shows list of properties according to the filters and show list of all properties that are on rent and asks to filter by property filters
+                deactivate UI
+                UU -> UI : confirm
+                activate UI
+                 UI -> CTRL : getPropertyFilters ()
+                                        activate CTRL
+
+                                       ref over CTRL
+                                           get ListOfPropertyFilters
+                                        end ref
+                                        autonumber 33
+                                        CTRL --> UI : ListOfPropertyFilters
+                                        deactivate CTRL
+                UI --> UU : show list of property filters
+                deactivate UI
+                UU -> UI : select a filter
+                activate UI
+                UI --> UI : add(choosenFilter)
+
+                             UI --> CTRL : getPropertyList (requestType, propertyType, bedroomNo, choosenFilter)
+
+                                        activate CTRL
+
+                                        ref over CTRL
+                                            get ListOfProperties
+                                         end ref
+
+                                        autonumber 38
+                                        CTRL -> UI : ListOfProperties
+                                        deactivate CTRL
+
+                UI --> UU : shows list of properties
+        deactivate UI
+        end
+
+
+
+        UI -> CTRL : getPropertyFilters ()
+        activate UI
+
+        activate CTRL
+
+        ref over CTRL
+            get ListOfPropertyFilters
+        end ref
+        autonumber 17
+        CTRL --> UI : ListOfPropertyFilters
+        deactivate CTRL
+
+        UI --> UU : show list of property filters and asks to select one
+        deactivate UI
+
+
+
+            UU -> UI : select an option
+            activate UI
+            UI --> UI : add(choosenFilter)
+
+        UI --> CTRL : getPropertyList (requestType, propertyType, bedroomNo, choosenFilter)
+
+        activate CTRL
+
+        ref over CTRL
+            get ListOfProperties
+        end ref
+        CTRL -> UI : ListOfProperties
+        deactivate CTRL
+        UI --> UU : shows list of properties
+        deactivate UI
+
+deactivate UU
+
+
+@enduml

@@ -1,0 +1,70 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 33
+
+'hide footbox
+participant ":AnnouncementController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant ":ApplicationSession" as _APP
+participant "employeeRepository:\nEmployeeRepository" as CLI
+participant ":ApplicationSession" as _APP
+participant "appSession\n:ApplicationSession" as APP
+participant "currentSession\n:UserSession" as SESSION
+
+  autonumber 19
+     -> CTRL: getAgentFromSession()
+
+    activate CTRL
+
+    autonumber 20.1
+
+
+
+                     CTRL -> _APP: getInstance()
+                     activate _APP
+                     _APP --> CTRL: appSession
+                     deactivate _APP
+
+
+                    CTRL -> APP: getCurrentSession()
+                    activate APP
+
+                    APP --> CTRL: currentSession
+                    deactivate APP
+
+                   CTRL -> SESSION: email = getUserEmail()
+                   activate SESSION
+
+                   SESSION --> CTRL: email
+                   deactivate SESSION
+                    CTRL -> RepositorySingleton : getInstance()
+                    activate RepositorySingleton
+
+                    RepositorySingleton --> CTRL: repositories
+                    deactivate RepositorySingleton
+
+                    CTRL -> PLAT : getEmployeeRepository()
+                    activate PLAT
+
+                    PLAT --> CTRL : employeeRepository
+                     deactivate PLAT
+                     CTRL -> CLI: agent = getEmployeeByEmail(email)
+                     activate CLI
+
+                     CLI --> CTRL : agent
+                     deactivate CLI
+
+                             autonumber 34
+
+    <-- CTRL  : agent
+    deactivate CTRL
+
+
+    deactivate CTRL
+
+
+@enduml

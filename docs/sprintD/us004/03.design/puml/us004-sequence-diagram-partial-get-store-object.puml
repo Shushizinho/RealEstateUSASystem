@@ -1,0 +1,47 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 13
+
+'hide footbox
+participant ":RegisterEmployeeController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "storeRepository:\nStoreRepository" as STRR
+
+
+     -> CTRL: getStoreByDescription(storeDescription)
+
+    activate CTRL
+
+    autonumber 13.1
+            CTRL -> RepositorySingleton : getInstance()
+                                            activate RepositorySingleton
+
+                                                RepositorySingleton --> CTRL: repositories
+                                            deactivate RepositorySingleton
+
+                                            CTRL -> PLAT : getStoreRepository()
+                                            activate PLAT
+
+                                                PLAT -> CTRL : StoreRepository
+                                            deactivate PLAT
+
+                                            CTRL -> STRR : getStoreByDescription(storeDescription)
+                                            activate STRR
+
+                                                STRR --> CTRL : store
+                                            deactivate STRR
+
+
+
+    autonumber 14
+
+    <-- CTRL  : store
+
+    deactivate CTRL
+
+
+@enduml

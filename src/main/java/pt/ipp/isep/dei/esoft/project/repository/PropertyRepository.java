@@ -15,6 +15,18 @@ import java.util.Optional;
  * A repository class for managing all Properties.
  */
 public class PropertyRepository {
+    private final String APPROVED = "yes";
+
+    private final String REJECTED = "no";
+
+    private final String RENT = "Rent";
+
+    private final String SALE = "Sale";
+
+    private final String HOUSE = "House";
+
+    private final String APPARTMENT = "Apartment";
+
     private final List<Property> properties = new ArrayList<>();
     private final List<Land> lands = new ArrayList<>();
     private static final List<Inhabitable> inhabitableProperties = new ArrayList<>();
@@ -52,22 +64,19 @@ public class PropertyRepository {
      * This method returns an existing list of properties by businessType, propertyType and bedroomNo.
      *
      * @param properties   the properties
-     * @param businessType the business type
-     * @param propertyType the property type
-     * @param bedroomNo    the bedroom no
      * @return list of properties.
      */
-    public List<Property> getPropertyList (List<Property> properties, String businessType,String propertyType, String bedroomNo){
+    public List<Property> getPropertyList (List<Property> properties, ArrayList<String> list){
         List<Property> newProperty =properties;
-        if (businessType.equals("Sale")){
-            newProperty = getPropertiesBySaleAnnoucement(businessType);
-        } else if (businessType.equals("Rent")) {
-            newProperty = getPropertiesByRentAnnoucement(businessType);
+        if (list.get(0).equals(SALE)){
+            newProperty = getPropertiesBySaleAnnoucement(list.get(0));
+        } else if (list.get(0).equals(RENT)) {
+            newProperty = getPropertiesByRentAnnoucement(list.get(0));
         }
-        newProperty = getPropertiesByPropertyType(propertyType, newProperty);
+        newProperty = getPropertiesByPropertyType(list.get(1), newProperty);
 
-        if ((propertyType.equals("House")|| propertyType.equals("Apartment") && !newProperty.isEmpty())){
-            if (!bedroomNo.equals("n")) newProperty = getPropertiesByBedroomNo(Integer.parseInt(bedroomNo),newProperty);
+        if ((list.get(1).equals(HOUSE)|| list.get(1).equals(APPARTMENT) && !newProperty.isEmpty())){
+            if (!list.get(2).equals(REJECTED)) newProperty = getPropertiesByBedroomNo(Integer.parseInt(list.get(2)),newProperty);
         }
 
 

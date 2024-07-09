@@ -1,0 +1,220 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title As an owner, I intend to submit a request for listing a property sale or rent, choosing the responsible agent.
+
+autonumber
+
+actor "Client" as Client
+participant ":CreatePropertyUI" as UI
+participant ":CreatePropertyController" as CTRL
+participant "store:\nStore" as STR
+
+activate Client
+
+    Client -> UI : asks to fill the request form
+    activate UI
+
+        UI -> CTRL** : create
+                UI -> CTRL : getPropertyTypes()
+                activate CTRL
+                    ref over CTRL
+                          Get Property Type List
+
+                      end ref
+                    CTRL-->UI : propertyTypeList
+                deactivate CTRL
+        UI --> Client : provides property type list and asks to select either one or none
+        deactivate UI
+
+    Client -> UI : selects property type
+    activate UI
+                UI -> UI : keepPropertyType(propertyTypeDescription)
+                UI -> CTRL : getStores()
+                activate CTRL
+                    ref over CTRL
+                          Get Store List
+
+                      end ref
+                    CTRL-->UI : storeList
+                deactivate CTRL
+        UI --> Client : provides store list and asks to select either one or none
+    deactivate UI
+
+    Client -> UI : selects store from list
+
+    activate UI
+                UI -> UI : keepStore(storeDescription)
+                            UI -> CTRL : store = getStoreByDescription(storeDescription)
+                            activate CTRL
+                            ref over CTRL
+                                                  Get Store Object
+
+                                              end ref
+                            CTRL --> UI : store
+                        deactivate CTRL
+                        UI -> CTRL : getAgentsFromStore(store)
+                                    activate CTRL
+                                    ref over CTRL
+                                                          Get Agents List
+
+                                                      end ref
+                                            CTRL-->UI : agentsList
+                                        deactivate CTRL
+        UI --> Client : provides agents list from store and asks to select either one or none
+
+    deactivate UI
+
+    Client -> UI : selects agent from list
+    activate UI
+                UI -> UI : keepAgent(agentDescription)
+    alt if property == land
+        UI --> Client : requests land data (price, area, address, distanceToCentre, photographs)
+'    deactivate UI
+
+    Client -> UI : types requested data
+                UI -> UI : keepData(price, area, address, distanceToCentre, photographs)
+'    activate UI
+    else if property == apartment
+        UI --> Client : requests apartment data (price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList)
+'    deactivate UI
+
+    Client -> UI : types requested data
+                UI -> UI : keepData(price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList)
+'    activate UI
+    else if property == house
+        UI --> Client : requests house data (price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList,\nhasBasement, hasLoft, sunExposure)
+'    deactivate UI
+
+    Client -> UI : types requested data
+                UI -> UI : keepData(price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList,\nhasBasement, hasLoft, sunExposure)
+'    activate UI
+    end
+    UI -> CTRL : propertyType = getPropertyTypeByDescription(propertyTypeDescription)
+        activate CTRL
+            ref over CTRL
+                      Get Property Type Object
+
+                  end ref
+            CTRL --> UI : propertyType
+
+        deactivate CTRL
+        UI -> CTRL : agent = getAgentByDescription(agentDescription)
+            activate CTRL
+            ref over CTRL
+                                  Get Agent Object
+
+                              end ref
+                CTRL --> UI : agent
+
+            deactivate CTRL
+     UI -> CTRL : client = getClientFromSession()
+            activate CTRL
+
+                 ref over CTRL
+                                       Get Client From Session
+
+                                   end ref
+                 CTRL --> UI : client
+             deactivate CTRL
+    alt if property == land
+        UI -> CTRL: createProperty(price, area, address, distanceToCentre, photographs,\npropertyType, store, agent, client)
+        activate CTRL
+
+            CTRL -> STR : createProperty(price, area, address, distanceToCentre, photographs, propertyType, store, agent, client)
+            activate STR
+                ref over STR
+                                      Create Land Object
+
+                                  end ref
+                  STR -> CTRL : property
+                deactivate STR
+              CTRL -> UI : property
+        deactivate CTRL
+    else if property == apartment
+        UI -> CTRL: createProperty(price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList,\npropertyType, store, agent, client)
+        activate CTRL
+
+            CTRL -> STR : createProperty(price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList,\npropertyType, store, agent, client)
+            activate STR
+                ref over STR
+                                                      Create Apartment Object
+
+                                                  end ref
+                  STR -> CTRL : property
+                deactivate STR
+              CTRL -> UI : property
+        deactivate CTRL
+    else if property == house
+        UI -> CTRL: createProperty(price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList,\nhasBasement, hasLoft, sunExposure, propertyType, store, agent, client)
+        activate CTRL
+
+            CTRL -> STR : createProperty(price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList,\nhasBasement, hasLoft, sunExposure, propertyType, store, agent, client)
+            activate STR
+                ref over STR
+                              Create House Object
+
+                          end ref
+                  STR -> CTRL : property
+                deactivate STR
+              CTRL -> UI : property
+        deactivate CTRL
+    end
+        UI -> CTRL : getBusinessTypes()
+                activate CTRL
+                    ref over CTRL
+                                                            Get Business Type List
+
+                                                        end ref
+                        CTRL-->UI : businessTypeList
+                    deactivate CTRL
+        UI --> Client : provides business type list and asks to select one
+    deactivate UI
+    Client -> UI: select business type
+    activate UI
+                UI -> UI : keepBusinessType(businessTypeDescription)
+           UI -> CTRL : businessType = getBusinessTypeByDescription(businessTypeDescription)
+                                           activate CTRL
+                                           ref over CTRL
+                                                                   Get Business Type Object
+
+                                                               end ref
+                                           CTRL --> UI : store
+                    deactivate CTRL
+    alt if business == rent
+        UI --> Client : requests data(rentDuration)
+    deactivate UI
+    Client -> UI: types requested data
+    activate UI
+                UI -> UI : keepRentDuration(rentDuration)
+    UI -> CTRL: createAnnouncementRequest(rentDuration, businessType, property, agent, client)
+    activate CTRL
+    CTRL -> STR: createAnnouncementRequest(rentDuration, businessType, property, agent, client)
+    activate STR
+    ref over STR
+        Create Announcement Request (Rent)
+
+    end ref
+    STR --> CTRL: announcementRequest
+    deactivate STR
+    CTRL --> UI: announcementRequest
+    deactivate CTRL
+    else
+    UI -> CTRL: createAnnouncementRequest(businessType, property, agent, client)
+    activate CTRL
+        CTRL -> STR: createAnnouncementRequest(businessType, property, agent, client)
+        activate STR
+    ref over STR
+        Create Announcement Request (Sale)
+
+    end ref
+        STR --> CTRL: announcementRequest
+        deactivate STR
+        CTRL --> UI: announcementRequest
+        deactivate CTRL
+    end
+    UI --> Client: displays operation success
+
+@enduml

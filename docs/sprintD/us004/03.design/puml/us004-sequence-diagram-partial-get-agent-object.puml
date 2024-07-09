@@ -1,0 +1,47 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 31
+
+'hide footbox
+participant ":RegisterEmployeeController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "employeeRepository:\nEmployeeRepository" as AGTR
+
+
+     -> CTRL: getAgentByDescription(agentDescription)
+
+    activate CTRL
+
+    autonumber 31.1
+            CTRL -> RepositorySingleton : getInstance()
+                                activate RepositorySingleton
+
+                                    RepositorySingleton --> CTRL: repositories
+                                deactivate RepositorySingleton
+
+                                CTRL -> PLAT : getEmployeeRepository()
+                                activate PLAT
+
+                                    PLAT -> CTRL : EmployeeRepository
+                                deactivate PLAT
+
+                                CTRL -> STRR : getAgentByDescription(agentDescription)
+                                activate STRR
+
+                                    STRR --> CTRL : agent
+                                deactivate STRR
+
+
+
+    autonumber 32
+
+    <-- CTRL  : agent
+
+    deactivate CTRL
+
+
+@enduml

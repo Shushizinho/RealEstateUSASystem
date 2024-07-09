@@ -1,0 +1,237 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+autonumber
+
+'hide footbox
+actor "Client UI" as CLN
+participant ":CreateVisitRequestUI" as UI
+participant ":CreateVisitRequestController" as CTRL
+
+activate CLN
+
+    CLN -> UI : asks to post a visit request
+
+        activate UI
+
+        UI -> CTRL** : CreateVisitRequestListController
+
+
+        UI -> CTRL : getPropertyList
+            activate CTRL
+
+
+                ref over CTRL
+                 get Property List
+                 end ref
+
+
+
+                CTRL --> UI : propertyList
+
+            deactivate CTRL
+
+            UI --> CLN : show list of all properties and asks to select one
+        deactivate UI
+
+        CLN -> UI : select a property
+        activate UI
+
+            UI -> UI : keepData(property)
+
+        UI --> CLN : request preferred date
+
+        deactivate UI
+        CLN -> UI : insert preferred date
+
+        activate UI
+            UI -> UI : keepData(preferredDate)
+
+        UI --> CLN : request time slot
+
+        deactivate UI
+
+        CLN -> UI : insert time slot
+
+        activate UI
+
+        UI -> UI : keepData(timeSlot)
+
+        UI --> CTRL : getClient()
+
+
+
+        activate CTRL
+
+
+           ref over CTRL
+            get Client
+            end ref
+
+            autonumber 15
+
+            CTRL --> UI : client
+
+            deactivate CTRL
+
+
+
+
+
+        UI -> CTRL : client.getName()
+        activate CTRL
+
+
+        ref over CTRL
+         get Client Name
+         end ref
+
+
+
+
+        CTRL --> UI : clientName
+        deactivate CTRL
+        UI -> CTRL : client.getPhoneNumber()
+        activate CTRL
+
+
+
+        ref over CTRL
+                     get Client Phone Number
+                     end ref
+
+        autonumber 19
+        CTRL --> UI : clientPhoneNumber
+
+        deactivate CTRL
+
+        UI --> CLN :  asks to confirmation to submit data
+
+        deactivate UI
+
+        CLN -> UI : confirmation to submit data
+        activate UI
+
+        UI -> CTRL : creatVisitRequest (property, preferredDate, timeSlot, clientName, clientPhoneNumber)
+
+
+        activate CTRL
+
+           ref over CTRL
+            create Visit Request
+            end ref
+
+
+
+
+        CTRL --> UI : wasAccepted
+        deactivate CTRL
+
+
+
+         UI --> CLN : show success message and asks to add another time slot
+
+        deactivate UI
+        group loop
+
+        CLN -> UI : confirmation to submit another time slot
+
+        activate UI
+
+        UI --> CLN : request time slot
+
+        deactivate UI
+
+        CLN -> UI : insert time slot
+
+        activate UI
+                    UI -> UI : keepData(timeSlot)
+
+        UI --> CLN : asks to confirmation to submit data
+        deactivate UI
+
+
+        CLN -> UI : confirmation to submit data
+
+        activate UI
+
+            UI -> CTRL : creatVisitRequest (property, preferredDate, timeSlot, clientName, clientPhoneNumber)
+
+
+            activate CTRL
+
+                ref over CTRL
+                 create Visit Request
+                 end ref
+
+
+            CTRL --> UI : wasAccepted
+            deactivate CTRL
+
+             UI --> CLN : show success message and asks to add another time slot
+
+
+        end
+        group loop
+
+             UI --> CLN : asks to add another date
+            deactivate UI
+
+            CLN -> UI : confirmation to submit another date
+
+                    activate UI
+
+                    UI --> CLN : request date
+
+                    deactivate UI
+
+                    CLN -> UI : insert date
+
+                    activate UI
+
+                    UI --> UI : keepData(preferredDate)
+
+                    UI --> UI : validateDate()
+
+                    UI --> CLN : asks to confirmation to submit data
+
+
+
+                    deactivate UI
+
+                    CLN -> UI : confirmation to submit data
+
+                    activate UI
+                    UI -> CTRL : creatVisitRequest (property, preferredDate, timeSlot, clientName, clientPhoneNumber)
+
+
+                            activate CTRL
+
+                            ref over CTRL
+                             create Visit Request
+                             end ref
+
+
+                            CTRL --> UI : wasAccepted
+                            deactivate CTRL
+
+
+                    UI --> CLN : show success message and asks to add another date or time slot
+
+                    deactivate UI
+                end
+
+        deactivate UI
+
+
+
+deactivate CLN
+
+@enduml
+@enduml

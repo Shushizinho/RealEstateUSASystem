@@ -1,0 +1,77 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Administrator" as ADM
+participant ":CreatStoreUI" as UI
+participant ":CreateStoreController" as CTRL
+participant "employee\n:Employee" as REP
+
+activate ADM
+
+    ADM -> UI : asks to register a new store
+
+    activate UI
+
+        UI -> CTRL** : create
+'        UI->CTRL : getStoreManagers()
+'            activate CTRL
+'                ref over CTRL
+'                    Get Store Manager List
+'
+'                end
+'
+'            CTRL-->UI : storeManagerList
+'            deactivate CTRL
+'
+'        UI --> ADM : provide store manager list
+'    deactivate UI
+'
+'
+'    ADM -> UI : selectes and sends store manager from list
+'        activate UI
+
+            UI --> ADM : request store data
+
+        deactivate UI
+
+
+    ADM -> UI : types requested data (ID, name, address, email,\n phoneNumber)
+    activate UI
+
+        UI -> CTRL : createStore(ID, name, address, email,\nphoneNumber)
+        activate CTRL
+
+'         CTRL -> CTRL: getLocalManagerByRole(localManagerRole)
+'                activate CTRL
+'
+'                    ref over CTRL
+'                        Get Store Manager Object
+'
+'                    end
+'                CTRL ->CTRL: localManager
+'                deactivate CTRL
+
+
+            CTRL -> REP: createStore(ID, name, address, email,\n phoneNumber)
+            activate REP
+
+                ref over REP
+                    Create Store
+                end
+
+                REP --> CTRL : store
+            deactivate REP
+
+            CTRL --> UI: store
+            deactivate CTRL
+            UI --> ADM: displays operation success
+    deactivate UI
+
+deactivate ADM
+
+@enduml

@@ -1,0 +1,311 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Client" as Client
+participant ":PlaceOrderUI" as UI
+participant ":PlaceOrderController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "storeRepository:\nStoreRepository" as STRR
+participant "storeMapper:\nStoreMapper" as STRMAP
+participant "StoreDTO" as STORDTO
+participant "Store" as STOR
+participant "propertyFiltersRepository:\nPropertyFiltersRepository" as PFR
+participant "pairMapper:\nPairMapper" as PAIRMAP
+participant "PairDTO" as PAIRDTO
+participant "Pair" as PAIR
+participant "announcementRepository:\nAnnouncementRepository" as ACMR
+participant "propertyRepository:\nPropertyRepository" as PR
+participant "propertyMapper:\nPropertyMapper" as PROPMAP
+participant "property:\nProperty" as PROP
+participant "propertyDTO:\nPropertyDTO" as PROPDTO
+participant ":ApplicationSession" as _APP
+participant "appSession\n:ApplicationSession" as APP
+participant "currentSession\n:UserSession" as SESSION
+participant "clientRepository:\nClientRepository" as CLI
+participant "purchaseOrderRepository:\nPurchaseOrderRepository" as OR
+participant "PurchaseOrder" as OFF
+
+
+activate Client
+
+    Client -> UI : asks to place an order to purchase a property
+    activate UI
+
+    UI -> CTRL** : create
+        UI -> CTRL : getStoresWithAgents()
+        activate CTRL
+
+        CTRL -> RepositorySingleton : getInstance()
+        activate RepositorySingleton
+
+            RepositorySingleton --> CTRL: repositories
+        deactivate RepositorySingleton
+        CTRL -> PLAT : getStoreRepository()
+            activate PLAT
+
+                PLAT --> CTRL : storeRepository
+            deactivate PLAT
+
+            CTRL -> STRR : getStoresWithAgentsDTO()
+            activate STRR
+                loop for each store in stores
+                opt if store.hasAgents()
+                STRR-> STRR : storesWithAgents.add(store)
+                end
+
+                end
+                STRR->STRMAP : toDTO(storesWithAgents)
+                activate STRMAP
+                loop for each store in storesWithAgents
+                STRMAP --> STOR : id = getId()
+                activate STOR
+                deactivate STOR
+                STRMAP --> STOR : designation = getDesignation()
+                activate STOR
+                deactivate STOR
+                STRMAP --> STOR : address = getAddress()
+                activate STOR
+                deactivate STOR
+                STRMAP --> STOR : email = getEmail()
+                activate STOR
+                deactivate STOR
+                STRMAP --> STOR : phoneNumber = getPhoneNumber()
+                activate STOR
+                deactivate STOR
+                STRMAP --> STORDTO** : create(id, designation, address, email, phoneNumber)
+                STRMAP -> STRMAP: storeDTOList.add(StoreDTO)
+                end
+                STRMAP --> STRR : storeDTOList
+                deactivate STRMAP
+                STRR --> CTRL : storeDTOList
+            deactivate STRR
+        CTRL --> UI : storeDTOList
+        deactivate CTRL
+        UI --> Client : provides list of stores and asks to select either one or none
+    deactivate UI
+
+    Client -> UI : selects store from lst (or leaves empty for no filtering)
+    activate UI
+        UI -> CTRL : getPriceRanges()
+        activate CTRL
+
+        CTRL -> PLAT : getPropertyFiltersRepository()
+        activate PLAT
+
+            PLAT --> CTRL : propertyFiltersRepository
+        deactivate PLAT
+
+        CTRL -> PFR : getPriceRanges()
+        loop for each pair in priceRanges
+        activate PFR
+        PFR->PAIRMAP : toDTO(pair)
+        activate PAIRMAP
+        PAIRMAP --> PAIR : left = getLeft()
+        activate PAIR
+        deactivate PAIR
+        PAIRMAP --> PAIR : right = getRight()
+        activate PAIR
+        deactivate PAIR
+        PAIRMAP --> PAIRDTO** : create(left,right)
+        PAIRMAP --> PFR : pairDTO
+        deactivate PAIRMAP
+        PFR -> PFR : pairDTOList.add(pairDTO)
+        end
+        PFR --> PAIRDTO** : create(getPriceRangeMax(), Integer.MAX_VALUE)
+        PFR -> PFR : pairDTOList.add(pairDTO)
+        PFR --> CTRL : pairDTOList
+
+        deactivate PFR
+        CTRL -> UI : priceRangeList
+        deactivate CTRL
+        UI --> Client : provides list of price ranges and asks to select either one or none
+    deactivate UI
+
+    Client -> UI : selects price range from list (or leaves empty for no filtering)
+
+    activate UI
+    UI -> CTRL : getAvailableProperties(store, priceRange)
+    activate CTRL
+
+            CTRL -> PLAT : getAnnouncementRepository()
+            activate PLAT
+
+                PLAT --> CTRL : announcementRepository
+            deactivate PLAT
+
+            CTRL -> ACMR : getSaleAnnouncements()
+            activate ACMR
+
+                ACMR --> CTRL : announcementList
+            deactivate ACMR
+
+            CTRL -> ACMR : filterSaleAnnouncements(announcementList, store, priceRange)
+            activate ACMR
+                        loop for each announcement in announcementList
+                        ACMR -> ACMR : checkStoreAndPrice(announcement,store,priceRange)
+                        activate ACMR
+                            ACMR --> ACMR : valid
+
+                       deactivate ACMR
+
+                       alt valid
+                        ACMR --> ACMR : addToAnnouncementList(announcement)
+                        end
+
+                        end
+
+                ACMR --> CTRL : announcementList
+            deactivate ACMR
+            CTRL -> PLAT : getPropertyRepository()
+            activate PLAT
+
+                PLAT --> CTRL : propertyRepository
+            deactivate PLAT
+
+            CTRL -> PR : getPropertiesByAnnouncements(announcementList)
+            activate PR
+            loop for each announcement in announcementList
+            PR -> PR : getPropertyByAnnouncement(announcement)
+            activate PR
+
+                PR --> PR : property
+            deactivate PR
+            PR->PROPMAP : toDTO(property)
+            activate PROPMAP
+
+
+            PROPMAP --> PROP : price = getPrice()
+            activate PROP
+            deactivate PROP
+            PROPMAP --> PROP : area = getArea()
+            activate PROP
+            deactivate PROP
+            PROPMAP --> PROP : address = getAddress()
+            activate PROP
+            deactivate PROP
+            PROPMAP --> PROP : distanceToCentre = getDistanceToCentre()
+            activate PROP
+            deactivate PROP
+            PROPMAP --> PROP : photographs = getPhotographs()
+            activate PROP
+            deactivate PROP
+            PROPMAP --> PROP : propertyType = getPropertyType()
+            activate PROP
+            deactivate PROP
+            PROPMAP --> PROP : store = getStore()
+            activate PROP
+            deactivate PROP
+            PROPMAP --> PROP : creator = getCreator()
+            activate PROP
+            deactivate PROP
+            PROPMAP --> PROPDTO** : create()
+            PROPMAP --> PR : propertyDTO
+            deactivate PROPMAP
+                PR --> PR : addToPropertyList(propertyDTO)
+            end
+                PR --> CTRL : propertyList
+            deactivate PR
+
+
+'        end group
+                CTRL-->UI : propertyList
+    deactivate CTRL
+    UI --> Client : provides list of properties depending on selected filters and asks to select one
+    deactivate UI
+
+        Client -> UI : selects property from list
+    activate UI
+
+        UI --> Client : requests data
+    deactivate UI
+
+    Client -> UI : types requested data (order amount)
+    activate UI
+
+        UI -> CTRL : placeOrder(orderAmount, propertyDescription)
+        activate CTRL
+
+            CTRL -> RepositorySingleton : getInstance()
+            activate RepositorySingleton
+
+                RepositorySingleton --> CTRL: repositories
+            deactivate RepositorySingleton
+
+            CTRL -> PLAT : getPropertyRepository()
+            activate PLAT
+
+                PLAT --> CTRL : propertyRepository
+            deactivate PLAT
+
+            CTRL -> PR : getPropertyByDescription(propertyDescription)
+            activate PR
+
+                PR --> CTRL : property
+            deactivate PR
+
+            CTRL -> PR : getSaleAnnouncementByProperty(property)
+            activate PR
+
+                PR --> CTRL : announcement
+            deactivate PR
+
+            CTRL -> _APP: getInstance()
+             activate _APP
+                 _APP --> CTRL: appSession
+             deactivate _APP
+
+
+             CTRL -> APP: getCurrentSession()
+             activate APP
+
+                 APP --> CTRL: currentSession
+             deactivate APP
+
+             CTRL -> SESSION: email = getUserEmail()
+             activate SESSION
+
+                 SESSION --> CTRL: email
+             deactivate SESSION
+
+
+             CTRL -> PLAT : getClientRepository()
+             activate PLAT
+
+                 PLAT --> CTRL : clientRepository
+             deactivate PLAT
+             CTRL -> CLI: client = getClientByEmail(email)
+             activate CLI
+
+                 CLI --> CTRL : client
+             deactivate CLI
+            CTRL -> PLAT : getPurchaseOrderRepository()
+            activate PLAT
+
+                PLAT --> CTRL : purchaseOrderRepository
+            deactivate PLAT
+            CTRL -> OR : placeOrder(orderAmount, propertyDescription, client)
+            activate OR
+                OR -> OFF** : create(orderAmount, announcement, client)
+                OR -> OR: addOffer(order)
+               activate OR
+                   OR -> OR: validateOffer(order)
+                   activate OR
+                       OR --> OR
+                   deactivate OR
+                   OR --> OR
+
+                deactivate OR
+
+                OR --> CTRL : order
+            deactivate OR
+            CTRL --> UI : order
+        deactivate CTRL
+        UI --> Client : displays operation success
+    deactivate UI
+
+@enduml

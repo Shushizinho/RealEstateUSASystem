@@ -1,0 +1,53 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Unregistered User" as UU
+participant ":SignUI" as UI
+participant ":SignController" as CTRL
+participant ":clientRepository:\nClientRepository" as CLR
+
+activate UU
+
+        UU -> UI : asks to register in the system
+
+        activate UI
+
+            create CTRL
+            UI -> CTRL** : create
+
+            deactivate CTRL
+
+            UI --> UU : request to fill data
+        deactivate UI
+
+
+    UU -> UI : request data to create a new client ( name, passportNumber, taxNumber, \n address, email, phoneNumber)
+    activate UI
+
+       UI -> CTRL : registerClient( name, passportNumber, taxNumber, \n address, email, phoneNumber)
+
+            activate CTRL
+
+                CTRL -> CLR: registerClient( name, passportNumber, taxNumber, \n address, email, phoneNumber)
+                activate CLR
+               ref over CLR
+               Create client
+               end ref
+
+
+                    CLR --> CTRL: client
+                deactivate CLR
+
+            CTRL --> UI: client
+            deactivate CTRL
+            UI --> UU: displays operation success
+    deactivate UI
+
+deactivate UU
+
+@enduml

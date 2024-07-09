@@ -311,3 +311,15 @@ Recipient: receiver@example.com
 Subject: Test Email
 
 This is a test email.
+
+From: sender@example.com
+Recipient: receiver@example.com
+Subject: Test Email
+
+This is a test email.
+
+From: diogo@this.app
+Recipient: joao@gmail.com
+Subject: Email create
+
+Yes

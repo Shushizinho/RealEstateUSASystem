@@ -1,0 +1,61 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 33
+
+'hide footbox
+participant ":RegisterEmployeeController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "employeeRepository:\nEmployeeRepository" as AGTR
+
+
+     -> CTRL: getClientFromSession()
+
+    activate CTRL
+
+    autonumber 33.1
+            CTRL -> RepositorySingleton : getInstance()
+        CTRL -> _APP: getInstance()
+                                     activate _APP
+                                         _APP -> CTRL: appSession
+                                     deactivate _APP
+
+
+                                     CTRL -> APP: getCurrentSession()
+                                     activate APP
+
+                                         APP --> CTRL: currentSession
+                                     deactivate APP
+
+                                     CTRL -> SESSION: email = getUserEmail()
+                                     activate SESSION
+
+                                         SESSION --> CTRL: email
+                                     deactivate SESSION
+                                     CTRL -> RepositorySingleton : getInstance()
+                                     activate RepositorySingleton
+
+                                         RepositorySingleton --> CTRL: repositories
+                                     deactivate RepositorySingleton
+
+                                     CTRL -> PLAT : getClientRepository()
+                                     activate PLAT
+
+                                         PLAT -> CTRL : clientRepository
+                                     deactivate PLAT
+                                     CTRL -> CLI: client = getClientByEmail(email)
+                                     activate CLI
+
+                                         CLI --> CTRL : client
+                                     deactivate CLI
+                             autonumber 34
+
+    <-- CTRL  : client
+
+    deactivate CTRL
+
+
+@enduml

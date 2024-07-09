@@ -1,0 +1,100 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Unregistered User" as User
+participant ":System" as System
+
+activate User
+
+    User -> System : asks to see list of properties
+
+    activate System
+
+    System --> User : show list of properties available and asks to filter
+
+    deactivate System
+
+    User -> System : confirmation to filter the list
+
+    activate System
+
+    System --> User : show filters of type of business and asks to select one
+
+    deactivate System
+
+    User -> System : select an option
+
+    activate System
+
+    System --> User : show filters of type of property and asks to select one
+
+    deactivate System
+
+    User -> System : select an option
+
+    activate System
+
+    System --> User : request number of bedrooms
+
+    deactivate System
+
+    User -> System : select number of bedrooms
+
+    activate System
+
+     opt type of property, business type and number of bedrooms are null
+
+    System --> User : show list of all properties that are on sale and asks to filter by property filters
+
+    deactivate System
+
+    User -> System : confirm
+
+    activate System
+
+
+    System --> User : show list of property filters
+
+    deactivate System
+
+    User -> System : select a filter
+
+    activate System
+
+    System --> User : shows list of properties according to the filters and show list of all properties that are on rent and asks to filter by property filters
+
+    deactivate System
+
+    User -> System : confirm
+
+    activate System
+
+    System --> User : show list of property filters
+
+    deactivate System
+
+    User -> System : select a filter
+
+    activate System
+
+    System --> User : shows list of properties
+
+    end
+
+    System --> User : show list of property filters and asks to select one
+
+    deactivate System
+
+    User -> System : select an option
+
+    activate System
+
+    System --> User : shows list of properties
+
+    deactivate System
+
+@enduml

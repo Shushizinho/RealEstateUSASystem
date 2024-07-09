@@ -1,0 +1,83 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Client" as Client
+participant ":PlaceOrderUI" as UI
+participant ":PlaceOrderController" as CTRL
+
+
+
+activate Client
+
+    Client -> UI : asks to place an order to purchase a property
+    activate UI
+
+    UI -> CTRL** : create
+        UI -> CTRL : getStoresWithAgents()
+        activate CTRL
+        ref over CTRL
+           Get Store List
+
+       end ref
+       autonumber 20
+        CTRL --> UI : storeDTOList
+        deactivate CTRL
+        UI --> Client : provides list of stores and asks to select either one or none
+    deactivate UI
+
+    Client -> UI : selects store from list (or leaves empty for no filtering)
+    activate UI
+        UI -> CTRL : getPriceRanges()
+        activate CTRL
+        ref over CTRL
+           Get Price Ranges List
+
+       end ref
+       autonumber 37
+        CTRL --> UI : priceRangeList
+        deactivate CTRL
+        UI --> Client : provides list of price ranges and asks to select either one or none
+    deactivate UI
+
+    Client -> UI : selects price range from list (or leaves empty for no filtering)
+
+    activate UI
+    UI -> CTRL : getAvailableProperties(store, priceRange)
+    activate CTRL
+        ref over CTRL
+           Get Available Property List
+
+       end ref
+       autonumber 68
+                CTRL-->UI : propertyList
+    deactivate CTRL
+    UI --> Client : provides list of properties depending on selected filters and asks to select one
+    deactivate UI
+
+        Client -> UI : selects property from list
+    activate UI
+
+        UI --> Client : requests data
+    deactivate UI
+
+    Client -> UI : types requested data (order amount)
+    activate UI
+
+        UI -> CTRL : placeOrder(orderAmount, propertyDescription)
+        activate CTRL
+
+        ref over CTRL
+           Create Purchase Order
+
+       end ref
+       autonumber 109
+            CTRL --> UI : order
+        deactivate CTRL
+        UI --> Client : displays operation success
+    deactivate UI
+
+@enduml

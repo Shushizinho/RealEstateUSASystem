@@ -1,0 +1,64 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":CreateVisitRequestController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "Repositories\n:Repositories" as PLAT
+participant ":ApplicationSession" as _APP
+participant "appSession\n:ApplicationSession" as APP
+participant "currentSession\n:UserSession" as SESSION
+participant "clientRepository:\nClientRepository" as CLI
+
+autonumber 14
+
+ --> CTRL : getClient()
+
+
+        activate CTRL
+
+
+            CTRL -> _APP: getInstance()
+            activate _APP
+                _APP -> CTRL: appSession
+            deactivate _APP
+
+
+            CTRL -> APP: getCurrentSession()
+            activate APP
+
+            APP --> CTRL: currentSession
+            deactivate APP
+
+            CTRL -> SESSION: email = getUserEmail()
+            activate SESSION
+
+             SESSION --> CTRL: email
+            deactivate SESSION
+            CTRL -> RepositorySingleton : getInstance()
+            activate RepositorySingleton
+
+             RepositorySingleton --> CTRL: repositories
+            deactivate RepositorySingleton
+
+            CTRL -> PLAT : getClientRepository()
+            activate PLAT
+
+             PLAT -> CTRL : clientRepository
+            deactivate PLAT
+            CTRL -> CLI: client = getClientByEmail(email)
+            activate CLI
+
+             CLI --> CTRL : client
+
+            deactivate CLI
+
+
+
+
+            <-- CTRL: client
+
+            deactivate CTRL
+@enduml

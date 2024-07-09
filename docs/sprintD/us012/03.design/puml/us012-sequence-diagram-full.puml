@@ -1,0 +1,221 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Administrator" as ADM
+participant ":ImportLegacySystemUI" as UI
+participant ":ImportLegacySystemController" as CTRL
+participant "dataIntegrityChecker:\nDataIntegrityChecker" as CHECKER
+participant "clientRepository:\nClientRepository" as CLR
+participant "storeRepository:\nStoreRepository" as STRR
+participant "propertyRepository:\nPropertyRepository" as PR
+participant "announcementRepository:\nAnnouncementRepository" as ACMR
+participant "purchaseOrderRepository:\nPurchaseOrderRepository" as POR
+
+participant "client:\nClient" as CLI
+participant "store:\nStore" as STOR
+participant "property:\nProperty" as PROP
+participant "announcement:\nAnnouncement" as ANNC
+participant "purchaseOrder:\nPurchaseOrder" as PO
+activate ADM
+
+ADM -> UI : asks to import a csv file
+
+activate UI
+UI -> CTRL** : create
+
+UI --> ADM : show the list of all csv files in the resources folder
+deactivate UI
+
+ADM -> UI : choose an option to import the file
+activate UI
+UI -> CTRL : importFile(file)
+
+activate CTRL
+CTRL -> CHECKER : checkAllData(arrayHeaders, headers, values)
+activate CHECKER
+CHECKER --> CTRL : clientValues
+deactivate CHECKER
+CTRL -> CHECKER : validateClientData(clientValues, address)
+activate CHECKER
+CHECKER --> CTRL: answer
+deactivate CHECKER
+
+alt answer = true
+
+CTRL -> CHECKER : checkAllData(arrayHeaders, headers, values)
+activate CHECKER
+CHECKER --> CTRL : storeValues
+deactivate CHECKER
+CTRL -> CHECKER : validateStoreData(storeValues, address)
+activate CHECKER
+CHECKER --> CTRL: answer
+deactivate CHECKER
+alt answer = true
+
+
+CTRL -> CHECKER : checkAllData(arrayHeaders, headers, values)
+activate CHECKER
+CHECKER --> CTRL : propertyValues
+deactivate CHECKER
+CTRL -> CHECKER : validatePropertyData(propertyValues, address)
+activate CHECKER
+CHECKER --> CTRL: answer
+deactivate CHECKER
+alt answer = true
+CTRL -> CHECKER : checkAllData(arrayHeaders, headers, values)
+activate CHECKER
+CHECKER --> CTRL : announcementValues
+deactivate CHECKER
+
+CTRL -> CHECKER : validateAnnouncementData(announcementValues)
+activate CHECKER
+CHECKER --> CTRL: answer
+deactivate CHECKER
+alt answer = true
+
+CTRL -> CHECKER : checkAllData(arrayHeaders, headers, values)
+activate CHECKER
+CHECKER --> CTRL : purchaseOrderValues
+deactivate CHECKER
+CTRL -> CHECKER : validatePurchaseOrderData(purchaseOrderValues)
+activate CHECKER
+
+CHECKER --> CTRL: answer
+deactivate CHECKER
+alt answer = true
+
+CTRL -> CHECKER : submitClientData(clientValues, address)
+
+activate CHECKER
+CHECKER -> CLR : createClient(client, password)
+activate CLR
+CLR -> CLI** : create(name, email, passportNumber, taxNumber, address, phoneNumber)
+
+CLR -> CLR : add(client)
+activate CLR
+CLR -> CLR : validateClient(client)
+activate CLR
+CLR --> CLR:
+deactivate CLR
+CLR --> CLR:
+deactivate CLR
+CLR --> CHECKER: client
+deactivate CLR
+
+CHECKER --> CTRL: client
+deactivate CHECKER
+
+
+CTRL -> CHECKER : submitStoreData(storeValues)
+activate CHECKER
+
+CHECKER -> STRR : createStore(store, address)
+activate STRR
+STRR -> STOR** : create(id, designation, address, email, phoneNumber)
+
+STRR -> STRR : add(store)
+activate STRR
+STRR -> STRR : validateStore(store)
+activate STRR
+STRR --> STRR:
+deactivate STRR
+STRR --> STRR:
+deactivate STRR
+STRR --> CHECKER: store
+deactivate STRR
+
+CHECKER --> CTRL: store
+deactivate CHECKER
+
+
+
+CTRL -> CHECKER : submitPropertyData(propertyValues, address, store, client)
+activate CHECKER
+
+CHECKER -> PR : createProperty(property, address, store, client)
+activate PR
+PR -> PROP** : create(price, area, address, distanceToCentre, photographs, propertyType, store, creator)
+
+PR -> PR : add(property)
+activate PR
+PR -> PR : validateProperty(property)
+activate PR
+PR --> PR:
+deactivate PR
+PR --> PR:
+deactivate PR
+PR --> CHECKER: property
+deactivate PR
+
+CHECKER --> CTRL: property
+deactivate CHECKER
+
+
+
+CTRL -> CHECKER : submitAnnouncementData(announcementValues, address)
+activate CHECKER
+
+CHECKER -> ACMR : createAnnouncement(announcement, address)
+activate ACMR
+
+
+
+ACMR -> ANNC** : create(listedPrice, rentDuration, agent, date, businessType, property)
+
+
+ACMR -> ACMR : add(announcement)
+activate ACMR
+ACMR -> ACMR : validateAnnouncement(announcement)
+activate ACMR
+ACMR --> ACMR:
+deactivate ACMR
+ACMR --> ACMR:
+deactivate ACMR
+ACMR --> CHECKER: announcement
+deactivate ACMR
+
+CHECKER --> CTRL: announcement
+deactivate CHECKER
+
+
+
+CTRL -> CHECKER : submitPurchaseOrderData(purchaseOrderValues, announcement)
+activate CHECKER
+CHECKER -> POR : createPurchaseOrder(purchaseOrder, announcement)
+activate POR
+POR -> PO** : create(orderAmount, announcement, client, creationDate)
+
+POR -> POR : add(purchaseOrder)
+activate POR
+POR -> POR : validatePurchaseOrder(purchaseOrder)
+activate POR
+POR --> POR:
+deactivate POR
+POR --> POR:
+deactivate POR
+POR --> CHECKER: purchaseOrder
+deactivate POR
+
+CHECKER --> CTRL: purchaseOrder
+deactivate CHECKER
+
+end alt
+
+end alt
+end alt
+end alt
+end alt
+
+CTRL --> UI: operationResult
+deactivate CTRL
+
+UI --> ADM : displays operation success
+deactivate UI
+
+deactivate ADM
+@enduml

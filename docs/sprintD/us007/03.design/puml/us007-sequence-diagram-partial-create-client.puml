@@ -1,0 +1,40 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 6
+
+'hide footbox
+participant ":clientRepository:\nClientRepository" as CLR
+participant "client:\nClient" as CLIT
+
+                 -> CLR : registerClient( name, passportNumber, taxNumber, \n address, email, phoneNumber)
+                        activate CLR
+
+               autonumber 6.1
+
+                CLR -> CLIT**: create( name, passportNumber, taxNumber, \n address, email, phoneNumber)
+                activate CLR
+
+                        CLR -> CLR: addEmployee (employee)
+
+                        CLR -> CLR: generatePassword()
+
+                        activate CLR
+                        CLR -> CLR: validateEmployee(employee)
+                        activate CLR
+                            CLR --> CLR
+                        deactivate CLR
+                        CLR --> CLR
+                    deactivate CLR
+                    CLR --> CLR
+                deactivate CLR
+               autonumber 7
+
+
+                    <-- CLR : client
+                deactivate CLR
+
+
+@enduml

@@ -1,0 +1,40 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+autonumber
+
+actor "Store Manager" as User
+participant ":System" as System
+
+activate User
+
+    User -> System : request to analyse deals
+
+    activate System
+
+    System --> User : request regression model (simple linear or multi-linear)
+    deactivate System
+
+    User -> System : select regression model
+    activate System
+
+    System --> User :request the independent variable(s) from the list of property information
+    deactivate System
+loop if simple linear
+
+    User -> System : select the independent variable
+    activate System
+
+end
+
+    System --> User : shows a prediction of the value of a\n property based on the value of the independent variable(s)
+
+    deactivate System
+
+
+
+@enduml

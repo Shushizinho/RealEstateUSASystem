@@ -1,0 +1,64 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+
+hide circle
+hide methods
+
+title Domain Model: US005 - Register a new store
+
+class Administrator{
+
+}
+
+class Employee{
+    email
+    name
+    passportNumber
+    taxNumber
+    telephoneNumber
+}
+
+class Store {
+    id
+    designation
+    email
+    phoneNumber
+}
+
+class Network
+
+
+class StoreManager {
+
+}
+
+class Role{
+id
+description
+}
+
+class Address{
+    streetAddress
+     state
+     zipCode
+ }
+
+Administrator "1" -- "1..*" Network : register >
+Administrator "1" --- "*" Store : creates >
+StoreNetworkManager "1" - "1" Network : manages >
+Network "1" - "1..*" Store : has >
+Store "1" - "1" StoreManager : manages <
+Address "1" - "1"  Store : < has an
+
+Address "1" - "1"  Employee : < has an
+Employee "1" - "1" Administrator: < play as
+Employee "1" - "1"StoreManager: < play as
+Role "1..*" -- "1" Employee : < has
+
+
+@enduml

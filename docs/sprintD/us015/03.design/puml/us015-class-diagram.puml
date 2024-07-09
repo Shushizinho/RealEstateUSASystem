@@ -1,0 +1,223 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing true
+'skinparam linetype polyline
+skinparam linetype orto
+'skinparam nodesep 50
+!pragma layout smetana
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class ListBookingRequestsUI{
+
+}
+
+class ListBookingRequestsController{
+}
+
+class Repositories {
+- Repositories()
++ getInstance() : Repositories
++ getAnnouncementRequests()
++ getAnnouncementRepository()
++getAuthenticationRepository()
++getEmployeeRepository
+
+}
+
+class VisitRequestRepository{
+- List<VisitRequest> visitRequests
++ getVisitRequestsByAgentInPeriod(String visitRequestsListByAgent, DateTime begin, DateTime end)
+}
+
+class EmployeeRepository{
+-List<Employee> employees
++getEmployeeByEmail(String email)
+
+
+}
+
+class VisitRequest{
+-List<DateTime> timeSlot
+-String clientName
+-long clientPhoneNumber
+-String clientReply
+-int wasAccepted
+
+
+}
+
+class Property{
+-double price
+-double area
+-double distanceToCentre
+-List<Photograph> photographs
+
+
+
+}
+
+interface SortingAlgorithm{
++ sort(List<VisitRequest> visitRequestList)
+
+
+}
+
+class BubbleSort{
+ +sort(List<VisitRequest> visitRequests) {
+
+
+
+}
+
+
+class InsertionSort{
+ +sort(List<VisitRequest> visitRequests) {
+
+
+
+}
+
+class DateTime{
+Calendar date
+
+}
+
+class Address{
+ -String streetAddress
+ -String city
+ -String state
+   -String zipCode
+
+}
+
+class PropertyType{
+ -String Description
+
+}
+class Photographs{
+-String uri
+}
+
+class Store{
+ -Integer id
+-String designation
+- String email
+- long phoneNumber
+
+
+}
+
+class Employee{
+List<Role> role
+
+}
+
+class Role{
+- Integer id
+-String description
+}
+
+class Person{
+-String email
+-String name
+-Integer passportNumber
+-long phoneNumber
+-String taxNumber
+
+}
+
+
+class VisitRequestMapper{
++ toDTO(VisitRequest visitRequest)
++ toEntity(VisitRequestDTO visitRequestDTO)
++getVisitRequestsDTO(List<VisitRequest> visitRequests)
+
+}
+
+class VisitRequestDTO{
+-PropertyDTO property
+-DateTimeDTO preferredDate
+- List<DateTime> timeSlot
+-String clientName
+- long clientPhoneNumber
+-String ClientReply
+
+
+
+
+
+
+}
+
+
+
+
+
+
+ListBookingRequestsUI .> ListBookingRequestsController
+
+ListBookingRequestsController ..> Repositories: repositories
+
+
+Repositories --> "1"VisitRequestRepository
+
+Repositories --> "1" EmployeeRepository
+
+VisitRequestRepository --> VisitRequest:contains
+EmployeeRepository --> Employee:contains
+
+
+VisitRequest"*" --> "1"Property: refers to
+
+VisitRequest"1" --> "1 "DateTime
+
+
+Property"1" --o "1" Address
+Property "*" ---> "1" Store: listed under
+Property "1" --> "1..30" Photographs: has
+
+Property"*" --> "1" PropertyType: cataloged as >
+Property"1" --> "1" DateTime: has a
+''Property"*" --> "1" Client:  is selling
+
+''Client'' --|> Person
+
+Person --> Address: has an
+
+
+Store"1" --> "1"Address: has an
+
+ListBookingRequestsController ..> VisitRequestMapper
+
+VisitRequestMapper ..> VisitRequest
+VisitRequestMapper ..> VisitRequestDTO
+
+Agent"1" -- "*" VisitRequest: intends to see
+
+Agent --|>  Employee
+
+Employee"*" --> "1"Store: works on a
+Employee"1" --> "1.." Role: has
+Employee --|>  Person
+
+
+VisitRequest"*" -->"1" SortingAlgorithm: makes use of
+
+
+SortingAlgorithm <|.. BubbleSort: implements
+
+SortingAlgorithm <|.. InsertionSort: implements
+
+
+
+
+
+
+
+
+
+@enduml

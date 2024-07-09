@@ -1,0 +1,104 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+autonumber 40
+
+participant ":PlaceOrderController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "announcementRepository:\nAnnouncementRepository" as ACMR
+participant "propertyRepository:\nPropertyRepository" as PR
+participant "propertyMapper:\nPropertyMapper" as PROPMAP
+participant "property:\nProperty" as PROP
+participant "propertyDTO:\nPropertyDTO" as PROPDTO
+group Get Available Property List
+        --> CTRL : getAvailableProperties(store, priceRange)
+             activate CTRL
+
+                     CTRL -> PLAT : getAnnouncementRepository()
+                     activate PLAT
+
+                         PLAT --> CTRL : announcementRepository
+                     deactivate PLAT
+
+                     CTRL -> ACMR : getSaleAnnouncements()
+                     activate ACMR
+
+                         ACMR --> CTRL : announcementList
+                     deactivate ACMR
+
+                     CTRL -> ACMR : filterSaleAnnouncements(announcementList, store, priceRange)
+                     activate ACMR
+                                 loop for each announcement in announcementList
+                                 ACMR -> ACMR : checkStoreAndPrice(announcement,store,priceRange)
+                                 activate ACMR
+                                     ACMR --> ACMR : valid
+
+                                deactivate ACMR
+
+                                alt valid
+                                 ACMR --> ACMR : addToAnnouncementList(announcement)
+                                 end
+
+                                 end
+
+                         ACMR --> CTRL : announcementList
+                     deactivate ACMR
+                     CTRL -> PLAT : getPropertyRepository()
+                     activate PLAT
+
+                         PLAT --> CTRL : propertyRepository
+                     deactivate PLAT
+
+                     CTRL -> PR : getPropertiesByAnnouncements(announcementList)
+                     activate PR
+                     loop for each announcement in announcementList
+                     PR -> PR : getPropertyByAnnouncement(announcement)
+                     activate PR
+
+                         PR --> PR : property
+                     deactivate PR
+                     PR->PROPMAP : propertyToDTO(property)
+                     activate PROPMAP
+
+
+                     PROPMAP --> PROP : price = getPrice()
+                     activate PROP
+                     deactivate PROP
+                     PROPMAP --> PROP : area = getArea()
+                     activate PROP
+                     deactivate PROP
+                     PROPMAP --> PROP : address = getAddress()
+                     activate PROP
+                     deactivate PROP
+                     PROPMAP --> PROP : distanceToCentre = getDistanceToCentre()
+                     activate PROP
+                     deactivate PROP
+                     PROPMAP --> PROP : photographs = getPhotographs()
+                     activate PROP
+                     deactivate PROP
+                     PROPMAP --> PROP : propertyType = getPropertyType()
+                     activate PROP
+                     deactivate PROP
+                     PROPMAP --> PROP : store = getStore()
+                     activate PROP
+                     deactivate PROP
+                     PROPMAP --> PROP : creator = getCreator()
+                     activate PROP
+                     deactivate PROP
+                     PROPMAP --> PROPDTO** : create()
+                     PROPMAP --> PR : propertyDTO
+                     deactivate PROPMAP
+                         PR --> PR : addToPropertyList(propertyDTO)
+                     end
+                         PR --> CTRL : propertyList
+                     deactivate PR
+
+
+        <-- CTRL : propertyList
+        deactivate CTRL
+end group
+@enduml

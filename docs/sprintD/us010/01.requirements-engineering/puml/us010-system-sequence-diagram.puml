@@ -1,0 +1,45 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title System Sequence Diagram (SSD)
+
+autonumber
+
+actor "Client" as Client
+participant ":System" as System
+
+activate Client
+
+    Client -> System : asks to place an order to purchase a property
+    activate System
+
+        System --> Client : provides list of stores and asks to select either one or none
+    deactivate System
+
+    Client -> System : selects store from list (or leaves empty for no filtering)
+    activate System
+
+        System --> Client : provides list of price ranges and asks to select either one or none
+    deactivate System
+
+    Client -> System : selects price range from list (or leaves empty for no filtering)
+    activate System
+
+    System --> Client : provides list of properties depending on selected filters and asks to select one
+    deactivate System
+
+        Client -> System : selects property from list
+    activate System
+
+        System --> Client : requests data
+    deactivate System
+
+    Client -> System : types requested data (order amount)
+    activate System
+
+        System --> Client : displays operation success
+    deactivate System
+
+@enduml

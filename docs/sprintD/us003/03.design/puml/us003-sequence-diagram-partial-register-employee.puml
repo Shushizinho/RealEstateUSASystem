@@ -1,0 +1,42 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 18
+
+'hide footbox
+participant "employeeRepository:\nEmployeeRepository" as EMPR
+participant "employee:\nEmployee" as EMPL
+
+
+     --> EMPR: registerEmployee(name,email,passportNumber,\n taxNumber,address,phoneNumber,store,role)
+
+    activate EMPR
+
+
+    autonumber 18.1
+
+                    EMPR -> EMPL**: create(name,email,password,passportNumber,\n taxNumber,address,phoneNumber,store, role)
+                    EMPR -> EMPR: addEmployee (employee)
+
+                    activate EMPR
+                            EMPR -> EMPR: generate password(email)
+
+                            activate EMPR
+                            EMPR -> EMPR: validateEmployee(employee)
+                            activate EMPR
+                                EMPR --> EMPR
+                            deactivate EMPR
+                            EMPR --> EMPR
+                        deactivate EMPR
+                        EMPR --> EMPR
+                    deactivate EMPR
+
+    autonumber 19
+
+      <-- EMPR:  employeeRegistered
+     deactivate EMPR
+
+
+@enduml

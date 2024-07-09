@@ -1,0 +1,95 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 23
+
+'hide footbox
+
+
+
+participant ":AnnouncementController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "propertyRepository:\nPropertyRepository" as PR
+
+participant "PropertyMapper" as PM
+
+
+participant "Land" as LPROP
+
+
+
+
+
+autonumber
+ -> CTRL : createProperty(landDTO)
+ activate CTRL
+
+CTRL -> RepositorySingleton : getInstance()
+            activate RepositorySingleton
+
+            RepositorySingleton --> CTRL: repositories
+            deactivate RepositorySingleton
+
+            CTRL -> PLAT : getPropertyRepository()
+            activate PLAT
+
+             PLAT -> CTRL : propertyRepository
+             deactivate PLAT
+
+
+
+
+
+CTRL -> PR : createProperty(PropertyDTO)
+activate  PR
+
+
+
+
+
+PR -> PM : landToEntity(landDTO)
+activate PM
+
+PM -> PM: toEntity(landDTO)
+activate PM
+
+
+PM --> PM
+deactivate PM
+
+PM -> LPROP**: create(land)
+
+PM --> PR: land
+deactivate
+
+
+
+
+
+
+
+   PR -> PR: validateLand(house)
+   activate PR
+                         PR -> PR: addLand(land)
+                         activate PR
+                             PR --> PR
+                         deactivate PR
+                             PR --> PR
+                     deactivate PR
+
+
+
+ PR --> CTRL : land
+deactivate PR
+<-- CTRL  : land
+   deactivate CTRL
+
+
+
+
+
+
+@enduml

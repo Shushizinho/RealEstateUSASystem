@@ -1,0 +1,7 @@
+
+
+From: agent@this.app
+Recipient: client@yahoo.com
+Subject: Your visit request was accepted
+
+accept

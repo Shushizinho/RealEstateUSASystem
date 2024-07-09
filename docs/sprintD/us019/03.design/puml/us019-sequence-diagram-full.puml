@@ -1,0 +1,174 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Network Manager" as Manager
+participant ":DivideStoresUI" as UI
+participant ":DivideStoresController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories:\nRepositories" as PLAT
+participant "storeRepository:\nStoreRepository" as stRep
+participant "propertyRepository:\nPropertyRepository" as pRep
+participant "StoreMapper" as stMa
+participant "ListStoreDTO:List<StoreDTO>" as listStDTO
+participant "ListStore:List<Store>" as listSt
+participant "StoreDTO:storeDTO" as stDTO
+participant "DivideStoresAlgorithm:\ndivideStoresAlgorithm" as alg
+
+activate Manager
+
+        Manager -> UI : asks to divide stores into two sublists so that they have the closest number of\nproperties between the sublists
+            activate UI
+
+                UI -> CTRL** : create DivideStoresController
+
+        UI --> Manager: requests the number of stores
+    deactivate UI
+
+
+    Manager -> UI : insert number of stores
+        activate UI
+
+        UI -> CTRL : getStores()
+        activate CTRL
+
+            CTRL -> RepositorySingleton : getInstance()
+            activate RepositorySingleton
+
+                RepositorySingleton --> CTRL: repositories
+            deactivate RepositorySingleton
+
+            CTRL -> PLAT : getStoreRepository()
+            activate PLAT
+
+                PLAT --> CTRL: storeRepository
+            deactivate PLAT
+
+            CTRL -> stRep : getStores()
+            activate stRep
+
+                stRep -> listSt**
+
+                stRep --> CTRL : storeList
+            deactivate stRep
+
+            CTRL -> stMa : getStoresDTO(storeList)
+            activate stMa
+
+            loop for each object in ListStore
+
+                stMa -> listStDTO** : create()
+
+                stMa -> listSt : id = getId()
+                activate listSt
+                deactivate listSt
+
+                stMa -> listSt : designation = getDesignation()
+                activate listSt
+                deactivate listSt
+
+                stMa -> listSt : adress = getAdress()
+                activate listSt
+                deactivate listSt
+
+                stMa -> listSt : email = getEmail()
+                activate listSt
+                deactivate listSt
+
+                stMa -> listSt : phoneNumber = getPhoneNumber()
+                activate listSt
+                deactivate listSt
+
+                stMa -> stMa :StoreDTO=toDTO(store)
+                activate stMa
+
+                    stMa -> stDTO** : create()
+                deactivate stMa
+
+                stMa -> listStDTO : add(StoreDTO)
+                activate listStDTO
+                   listStDTO -> stMa
+                deactivate listStDTO
+
+                end
+                stMa --> CTRL : storeListDTO
+            deactivate stMa
+
+            CTRL --> UI : storeListDTO
+
+        deactivate CTRL
+loop number of stores
+        UI -> Manager : provides the  stores and asks to select a store from the list of available stores
+    deactivate UI
+        Manager -> UI : selects store from list
+    activate UI
+            UI -> UI: addToStoreList(pRep)
+        end
+
+        UI -> CTRL : getPropertyNumberInEach(selectedStoresList)
+            activate CTRL
+
+            CTRL -> RepositorySingleton : getInstance()
+                activate RepositorySingleton
+
+                    RepositorySingleton --> CTRL: repositories
+                deactivate RepositorySingleton
+
+                CTRL -> PLAT : getPropertyRepository()
+                    activate PLAT
+
+                    PLAT --> CTRL: propertyRepository
+                deactivate PLAT
+                loop each storeDTO in (storeListDTO)
+                CTRL -> pRep : getNumberPropertiesFromStore(store)
+                    activate pRep
+                    pRep --> CTRL : propertyNumber
+                    deactivate pRep
+                    CTRL -> CTRL: addToNumberPropertiesList(propertyNumber)
+                end
+
+            CTRL -> UI : numberPropertiesList
+        deactivate CTRL
+
+        UI -> CTRL : divideStores(selectedStoresList,numberPropertiesList)
+            activate CTRL
+
+            CTRL -> alg : divideStores(selectedStoresList,numberPropertiesList)
+                activate alg
+                    alg -> alg : getTotalSum(numberPropertiesList)
+                        activate alg
+                        alg --> alg : total
+                        deactivate alg
+                    loop i = 1 to i = Math.pow(2,selectedStoresList.length)-1
+                        alg -> alg : getBinary(i)
+                        activate alg
+                        alg --> alg : binary
+                        deactivate alg
+                        alg -> alg : getPartialSum(binary,numberPropertiesList)
+                        activate alg
+                        alg --> alg : partial
+                        deactivate alg
+                        opt getAbsoluteDifference(total, partial) < minVal[1]
+                            alg -> alg : saveMinimum(binary, partial)
+                            activate alg
+                            alg --> alg : minVal
+                            deactivate alg
+                        end
+                    end
+                alg -> alg : getPairOfSublists(minVal, selectedStoresList, numberPropertiesList)
+                alg --> CTRL : pairOfSublists
+            deactivate alg
+
+            CTRL -> UI : pairOfSublists
+        deactivate CTRL
+
+        UI -> Manager : provide a pair of sublists with minimum difference between the number of\nproperties associated with their stores
+    deactivate UI
+
+deactivate Manager
+
+@enduml

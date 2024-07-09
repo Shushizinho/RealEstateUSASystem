@@ -1,0 +1,503 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing true
+skinparam linetype polyline
+'skinparam linetype orto
+skinparam nodesep 50
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class ApplicationSession
+{
+    + static getInstance()
+    + getCurrentSession()
+}
+
+class UserSession
+{
+    + getUserEmail()
+}
+
+class Agent {
+
+
+}
+
+class Employee{
+
+
+
+}
+
+
+
+
+class Address{
+-String streetAddress
+-String city
+-String state
+-String zipCode
+
+}
+
+
+
+class Announcement {
+    -Integer rentDuration
+    - Double listedPrice
+
++ Announcement(Agent agent, DateTime date,\n double commission, BusinessType businessType,\n Property property, double listedPrice)
++ Announcement(Agent agent, DateTime date, \ndouble commission, BusinessType businessType, \nProperty property, Integer rentDuration, double listedPrice)
+}
+
+class Commission{
+double value
+String typeCommission
+
+
+}
+
+
+
+
+class BusinessType{
+    - String description
+}
+
+class PropertyType{
+    - String description
+}
+
+class BusinessTypeRepository {
+    + getBusinessTypeByDescription(businessTypeDescription)
+    + getBusinessTypes()
+}
+
+class PropertyTypeRepository {
+    + getPropertyTypeByDescription(propertyTypeDescription)
+    + getPropertyTypes()
+}
+
+
+
+class Property {
+    - Float price
+    - Float area
+    - Float distanceToCentre
+
+}
+class House {
+    - Boolean hasBasement
+    - Boolean hasLoft
+    - String sunExposure
+
+    + House (double price, double area, Address address, \n double distanceToCentre, List<Photograph> photographs, int bedroomNumber, int bathroomNumber, int parkingSpaceNumber, \nList<String> equipmentList, boolean hasBasement, boolean hasLoft, String sunExposure,
+
+
+                       PropertyType propertyType, Store store, Client client, DateTime date)
+
+                       }
+
+class Land {
+    + Land(double price,double area, Address address,\n double distanceToCentre, List<Photograph> photographs,
+                          PropertyType propertyType,Store store,\n Client client, DateTime date)
+}
+class Apartment {
+    + Apartment(double price, double area, Address address, double distanceToCentre, \nList<Photograph> photographs, int bedroomNumber, int bathroomNumber, int parkingSpaceNumber,\n List<String> equipmentList,
+                                    PropertyType propertyType, Store store, Client client, DateTime dateTime)
+}
+class Inhabitable {
+    - Integer bedroomNumber
+    - Integer bathroomNumber
+    - Integer parkingSpaces
+    - List<String> equipmentList
+}
+
+class EmployeeRepository{
+-List<Employee> employees
++getEmployeeByEmail(String email)
+
+
+}
+
+class Store{
+ -Integer id
+ -String designation
+ -Address address
+ -long phoneNumber
+
+
+
+}
+
+class AnnouncementRepository{
++createAnnouncement(AnnouncementDTO)
+
+
+}
+
+
+
+
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getAnnouncementRepository()
+    + getPropertyRepository()
+    +getEmployeeRepository()
+    +getBusinessTypeRepository()
+    +getAnnouncementRepository()
+    +getPropertyTypeRepository()
+}
+
+class AnnouncementController {
+    + CreateAnnouncementController(announcementRepository, employeeRepository, businessTypeRepository, propertyTypeRepository)
+    + createAnnouncement(AnnouncementDTO)
+    + getBusinessTypeByDescription(BusinessTypeDescription)
+    + getPropertyTypeByDescription(propertyTypeDescription)
+    +getBusinessTypes()
+    +getPropertyTypes()
+    +createProperty(apartmentDTO)
+    +createProperty(houseDTO)
+    +createProperty(landDTO)
+    +getAgentFromSession()
+
+
+
+}
+
+''note right of CreateTaskController
+  ''  - userEmail is obtained
+    ''from the user session
+    ''- categoryDescription
+    ''is retrieved from selected data
+''end note
+
+
+
+class CreateSaleAnnouncementUI {
+}
+
+class AnnouncementMapper{
++toDTO(Announcement announcement)
++ toEntity(AnnouncementDTO announcementDTO)
+
+}
+
+class PropertyMapper{
++toDTO(Property property)
++toEntity(PropertyDTO property)
++landToEntity (LandDTO landDTO)
++houseToEntity(HouseDTO houseDTO)
++apartmentToEntity(ApartmentDTO apartmentDTO)
+
+
+}
+
+class BusinessTypeMapper{
++toDTO(BusinessType businessType)
++toEntity( BusinessTypeDTO businessTypeDTO)
++toDTO(List<BusinessType> businessType)
+
+}
+
+class PropertyTypeMapper{
++toDTO(PropertyType propertyType)
++toEntity( PropertyTypeDTO propertyTypeDTO)
++toDTO(List<PropertyType> propertyType)
+
+
+
+}
+
+
+class PropertyDTO{
+ -double price
+ -double area
+-double distanceToCentre
+-List<PhotographDTO> photographs
+
+
+
+}
+
+class RoleDTO{
+   - Integer id
+    - String description
+
+}
+
+class ApartmentDTO{
++ApartmentDTO(double price, double area, AddressDTO address, \ndouble distanceToCentre, List<PhotographDTO> photographs,int bedroomNumber, int bathroomNumber, \nint parkingSpaceNumber, List<String> equipmentList,
+                                   PropertyTypeDTO propertyType, StoreDTO store, ClientDTO client, DateTimeDTO dateFormatted)
+
+
+}
+
+class LandDTO{
++LandDTO(double price, double area, AddressDTO address, double distanceToCentre, List<PhotographDTO> photographs,
+                 PropertyTypeDTO propertyType, StoreDTO store, ClientDTO client, DateTimeDTO date)
+
+
+}
+
+class AddressDTO{
+ String streetAddress
+ String city
+ String state
+ String zipCode
+
+}
+
+class PropertyTypeDTO{
+String description
+
+
+}
+
+class PhotographDTO{
+-String uri
+
+}
+
+class StoreDTO{
+ Integer id
+ String designation
+ AddressDTO address
+ String email
+ long phoneNumber
+
+}
+
+
+
+class Person{
+-String email
+-String name
+-Integer passportNumber
+-long phoneNumber
+-String taxNumber
+
+
+}
+
+class Role{
+- Integer id
+-String description
+}
+
+class DateTime{
+Calendar date
+
+
+}
+
+
+class AnnouncementDTO{
+ -double listedPrice
+ -Integer rentDuration
+ + AnnouncementDTO(AgentDTO agent, DateTimeDTO date, double commission, BusinessTypeDTO businessType, PropertyDTO property, Integer rentDuration, double listedPrice)
+ + (AgentDTO agent, DateTimeDTO date, double commission, BusinessTypeDTO businessType, PropertyDTO property, double listedPrice)
+
+
+
+}
+
+class AgentDTO{
+
+
+
+
+}
+
+class HouseDTO{
+- boolean hasBasement
+   -boolean hasLoft
+     -String sunExposure
+
+     +HouseDTO(double price, double area, AddressDTO address, \ndouble distanceToCentre, List<PhotographDTO> photographs, int bedroomNumber, int bathroomNumber, \nint parkingSpaceNumber, List<String> equipmentList, boolean hasBasement, boolean hasLoft, String sunExposure,
+                          PropertyTypeDTO propertyType, \nStoreDTO store, ClientDTO client, DateTimeDTO date)
+
+
+
+}
+
+
+class PropertyRepository{
++createProperty(landDTO)
++createProperty(houseDTO)
++createProperty(apartmentDTO)
+
+
+
+}
+
+class EmployeeDTO{
+-List<RoleDTO> roleDTO
+
+}
+
+class PersonDTO{
+-String email
+-String name
+-Integer passportNumber
+-long phoneNumber
+-String taxNumber
+
+
+}
+
+
+class DateTimeDTO{
+-Calendar date
+
+
+}
+
+
+class BusinessTypeDTO{
+-String description
+
+
+
+}
+
+class CommissionDTO{
+-double value
+-String typeCommission
+
+}
+
+class InhabitableDTO{
+ -int bedroomNumber
+ -int bathroomNumber
+   -int parkingSpaceNumber
+- List<String> equipmentList
+
++InhabitableDTO(double price, double area,\n AddressDTO addressDTO, double distanceToCentre, List<PhotographDTO> photographs,\n int bedroomNumber, int bathroomNumber, int parkingSpaceNumber, List<String> equipmentList,
+                          PropertyTypeDTO propertyType, StoreDTO store, ClientDTO client, DateTimeDTO date)
+
+}
+
+
+
+
+
+Repositories --> "1" BusinessTypeRepository
+Repositories --> "1" PropertyTypeRepository
+Repositories -> Repositories : instance
+Repositories --> EmployeeRepository
+Repositories --> AnnouncementRepository
+Repositories --> PropertyRepository
+
+EmployeeRepository"1" ---> "*" Employee:contains
+
+
+
+
+AnnouncementController ..> Repositories:repositories
+
+
+AnnouncementController ...> BusinessTypeRepository: BusinessTypeRepository
+AnnouncementController ...> PropertyTypeRepository: PropertyTypeRepository
+
+Property "*" --> "1" PropertyType : cataloged as
+Agent "1" --> "*" Property : creates
+Property <|-- Land
+Property <|--- Inhabitable
+
+PropertyRepository"1" -->"*" Property: contais
+
+
+Agent"1"  --->"*"  Announcement:creates
+BusinessTypeRepository "1" --> "*" BusinessType : BusinessType
+BusinessType"1" <-- "*" Property: cataloged as
+PropertyTypeRepository "1" ---> "*" PropertyType : propertyType
+ApplicationSession --> "1" UserSession : userSession
+AnnouncementController...> ApplicationSession
+
+
+
+Property"1" --> "1"Announcement
+
+ApplicationSession -> ApplicationSession : instance
+
+CreateSaleAnnouncementUI .> AnnouncementController
+
+
+
+Inhabitable <|-- Apartment
+Inhabitable <|-- House
+
+InhabitableDTO <|-- ApartmentDTO
+InhabitableDTO <|-- HouseDTO
+
+     PropertyDTO        <|--      InhabitableDTO
+
+Employee"1" --> "1..*" Role: has an
+
+Person"1"  --->"1"  Address: has an
+
+Agent ---|> Employee
+
+Employee --|> Person
+
+Store "1"-->"1" Address: has an
+
+Property "*" --> "1"Store: listed under
+
+
+Employee "1" --> "1" Store: has a
+
+Announcement "1" --> "1" Commission: has a
+
+Announcement "1" --> "1" DateTime: has a
+
+AnnouncementRepository"1" --> "*" Announcement: contains
+
+
+Property "1" -> "1" Address  :  has an
+
+AnnouncementDTO"*" --> "1" AgentDTO: has an
+AnnouncementDTO"1" --> "1" DateTimeDTO: has a
+AnnouncementDTO "1" --> "1" BusinessTypeDTO: has a
+AnnouncementDTO "1" --> "1" PropertyDTO: has a
+AnnouncementDTO"1" --> "1" CommissionDTO: has a
+
+AgentDTO --|> EmployeeDTO
+
+EmployeeDTO --|> PersonDTO
+
+EmployeeDTO "1" --> "1..*" RoleDTO
+
+PersonDTO"1" --> "1" AddressDTO: has an
+
+
+PropertyDTO"1" --> "1" AddressDTO: has an
+PropertyDTO"1" --> "1" PropertyTypeDTO: has a
+PropertyDTO"1" --> "1" StoreDTO: has a
+PropertyDTO"1" -->"1" PersonDTO:has a
+PropertyDTO "1" --> "1..30" PhotographDTO: has a
+
+
+AnnouncementMapper ..> AnnouncementDTO
+AnnouncementMapper ..> Announcement
+PropertyMapper ..> PropertyDTO
+PropertyMapper ..> Property
+BusinessTypeMapper ..> BusinessTypeDTO
+BusinessTypeMapper ..> BusinessType
+PropertyTypeMapper ..> PropertyTypeDTO
+PropertyTypeMapper ..> PropertyType
+
+
+AnnouncementController ..> AnnouncementMapper
+AnnouncementController..> PropertyMapper
+AnnouncementController..> BusinessTypeMapper
+AnnouncementController..> PropertyTypeMapper
+LandDTO --|> PropertyDTO
+
+@enduml

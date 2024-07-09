@@ -1,0 +1,197 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Administrator" as ADM
+participant ":RegisterEmployeeUI" as UI
+participant ":RegisterEmployeeController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "roleRepository:\nRoleRepository" as ROLR
+participant "storeRepository:\nStoreRepository" as STRR
+participant "employeeRepository:\nEmployeeRepository" as EMPR
+participant "employee:\nEmployee" as EMPL
+
+activate ADM
+   ADM -> UI : asks to register a new employee
+
+    activate UI
+
+    UI-> CTRL** : create
+
+    UI -> CTRL : getRoles()
+                    activate CTRL
+                    autonumber 3.1
+                            CTRL -> RepositorySingleton : getInstance()
+                            activate RepositorySingleton
+
+                                RepositorySingleton --> CTRL: repositories
+                            deactivate RepositorySingleton
+
+                            CTRL -> PLAT : getRoleRepository()
+                            activate PLAT
+
+                                PLAT --> CTRL : roleRepository
+                            deactivate PLAT
+
+                            CTRL -> ROLR : getRoles()
+                            activate ROLR
+
+                                ROLR --> CTRL : roleList
+
+                            deactivate ROLR
+
+
+
+                        autonumber 4
+                        CTRL-->UI :  roleList
+                    deactivate CTRL
+                    UI --> ADM : show the list of available roles
+
+        deactivate UI
+
+        ADM -> UI : select one or more roles for the employee
+
+        activate UI
+
+         UI -> CTRL : getStores()
+                    activate CTRL
+                    autonumber 7.1
+                            CTRL -> RepositorySingleton : getInstance()
+                            activate RepositorySingleton
+
+                                RepositorySingleton --> CTRL: repositories
+                            deactivate RepositorySingleton
+
+                            CTRL -> PLAT : getStoreRepository()
+                            activate PLAT
+
+                                PLAT --> CTRL : storeRepository
+                            deactivate PLAT
+
+                            CTRL -> STRR : getStores()
+                            activate STRR
+
+                                STRR --> CTRL : storeList
+
+                            deactivate STRR
+
+                        autonumber 8
+                        CTRL-->UI : storeList
+                    deactivate CTRL
+                    UI --> ADM : show a list of stores for the user select
+
+        deactivate UI
+
+    ADM -> UI : select the store to situate the employee
+    activate UI
+
+    UI --> ADM : request data to register a new employee (name,email,passportNumber,taxNumber,address,phoneNumber)
+
+    deactivate UI
+
+    ADM -> UI : submit data of the new employee
+
+    activate UI
+
+    UI -> CTRL: getRoleByDescription(roleDescription)
+
+    activate CTRL
+
+        autonumber 13.1
+            CTRL -> RepositorySingleton : getInstance()
+            activate RepositorySingleton
+
+                RepositorySingleton --> CTRL: repositories
+            deactivate RepositorySingleton
+
+            CTRL -> PLAT : getRoleRepository()
+            activate PLAT
+
+                PLAT --> CTRL : roleRepository
+            deactivate PLAT
+
+            CTRL -> ROLR : getRoleByDescription(roleDescription)
+            activate ROLR
+
+                ROLR --> CTRL : role
+            deactivate ROLR
+
+
+    autonumber 14
+    CTRL --> UI: role
+
+    deactivate CTRL
+
+    UI --> CTRL: getStoreByDescription(storeDescription)
+
+        activate CTRL
+
+            autonumber 15.1
+                CTRL -> RepositorySingleton : getInstance()
+                activate RepositorySingleton
+
+                    RepositorySingleton --> CTRL: repositories
+                deactivate RepositorySingleton
+
+                CTRL -> PLAT : getStoreRepository()
+                activate PLAT
+
+                    PLAT --> CTRL : storeRepository
+                deactivate PLAT
+
+                CTRL -> STRR : getStoreByDescription(storeDescription)
+                activate STRR
+
+                    STRR --> CTRL : store
+                deactivate STRR
+
+        autonumber 16
+        CTRL --> UI: store
+
+        deactivate CTRL
+
+    UI -> CTRL: registerEmployee(name,email,passportNumber,taxNumber,address,phoneNumber,store,role)
+
+    activate CTRL
+    CTRL -> EMPR: registerEmployee(name,email,passportNumber,taxNumber,address,phoneNumber,store,role)
+
+    activate EMPR
+
+
+    autonumber 18.1
+
+                    EMPR -> EMPL**: create(name,email,password,passportNumber,\n taxNumber,address,phoneNumber,store, role)
+                    EMPR -> EMPR: addEmployee (employee)
+
+                    activate EMPR
+                            EMPR -> EMPR: generatePassword()
+
+                            activate EMPR
+                            EMPR -> EMPR: validateEmployee(employee)
+                            activate EMPR
+                                EMPR --> EMPR
+                            deactivate EMPR
+                            EMPR --> EMPR
+                        deactivate EMPR
+                        EMPR --> EMPR
+                    deactivate EMPR
+
+    autonumber 19
+
+     EMPR --> CTRL:  employeeRegistered
+     deactivate EMPR
+
+     CTRL --> UI: employeeRegistered
+     deactivate CTRL
+
+        UI --> ADM : displays operation success
+
+    deactivate UI
+deactivate ADM
+
+@enduml

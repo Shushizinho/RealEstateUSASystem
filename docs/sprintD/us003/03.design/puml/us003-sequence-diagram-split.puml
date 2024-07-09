@@ -1,0 +1,120 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Administrator" as ADM
+participant ":RegisterEmployeeUI" as UI
+participant ":RegisterEmployeeController" as CTRL
+
+
+
+activate ADM
+   ADM -> UI : asks to register a new employee
+
+    activate UI
+
+    UI-> CTRL** : create
+
+    UI -> CTRL : getRoles()
+                    activate CTRL
+                        ref over CTRL
+                              Get Roles List
+
+                          end ref
+
+                        autonumber 4
+                        CTRL-->UI :  roleList
+                    deactivate CTRL
+                    UI --> ADM : show the list of available roles
+
+
+        deactivate UI
+
+        ADM -> UI : select one or more roles for the employee
+
+
+        activate UI
+
+         UI -> CTRL : getStores()
+                    activate CTRL
+                        ref over CTRL
+                            Get Stores List
+
+                        end ref
+                        autonumber 8
+                        CTRL-->UI : storeList
+                    deactivate CTRL
+                    UI --> ADM : show a list of stores for the user select
+
+
+        deactivate UI
+
+    ADM -> UI : select the store to situate the employee
+
+    activate UI
+
+    UI --> ADM : request data to register a new employee (name,email,passportNumber,taxNumber,address,phoneNumber)
+
+
+    deactivate UI
+
+    ADM -> UI : submit data of the new employee
+
+
+    activate UI
+
+    UI --> CTRL: getRoleByDescription(roleDescription)
+
+    activate CTRL
+
+        ref over CTRL
+            Get Role
+
+        end ref
+
+    CTRL --> UI: role
+        deactivate CTRL
+
+
+        UI --> CTRL: getStoreByDescription(storeDescription)
+
+        activate CTRL
+
+            ref over CTRL
+                Get Store
+
+            end ref
+
+        CTRL --> UI: store
+
+    deactivate CTRL
+    UI --> CTRL: registerEmployee(name,email,passportNumber,taxNumber,address,phoneNumber,store,role)
+
+    activate CTRL
+    CTRL --> EMPR: registerEmployee(name,email,passportNumber,taxNumber,address,phoneNumber,store,role)
+
+    activate EMPR
+
+
+                ref over EMPR
+                    Register Employee
+
+                end ref
+
+
+     EMPR --> CTRL:  employeeRegistered
+     deactivate EMPR
+
+     CTRL --> UI: employeeRegistered
+     deactivate CTRL
+
+        UI --> ADM : displays operation success
+
+    deactivate UI
+deactivate ADM
+
+@enduml

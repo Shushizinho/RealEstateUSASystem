@@ -1,0 +1,194 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing true
+skinparam linetype ortho
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class ApplicationSession
+{
+    + static getInstance()
+    + getCurrentSession()
+}
+class Employee{}
+class UserSession
+{
+    + getUserEmail()
+}
+
+class Person {
+    - String name
+    - Integer passportNumber
+    - String taxNumber
+    - String email
+    - Integer phoneNumber
+}
+class Address{
+    - String streetAddress
+    - String state
+    - Integer zipCode
+    - String city
+    + Address(streetAddress, state. zipCode)
+}
+class Property {
+    - Float price
+    - Float area
+    - Float distanceToCentre
+    - List<String> photographs
+    + sendAnnouncementRequest(businessType, property, agent)
+}
+class Inhabitable {
+    - Integer bedroomNumber
+    - Integer bathroomNumber
+    - Integer parkingSpaceNumber
+    - List<String> equipmentList
+}
+class Land {
+    + Land(price, area, address,\ndistanceToCentre, photographs, client,store)
+}
+class Apartment {
+    + Apartment(price, area, address,\ndistanceToCentre, photographs, bedroomNumber,\nbathroomNumber, parkingSpaces,\nequipmentList, client, store)
+}
+class House {
+    - Boolean hasBasement
+    - Boolean hasLoft
+    - String sunExposure
+    + House(price, area, address,\ndistanceToCentre, photographs, bedroomNumber,\nbathroomNumber, parkingSpaces,\nequipmentList, client, store,\nhasBasement, hasLoft, sunExposure)
+}
+
+
+class BusinessType{
+    - String description
+}
+class PropertyType{
+    - String description
+}
+
+class BusinessTypeRepository {
+    + getBusinessTypeByDescription(businessTypeDescription)
+    + getBusinessTypes()
+}
+class PropertyTypeRepository {
+    + getPropertyTypeByDescription(propertyTypeDescription)
+    + getPropertyTypes()
+}
+class StoreRepository{
+    + getStoreByDescription(storeDescription)
+    + getStores()
+}
+
+class EmployeeRepository{
+    + getAgentsFromStore(store)
+    + getAgentByDescription(agentDescription)
+}
+
+class ClientRepository{
+    + getClientByEmail(email)
+}
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getBusinessTypeRepository()
+    + getPropertyTypeRepository()
+    + getClientRepository()
+    + getStoreRepository()
+    + getEmployeeRepository()
+}
+
+class CreatePropertyController {
+    + CreatePropertyController()
+    + getBusinessTypes()
+    + getPropertyTypes()
+    + getStores()
+    + getAgentsFromStore(storeDescription)
+    + getStoreByDescription(storeDescription)
+    + getBusinessTypeByDescription(businessTypeDescription)
+    + getPropertyTypeByDescription(propertyTypeDescription)
+    + getAgentByDescription(agentDescription)
+    - getClientFromSession()
+    + createProperty(price, area, address, distanceToCentre, photographs,\npropertyType, store, agent, client)
+    + createProperty(price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList,\npropertyType, store, agent, client)
+    + createProperty(price, area, address, distanceToCentre, photographs, bedroomNumber,\nbathroomNumber, parkingSpaceNumber,equipmentList, hasBasement, hasLoft, sunExposure,\npropertyTypeDescription, storeDescription, client)
+    + createAnnouncementRequest(rentDuration, businessType, property, agent, client)
+    + createAnnouncementRequest(businessType, property, agent, client)
+}
+class AnnouncementRequest {
+    - Integer rentDuration
+    + AnnouncementRequest(businessType, property, agent,client)
+    + AnnouncementRequest(rentDuration,businessType, property, agent,client)
+}
+class Store {
+    - String designation
+    - String email
+    - Integer phoneNumber
+    + createProperty(price, area, address, distanceToCentre, photographs,\npropertyType, store, agent, client)
+        + createProperty(price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber, equipmentList,\npropertyType, store, agent, client)
+        + createProperty(price, area, address, distanceToCentre, photographs, bedroomNumber,\nbathroomNumber, parkingSpaceNumber,equipmentList, hasBasement, hasLoft, sunExposure,\npropertyTypeDescription, storeDescription, client)
+        + createAnnouncementRequest(rentDuration, businessType, property, agent, client)
+        + createAnnouncementRequest(businessType, property, agent, client)
+- addProperty(property)
+    - validateProperty(property)
+}
+
+class CreatePropertyUI {
+}
+class Role{
+    - Integer id
+    - String description
+}
+
+Repositories -> Repositories : instance
+ApplicationSession -> ApplicationSession : instance
+
+CreatePropertyUI .|> CreatePropertyController
+
+Repositories <. CreatePropertyController : repositories
+
+Repositories --> "1" BusinessTypeRepository
+Repositories --> "1" PropertyTypeRepository
+Repositories --> "1" StoreRepository
+Repositories --> "1" EmployeeRepository
+Repositories --> "1" ClientRepository
+BusinessTypeRepository "1" --> "*" BusinessType : businessType
+AnnouncementRequest "*" --o "1" BusinessType : businessType
+AnnouncementRequest "*" --o "1" Agent : agent
+AnnouncementRequest "*" --o "1" Client : client
+AnnouncementRequest "*" --o "1" Property : property
+Property "*" --o "1" PropertyType : propertyType
+PropertyTypeRepository "1" ---> "*" PropertyType : propertyType
+StoreRepository "1" ---> "*" Store : store
+Agent "*" --o "1" Store : store
+Property "*" --o "1" Store : store
+EmployeeRepository "1" ---> "*" Employee : employee
+ClientRepository "1" ---> "*" Client : client
+
+CreatePropertyController ...> BusinessTypeRepository : BusinessTypeRepository
+CreatePropertyController ...> PropertyTypeRepository : PropertyTypeRepository
+CreatePropertyController ...> StoreRepository : StoreRepository
+CreatePropertyController ...> EmployeeRepository : EmployeeRepository
+CreatePropertyController ...> ClientRepository : ClientRepository
+
+
+ApplicationSession --> "1" UserSession : userSession
+
+CreatePropertyController ..> ApplicationSession
+CreatePropertyController ..> UserSession
+Property -> Client : createdBy
+Property <|... Land
+Property <|... Inhabitable
+Person <|.. Employee
+Employee <|... Agent
+Employee "1" <-- "1" Role : role
+Person <|.... Client
+Inhabitable <|.. Apartment
+Inhabitable <|.. House
+
+Address <---- Property : address
+Address <-- Person : address
+Address <----- Store : address
+
+@enduml

@@ -1,0 +1,131 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+autonumber
+
+'hide footbox
+actor "Network Manager" as NM
+participant ":GetDealListUI" as UI
+participant ":DealListController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "purchaseOrderRepository:\nPurchaseOrderRepository" as OR
+participant ":BubbleSort" as MS
+participant ":InsertionSort" as HS
+
+
+
+activate NM
+
+
+    NM -> UI : aks to list all deals made
+
+    activate UI
+    UI -> CTRL** : createGetDealsListController()
+
+    UI -> CTRL :  getDeals
+        activate CTRL
+
+
+          CTRL -> RepositorySingleton : getInstance()
+
+          activate RepositorySingleton
+
+          RepositorySingleton --> CTRL: repositories
+          deactivate RepositorySingleton
+
+         CTRL -> PLAT : getPurchaseOrderRepository()
+        activate PLAT
+
+           PLAT --> CTRL : PurchaseOrderRepository
+        deactivate PLAT
+
+         CTRL -> OR : getDealsFromOrder()
+             activate OR
+
+             OR -> OR : getPurchaseOrders()
+
+             opt  for each purchase order
+             alt if purchase order was accepted
+
+             OR --> OR : add (property)
+             end
+
+             end opt
+
+             OR --> CTRL : dealsList
+             deactivate OR
+
+             CTRL --> UI : dealsList
+
+             deactivate CTRL
+
+
+
+    UI --> NM : asks to order a list of properties by area in ascending or descendent order
+
+
+    deactivate UI
+
+
+    NM -> UI : select ascending or descendent
+
+    activate UI
+    UI --> UI : keep (order)
+
+    UI --> UI : displaySortingMethods (order)
+
+    UI --> NM : asks the sorting method
+    deactivate UI
+
+
+    NM -> UI : select a sorting method
+
+    activate UI
+
+   UI --> UI : keep (method)
+        alt method = BubbleSort
+       UI -> CTRL : getBubbleSort (propertyAreaList)
+           activate CTRL
+
+
+
+            CTRL -> MS : sort (propertyAreaList)
+            activate MS
+            MS --> CTRL : sortedDealsList
+            deactivate MS
+
+            CTRL --> UI : sortedDealsList
+            deactivate CTRL
+            end
+
+            alt method = InsertionSort
+            UI -> CTRL : getInsertionSort (propertyAreaList)
+            activate CTRL
+
+            CTRL -> HS : sort (propertyAreaList)
+            activate HS
+            HS --> CTRL : sortedDealsList
+            deactivate HS
+
+
+           CTRL --> UI : sortedDealsList
+           deactivate CTRL
+           end
+
+           deactivate CTRL
+
+
+       UI --> UI : displaySortedDeals(sortedProperties, order)
+
+    UI --> NM : shows list of properties according to the sorting method and order
+
+    deactivate UI
+
+
+deactivate NM
+
+@enduml

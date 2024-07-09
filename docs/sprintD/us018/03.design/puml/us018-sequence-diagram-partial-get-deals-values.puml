@@ -1,0 +1,53 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":AnalyseDealsController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "Repositories\n:Repositories" as PLAT
+participant "purchaseOrderRepository:\nPurchaseOrderRepository" as OR
+participant "PurchaseOrder" as OFF
+
+autonumber 16
+
+-> CTRL: getValueFromDeals(dealsList)
+activate CTRL
+autonumber 16.1
+     CTRL -> RepositorySingleton : getInstance()
+    activate RepositorySingleton
+
+        RepositorySingleton --> CTRL: repositories
+    deactivate RepositorySingleton
+
+    CTRL -> PLAT : getPurchaseOrderRepository()
+    activate PLAT
+
+        PLAT -> CTRL : PurchaseOrderRepository
+    deactivate PLAT
+
+    CTRL -> OR : getDealsValue(dealsList)
+    activate OR
+    autonumber 16.5.1
+
+    loop for each deal in dealList
+    OR --> OFF : getOrderAmount()
+     activate OFF
+    OFF --> OR : orderAmount
+    deactivate OFF
+
+
+    OR --> OR : addToList(orderAmount)
+    end
+    autonumber 1.6
+    OR --> CTRL : ValuesList
+    deactivate OR
+
+    autonumber 17
+    <-- CTRL  : ValuesList
+deactivate CTRL
+
+
+@enduml

@@ -1,0 +1,66 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam nodesep 150
+
+
+'left to right direction
+
+hide circle
+hide methods
+
+'title Domain Model: US013
+
+class NetworkManager {
+
+}
+
+'note right: Test
+
+class Employee {
+    email
+    name
+    passportNumber
+    taxNumber
+    phoneNumber
+ }
+
+  class Property{
+        price
+        area
+        distanceToCentre
+    }
+
+
+ class Role {
+    id
+    description
+ }
+
+ class Address{
+     streetAddress
+     city
+     state
+     zipCode
+ }
+
+ class Store {
+     id
+     designation
+     email
+     phoneNumber
+
+  }
+
+
+Address  "1" - "1"   Employee : < has an
+Property  "1" - "1"  Address : > has an
+Address  "1" - "1"   Store : < has an
+Employee  "1" -- "1"  Store : > has a
+Employee "1" - "1..*"  Role
+Property "1" - "1"  Store : > has a
+
+
+Employee <|-- NetworkManager
+@enduml

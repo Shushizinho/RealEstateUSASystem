@@ -1,0 +1,85 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+
+hide circle
+hide methods
+
+title Domain Model: US016 - Respond to the user that scheduled the visit
+
+
+class Employee{
+
+}
+
+'class Store {
+'    id
+'    designation
+'    email
+'    phoneNumber
+'}
+
+class Property {
+
+}
+
+class Person{
+    email
+    name
+
+}
+
+class Agent {
+
+}
+
+class Role{
+id
+description
+
+}
+
+class Address{
+    streetAddress
+    state
+    zipCode
+}
+
+class VisitRequest{
+    preferred date
+    time slot
+    wasAccepted
+}
+
+class Client {
+
+}
+class PropertyType{
+    description
+}
+
+
+Property "1" -- "1"  PropertyType : > has an
+
+Client "1" - "*" VisitRequest : request >
+VisitRequest "*" -- "1" Property : refers to >
+
+'Store' "1" o-- "*" Employee : part of <
+
+'Address "1" o-- "1"  Store
+Property "1" -- "1"  Address : > has an
+Address "1" -- "1"  Person : < has an
+
+Employee <|-- Agent
+Role "1..*" -- "1" Employee:  < has an
+'Property "*" - "1" Store: in associated with >
+Person  <|-- Client
+Person  <|-- Employee
+VisitRequest - Agent : respond <
+
+
+@enduml

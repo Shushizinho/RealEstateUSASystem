@@ -1,0 +1,137 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title As a administrator, I intend to register a new store
+
+autonumber
+
+'hide footbox
+actor "Administrator" as ADM
+participant ":RegisterStoreUI" as UI
+participant ":RegisterStoreController" as CTRL
+'participant ":Repositories" as RepositorySingleton
+'participant "repositories\n:Repositories" as PLAT
+'participant "employeeRepository\n:EmployeeRepository" as LOC
+participant "emplyee\n:Employee" as REP
+participant "store\n:Store" as Str
+
+
+activate ADM
+
+        ADM -> UI : asks to register a new store
+
+        activate UI
+
+            UI -> CTRL** : create
+
+'            UI->CTRL : getStoreManagers()
+'
+'                Group Get Store Manager
+'                    activate CTRL
+'                    autonumber 3.1
+'                        CTRL -> RepositorySingleton: getInstance()
+'                        activate RepositorySingleton
+'
+'                        RepositorySingleton -> CTRL: Repositories
+'                        deactivate RepositorySingleton
+'
+'                        CTRL -> PLAT: getEmployeeRepository
+'                        activate PLAT
+'
+'                        PLAT -> CTRL: EmployeeRepository
+'                        deactivate PLAT
+'
+'                        CTRL -> LOC: getStoreManagers()
+'                        activate LOC
+'
+'                        LOC -> CTRL: storeManagerList
+'                        deactivate LOC
+'                        end group
+'                    autonumber 4
+'                    CTRL-->UI : storeManagerList
+'                    deactivate CTRL
+'
+'            UI --> ADM : provide store manager list
+'        deactivate UI
+'
+'        ADM -> UI : selectes and sends store manager from list
+'        activate UI
+
+            UI --> ADM : request store data
+
+        deactivate UI
+
+    ADM -> UI : types requested data (ID, name, address, email,\nphoneNumber)
+    activate UI
+
+        UI -> CTRL : createStore(ID, name, address, email,\nphoneNumber)
+        activate CTRL
+
+
+
+'        CTRL -> CTRL: getStoreManagerByRole(storeManagerRole)
+'        activate CTRL
+'        autonumber 10.1
+'            Group Get Store Manager
+'
+'
+'            CTRL -> RepositorySingleton: getInstance()
+'            activate RepositorySingleton
+'
+'            RepositorySingleton -> CTRL: Repositories
+'            deactivate RepositorySingleton
+'
+'            CTRL -> PLAT: getEmployeeRepository
+'            activate PLAT
+'
+'            PLAT -> CTRL: EmployeeRepository
+'            deactivate PLAT
+'
+'            CTRL -> LOC: getStoreManagerByRole(storeManagerRole)
+'            activate LOC
+'
+'            LOC -> CTRL: storeManager
+'            deactivate LOC
+'
+'
+'            end group
+'            autonumber 11
+'            CTRL -> CTRL: storeManager
+'        deactivate CTRL
+
+
+            CTRL -> REP: createStore(ID, name, address, email,\n phoneNumber)
+
+            activate REP
+            autonumber 12.1
+            group Create Store
+
+                REP -> Str** : create(ID, name, address, email,\n phoneNumber)
+
+                REP -> REP: addStore (store)
+
+
+                activate REP
+                    REP -> REP: validateStore(store)
+                    activate REP
+                        REP --> REP
+                    deactivate REP
+
+                    REP --> REP
+                deactivate REP
+            end group
+            autonumber 13
+            REP --> CTRL : store
+
+            deactivate REP
+
+            CTRL --> UI: store
+            deactivate CTRL
+            UI --> ADM: displays operation success
+    deactivate UI
+
+deactivate ADM
+
+@enduml

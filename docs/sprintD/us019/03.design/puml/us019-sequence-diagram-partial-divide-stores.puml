@@ -1,0 +1,43 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":DivideStoresController" as CTRL
+participant "DivideStoresAlgorithm:\ndivideStoresAlgorithm" as alg
+
+
+autonumber 38
+
+group Divide Stores between two sublists
+        -> CTRL : divideStores(selectedStoresList,numberPropertiesList)
+         activate CTRL
+            CTRL -> alg : divideStores(selectedStoresList,numberPropertiesList)
+                activate alg
+                    alg -> alg : getTotalSum(numberPropertiesList)
+                        activate alg
+                        alg --> alg : total
+                        deactivate alg
+                    loop i = 1 to i = Math.pow(2,selectedStoresList.length)-1
+                        alg -> alg : getBinary(i)
+                        activate alg
+                        alg --> alg : binary
+                        deactivate alg
+                        alg -> alg : getPartialSum(binary,numberPropertiesList)
+                        activate alg
+                        alg --> alg : partial
+                        deactivate alg
+                        opt getAbsoluteDifference(total, partial) < minVal[1]
+                            alg -> alg : saveMinimum(binary, partial)
+                            activate alg
+                            alg --> alg : minVal
+                            deactivate alg
+                        end
+                    end
+                alg -> alg : getPairOfSublists(minVal, selectedStoresList, numberPropertiesList)
+                alg --> CTRL : pairOfSublists
+                            deactivate alg
+                <-- CTRL : pairOfSublists
+                deactivate CTRL
+end group
+@enduml

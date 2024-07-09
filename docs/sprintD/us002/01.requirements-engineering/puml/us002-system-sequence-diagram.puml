@@ -1,0 +1,157 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+
+autonumber
+
+actor "Agent" as Agent
+participant ":System" as System
+
+activate Agent
+
+     Agent -> System : asks to publish an announcement
+    activate System
+
+
+    System --> Agent: provides property type options
+    deactivate System
+
+     Agent -> System: selects property type
+     activate System
+
+
+ alt if property type = land
+    System --> Agent : requests land data (price, area, address, distanceToCentre, photographs)
+     deactivate System
+    Agent -> System : types requested data
+    activate System
+
+   System --> Agent: request data confirmation
+   deactivate System
+
+   Agent -> System: confirms data
+   activate System
+
+
+ else if property type = apartment
+    System --> Agent : requests apartment data (price, area, address, distanceToCentre, photographs,\nbedroomNumber,bathroomNumber, parkingSpaceNumber,\nequipmentList
+     deactivate System
+    Agent -> System : types requested data
+    activate System
+
+    System --> Agent: request data confirmation
+       deactivate System
+
+       Agent -> System: confirms data
+       activate System
+
+
+
+
+  else if property type = house
+        System --> Agent : requests house data (price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber,\nequipmentList, hasBasement, hasLoft, sunExposure)
+         deactivate System
+        Agent -> System : types requested data
+        activate System
+
+        System --> Agent: request data confirmation
+           deactivate System
+
+           Agent -> System: confirms data
+           activate System
+
+
+
+        end
+
+
+
+  System --> Agent : provides business type options
+          deactivate System
+
+    Agent -> System: selects business type
+    activate System
+
+
+
+
+
+
+
+  alt if business = rent
+     System --> Agent : requests data (rentDuration)
+      deactivate System
+     Agent -> System : types requested data
+     activate System
+
+        System --> Agent: asks if commission is in percentage or fixed
+                  deactivate System
+
+            Agent -> System: inputs the pretend option
+            activate System
+
+
+          System --> Agent : asks for announcement data (commission)
+          deactivate System
+
+          Agent -> System : provides the announcement data
+          activate System
+
+
+            System --> Agent: request data confirmation
+                     deactivate System
+
+            Agent -> System: confirms data
+            activate System
+
+
+
+   else if business = sale
+
+      System --> Agent: asks if commission is in percentage or fixed
+                     deactivate System
+
+               Agent -> System: inputs the pretend option
+               activate System
+
+
+
+       System --> Agent : Asks for announcement data (commission)
+       deactivate System
+
+       Agent -> System : provides the  announcement data
+       activate System
+
+         System --> Agent: request data confirmation
+                  deactivate System
+
+                  Agent -> System: confirms data
+                  activate System
+
+
+
+
+
+     end
+
+
+
+
+
+
+
+       System --> Agent : display operation success
+         deactivate System
+
+
+
+
+
+
+
+
+@enduml

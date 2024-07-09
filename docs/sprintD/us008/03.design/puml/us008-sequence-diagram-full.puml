@@ -1,0 +1,366 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title US008 Sequence Diagram
+autonumber
+
+actor "Agent" as Agent
+
+
+participant ":AnnouncementRequestUI" as UI
+participant ":AnnouncementRequestController" as CTRL
+participant ":Repositories" as MainRepository
+participant "Repository: \nRepositories" as Repository
+participant ":ApplicationSession" as _APP
+participant "appSession\n:ApplicationSession" as APP
+participant "currentSession\n:UserSession" as SESSION
+participant "employeeRepository:\nEmployeeRepository" as ER
+participant " announcementRequestRepository:\nAnnouncementRequestRepository" as ARR
+participant "AnnouncementRepository:\nAnnouncementRepository" as AnnouncementRepository
+participant "AnnouncementRequestMapper" as ARM
+participant "AnnouncementRequestDTOList : List<AnnouncementRequestDTO>" as LARDTO
+participant "announcementRequestsByAgentSortedList : List<AnnouncementRequest>" as LAR
+participant "AnnouncementRequestDTO:AnnouncementRequestDTO" as ARDTO
+participant "Announcement:Announcement" as A
+
+
+
+
+participant "Agent" as AG
+
+
+    activate Agent
+
+    Agent -> UI : asks to see the list of property announcement requests
+    activate UI
+
+    UI -> CTRL** : create
+
+    UI -> CTRL : getAgentFromSession()
+    activate CTRL
+
+    CTRL -> _APP : getInstance()
+    activate _APP
+
+    _APP --> CTRL : appSession
+    deactivate _APP
+
+    CTRL -> APP : getCurrentSession()
+    activate APP
+
+    APP --> CTRL : currentSession
+    deactivate APP
+
+    CTRL -> SESSION : email = getUserEmail()
+    activate SESSION
+
+    SESSION --> CTRL : email
+    deactivate SESSION
+
+      CTRL -> MainRepository : getInstance()
+      activate MainRepository
+
+    MainRepository -->CTRL : Repositories
+    deactivate MainRepository
+
+    CTRL -> Repository: getEmployeeRepository()
+    activate Repository
+
+    Repository --> CTRL : EmployeeRepository
+    deactivate Repository
+
+    CTRL -> ER: agent = getEmployeeByEmail(email)
+    activate ER
+
+    ER --> CTRL: agent
+    deactivate ER
+
+    CTRL --> UI: agent
+    deactivate CTRL
+
+    UI -> CTRL: getAnnouncementsRequestsByAgent(agent)
+    activate CTRL
+
+
+
+
+
+     CTRL -> MainRepository : getInstance()
+     activate MainRepository
+
+     MainRepository -->CTRL : Repositories
+     deactivate MainRepository
+
+
+
+    CTRL -> Repository : getAnnouncementRequestRepository()
+    activate Repository
+
+    Repository --> CTRL : announcementRequestRepository
+    deactivate Repository
+
+    CTRL -> ARR : getAnnouncementsRequestsByAgentSort(agent)
+    activate ARR
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ARR --> CTRL : announcementRequestsByAgentSorted
+    deactivate ARR
+
+    CTRL -> ARM: getAnnouncementRequestsDTO(announcementRequestsByAgentSorted)
+    activate ARM
+
+    ARM -> LARDTO**: create()
+
+
+     loop for each object in AnnouncementRequestList
+
+
+    ARM-> LAR: BusinessType = getBusinessTypeObject()
+    activate LAR
+    deactivate LAR
+
+     ARM-> LAR: Property = getProperty()
+     activate LAR
+     deactivate LAR
+
+     ARM-> LAR: Date = getDate()
+     activate LAR
+     deactivate LAR
+
+
+     ARM-> LAR: Client = getClient()
+     activate LAR
+     deactivate LAR
+
+      opt if businessType = Rent
+
+
+     ARM-> LAR: RentDuration = getRentDuration()
+     activate LAR
+     deactivate LAR
+     end
+
+
+
+
+
+     ARM-> LAR: Agent = getAgent()
+      activate LAR
+     deactivate LAR
+
+
+
+
+      ARM-> ARM: AnnouncementRequestDTO= toDTO(announcementRequest)
+       activate ARM
+
+       ARM --> ARDTO**: create()
+       deactivate ARM
+
+       ARM -> LARDTO: add(AnnouncementRequestDTO)
+       activate LARDTO
+       deactivate LARDTO
+
+
+
+       end group
+
+       ARM --> CTRL: AnnouncementRequestDTOList
+       deactivate ARM
+
+
+
+    CTRL -->UI : AnnouncementRequestDTOList
+    deactivate CTRL
+
+    UI --> Agent : provides the list of announcement request responsible for that agent, sorted by the creation date, and asks to select one
+    deactivate UI
+
+    Agent -> UI : selects announcement request
+    activate UI
+
+    UI -> UI: keepData(AnnouncementRequestDTO)
+
+    UI --> Agent : ask if the user wants to post the property announcement
+    deactivate UI
+
+    Agent -> UI : provides the request data (yes/no)
+    activate UI
+
+alt if answer = yes
+
+ UI--> Agent: Asks if commission is in percentage or fixed
+ deactivate UI
+
+  Agent -> UI: inputs the pretend option
+       activate UI
+
+    UI --> Agent : request data (commission)
+    deactivate UI
+
+    Agent -> UI : provides the request data
+    activate UI
+
+    UI -> UI: keepData(commission)
+
+
+
+    UI --> Agent : request data confirmation
+    deactivate UI
+
+    Agent -> UI : confirms data
+    activate UI
+
+    UI -> UI: confirmCommission(commission)
+    activate UI
+
+    UI --> UI
+    deactivate UI
+
+
+
+
+
+   UI->CTRL : createAnnouncement(AnnouncementRequestDTO, commission)
+       activate CTRL
+
+
+       CTRL -> MainRepository : getInstance()
+            activate MainRepository
+
+            MainRepository -->CTRL : Repositories
+            deactivate MainRepository
+
+
+       CTRL -> Repository : getAnnouncementRepository()
+       activate Repository
+
+       Repository --> CTRL : announcementRepository
+       deactivate Repository
+
+       CTRL -> AnnouncementRepository : createAnnouncement(AnnouncementRequestDTO,commission,listedPrice)
+       activate AnnouncementRepository
+
+
+
+       AnnouncementRepository -> ARM:announcementToEntity(AnnouncementRequestDTO,commission,listedPrice)
+       activate ARM
+
+
+
+
+
+        ARM -> A**: create(announcement request, commission, listedPrice)
+
+
+
+        ARM --> AnnouncementRepository: announcement
+        deactivate ARM
+
+        AnnouncementRepository -> AnnouncementRepository: validateAnnouncement(announcement)
+                      activate AnnouncementRepository
+
+                      AnnouncementRepository -> AnnouncementRepository: add(announcement)
+                       activate AnnouncementRepository
+
+                       AnnouncementRepository --> AnnouncementRepository
+                       deactivate AnnouncementRepository
+
+
+                       AnnouncementRepository --> AnnouncementRepository
+                                      deactivate AnnouncementRepository
+
+
+
+       AnnouncementRepository --> CTRL : newAnnouncement
+       deactivate AnnouncementRepository
+
+       CTRL --> UI : newAnnouncement
+       deactivate CTRL
+
+
+
+
+
+
+
+
+
+
+
+   else  if answer is no
+
+
+    UI --> Agent : Asks for a message why the request was declined
+    deactivate UI
+
+
+    Agent -> UI : Insert message
+    activate UI
+
+    UI -> CTRL : createEmail(String sender, String recipient, String subject, String message)
+    activate CTRL
+
+     CTRL -> MainRepository : getInstance()
+     activate MainRepository
+
+      MainRepository -->CTRL : Repositories
+     deactivate MainRepository
+
+
+     CTRL -> Repository : getAnnouncementRequestRepositoryRepository()
+     activate Repository
+
+     Repository --> CTRL : announcementRepository
+      deactivate Repository
+
+    CTRL -> ARR:createEmail(String sender, String recipient, String subject, String message)
+    deactivate CTRL
+    activate ARR
+
+    ARR -> ARDTO:sender = getAgent().getEmail
+    activate ARDTO
+    deactivate ARDTO
+
+     ARR -> ARDTO:recipient = getClient().getEmail()
+     activate ARDTO
+     deactivate ARDTO
+
+     ARR -> ARR:createEmail(String sender, String recipient, String subject, String message)
+    activate ARR
+
+    ARR --> ARR
+    deactivate ARR
+
+
+
+
+
+
+
+
+
+
+
+
+end group
+
+    UI --> Agent : Display operation success
+    deactivate UI
+
+
+
+@enduml

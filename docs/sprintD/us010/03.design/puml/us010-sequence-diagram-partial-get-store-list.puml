@@ -1,0 +1,68 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+autonumber 3
+
+participant ":PlaceOrderController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "storeRepository:\nStoreRepository" as STRR
+participant "storeMapper:\nStoreMapper" as STRMAP
+participant "StoreDTO" as STORDTO
+participant "Store" as STOR
+
+group Get Store List
+        -> CTRL : getStoresWithAgents()
+        activate CTRL
+
+        CTRL -> RepositorySingleton : getInstance()
+        activate RepositorySingleton
+
+            RepositorySingleton --> CTRL: repositories
+        deactivate RepositorySingleton
+        CTRL -> PLAT : getStoreRepository()
+            activate PLAT
+
+                PLAT --> CTRL : storeRepository
+            deactivate PLAT
+
+            CTRL -> STRR : getStoresWithAgentsDTO()
+            activate STRR
+                loop for each store in stores
+                opt if store.hasAgents()
+                STRR-> STRR : storesWithAgents.add(store)
+                end
+
+                end
+                STRR->STRMAP : storeListToDTO(storesWithAgents)
+                activate STRMAP
+                loop for each store in storesWithAgents
+                STRMAP --> STOR : id = getId()
+                activate STOR
+                deactivate STOR
+                STRMAP --> STOR : designation = getDesignation()
+                activate STOR
+                deactivate STOR
+                STRMAP --> STOR : address = getAddress()
+                activate STOR
+                deactivate STOR
+                STRMAP --> STOR : email = getEmail()
+                activate STOR
+                deactivate STOR
+                STRMAP --> STOR : phoneNumber = getPhoneNumber()
+                activate STOR
+                deactivate STOR
+                STRMAP --> STORDTO** : create(id, designation, address, email, phoneNumber)
+                STRMAP -> STRMAP: storeDTOList.add(StoreDTO)
+                end
+                STRMAP --> STRR : storeDTOList
+                deactivate STRMAP
+                STRR --> CTRL : storeDTOList
+                deactivate STRR
+                <-- CTRL : storeDTOList
+        deactivate CTRL
+end group
+@enduml

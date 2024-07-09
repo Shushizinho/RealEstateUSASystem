@@ -1,0 +1,27 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+autonumber 1
+participant ":DealListController" as CTRL
+participant ":InsertionSort" as IS
+
+
+ -> CTRL : getMergeSort (propertyAreaList)
+           activate CTRL
+
+
+
+            CTRL -> IS : sort (propertyAreaList)
+            activate IS
+            IS --> CTRL : sortedDealsList
+            deactivate IS
+
+            <-- CTRL : sortedDealsList
+            deactivate CTRL
+
+@enduml

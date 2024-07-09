@@ -1,0 +1,108 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+participant ":ImportLegacySystemUI" as UI
+participant ":ImportLegacySystemController" as CTRL
+participant "dataIntegrityChecker:\nDataIntegrityChecker" as CHECKER
+
+ -> CTRL : importFile(file)
+
+activate CTRL
+CTRL -> CHECKER : checkAllData(arrayHeaders, headers, values)
+activate CHECKER
+CHECKER --> CTRL : clientValues
+deactivate CHECKER
+CTRL -> CHECKER : validateClientData(clientValues, address)
+activate CHECKER
+CHECKER --> CTRL: answer
+deactivate CHECKER
+
+alt answer = true
+
+CTRL -> CHECKER : checkAllData(arrayHeaders, headers, values)
+activate CHECKER
+CHECKER --> CTRL : storeValues
+deactivate CHECKER
+CTRL -> CHECKER : validateStoreData(storeValues, address)
+activate CHECKER
+CHECKER --> CTRL: answer
+deactivate CHECKER
+alt answer = true
+
+
+CTRL -> CHECKER : checkAllData(arrayHeaders, headers, values)
+activate CHECKER
+CHECKER --> CTRL : propertyValues
+deactivate CHECKER
+CTRL -> CHECKER : validatePropertyData(propertyValues, address)
+activate CHECKER
+CHECKER --> CTRL: answer
+deactivate CHECKER
+alt answer = true
+CTRL -> CHECKER : checkAllData(arrayHeaders, headers, values)
+activate CHECKER
+CHECKER --> CTRL : announcementValues
+deactivate CHECKER
+
+CTRL -> CHECKER : validateAnnouncementData(announcementValues)
+activate CHECKER
+CHECKER --> CTRL: answer
+deactivate CHECKER
+alt answer = true
+
+CTRL -> CHECKER : checkAllData(arrayHeaders, headers, values)
+activate CHECKER
+CHECKER --> CTRL : purchaseOrderValues
+deactivate CHECKER
+CTRL -> CHECKER : validatePurchaseOrderData(purchaseOrderValues)
+activate CHECKER
+
+CHECKER --> CTRL: answer
+deactivate CHECKER
+alt answer = true
+
+'fazer um "break" para dar mais espaço
+
+ref over CTRL
+Create Client
+
+end ref
+
+ref over CTRL
+Create Store
+
+end ref
+
+ref over CTRL
+Create Property
+
+end ref
+
+ref over CTRL
+Create Announcement
+
+end ref
+
+ref over CTRL
+Create PurchaseOrder
+
+end ref
+
+
+end alt
+end alt
+end alt
+end alt
+end alt
+
+autonumber 115
+ <-- CTRL: operationResult
+deactivate CTRL
+
+
+@enduml

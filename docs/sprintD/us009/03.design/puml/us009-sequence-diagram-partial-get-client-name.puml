@@ -1,0 +1,44 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 1
+
+participant ":CreateVisitRequestController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "Repositories\n:Repositories" as PLAT
+participant "clientRepository:\nClientRepository" as CLI
+
+
+        -> CTRL : client.getClientName()
+        activate CTRL
+
+
+        CTRL -> RepositorySingleton : getInstance()
+        activate RepositorySingleton
+
+         RepositorySingleton --> CTRL: repositories
+        deactivate RepositorySingleton
+
+        CTRL -> PLAT : getClientRepository()
+        activate PLAT
+
+         PLAT -> CTRL : clientRepository
+        deactivate PLAT
+
+        CTRL -> CLI : getClientName()
+        activate CLI
+
+
+        CLI --> CTRL : clientName
+        deactivate CLI
+
+
+
+
+        <-- CTRL : clientName
+        deactivate CTRL
+
+@enduml

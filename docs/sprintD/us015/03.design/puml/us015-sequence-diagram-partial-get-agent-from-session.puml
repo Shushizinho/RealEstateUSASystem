@@ -1,0 +1,58 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":ListBookingRequestsRequestController" as CTRL
+participant ":Repositories" as MainRepository
+participant "Repository: \nRepositories" as Repository
+participant ":ApplicationSession" as _APP
+participant "appSession\n:ApplicationSession" as APP
+participant "currentSession\n:UserSession" as SESSION
+participant "employeeRepository:\nEmployeeRepository" as ER
+
+
+
+  -> CTRL : getAgentFromSession()
+    activate CTRL
+
+    CTRL -> _APP : getInstance()
+    activate _APP
+
+    _APP --> CTRL : appSession
+    deactivate _APP
+
+    CTRL -> APP : getCurrentSession()
+    activate APP
+
+    APP --> CTRL : currentSession
+    deactivate APP
+
+    CTRL -> SESSION : email = getUserEmail()
+    activate SESSION
+
+    SESSION --> CTRL : email
+    deactivate SESSION
+
+      CTRL -> MainRepository : getInstance()
+      activate MainRepository
+
+    MainRepository -->CTRL : Repositories
+    deactivate MainRepository
+
+    CTRL -> Repository: getEmployeeRepository()
+    activate Repository
+
+    Repository --> CTRL : EmployeeRepository
+    deactivate Repository
+
+    CTRL -> ER: agent = getEmployeeByEmail(email)
+    activate ER
+
+    ER --> CTRL: agent
+    deactivate ER
+@enduml

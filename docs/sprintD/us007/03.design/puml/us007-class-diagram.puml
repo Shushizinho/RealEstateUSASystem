@@ -1,0 +1,76 @@
+                                                                                                                                                                                @startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing true
+skinparam linetype polyline
+'skinparam linetype orto
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+
+'class UserSession
+'{
+'    + getUserEmail()
+'}
+
+
+
+class Client {
+    - String name
+    - String email
+    - Integer passportNumber
+    - String taxNumber
+    - Integer phoneNumber
+}
+
+class Address{
+     - String streetAddress
+     - String state
+     - String city
+     - String zipCode
+}
+
+
+
+
+
+class ClientRepository {
+     + create(email,passportNumber,\n taxNumber,address,phoneNumber)
+}
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getClientRepository()
+}
+
+class SignController {
+    + SignController()
+    + registerClient(email,passportNumber,\n taxNumber,address,phoneNumber)
+}
+
+
+
+class SignUI {
+}
+
+Repositories -> Repositories : instance
+
+SignUI .> SignController
+
+SignController .> Repositories : repositories
+
+Repositories --> "1" ClientRepository
+
+SignController ..> ClientRepository : ClientRepository
+
+
+ClientRepository "1" --> "*" Client : client
+
+
+Client -o Address
+
+
+
+@enduml

@@ -1,0 +1,40 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+autonumber
+
+actor "Client" as User
+participant ":System" as System
+
+activate User
+
+    User -> System : asks to see the agent's response to my visit requests
+
+    activate System
+
+    System --> User : show list of response (display property, date of the appointment, agent's name and phone number)
+    deactivate System
+
+
+    User -> System : select appointment
+
+    activate System
+
+    System --> User : display property, date of the appointment, agent's name and phone number and asks to accept or reject it
+
+
+    deactivate System
+
+    User -> System : accept the appointment
+
+    activate System
+
+    System --> User : display success message
+
+    deactivate System
+
+@enduml

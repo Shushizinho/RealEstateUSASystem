@@ -1,0 +1,115 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing true
+skinparam linetype ortho
+skinparam shadowing true
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class GetPropertyListUI {
+}
+
+class GetProperttyListController {
+    + CreateGetProperttyListController()
+    + getPropertyListByAnnouncement()
+    + getBusinessType()
+    + getPropertyType()
+    + getPropertyFilters()
+    + getPropertyList(businessType, propertyType, bedroomNo, choosenFilter)
+    + getPropertiesByBusinessType(businessType)
+}
+
+class PropertyFiltersRepository{
+    - ArrayList<Filters> propertyFilters
+    + getPropertyFilters()
+}
+
+class Filters {
+    - String filter
+}
+
+class BusinessTypeRepository{
+    - ArrayList<String> BusinessTypeList
+    + getBusinessType()
+
+}
+
+class BusinessType{
+   - String description
+}
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getAnnouncementRepository()
+    + getPropertyFiltersRepository()
+    + getBusinessTypeRepository()
+    + getPropertyTypeRepository()
+    + getPropertyRepository()
+}
+
+class PropertyRepository{
+   + getPropertyList (businessType, propertyType, bedroomNo, choosenFilter)
+   + sortPropertyList (choosenFilter)
+   + ArrayList<Property> Properties
+}
+
+class Property {
+    - float price;
+    - float area;
+    - Address address;
+    - float distanceToCentre;
+    - List<String> photographs;
+    - PropertyType propertyType;
+    - Store store;
+    - Agent agent;
+    - Client client;
+    - Announcement announcement;
+}
+
+class PropertyTypeRepository{
+    - ArrayList<String> PropertyTypeList
+    + getPropertyType()
+}
+
+class PropertyType{
+    - String description;
+}
+
+class AnnouncementRepository{
+    - ArrayList<Announcement> announcements;
+    + getPropertiesByBusinessType(businessType)
+    + getPropertyListByAnnouncement()
+}
+
+
+Repositories --> Repositories : instance
+
+GetPropertyListUI .> GetProperttyListController
+
+GetProperttyListController .-> Repositories : repositories
+
+Repositories --> "1" PropertyFiltersRepository
+
+Repositories --> "1" AnnouncementRepository
+
+Repositories --> "1" BusinessTypeRepository
+
+Repositories --> "1" PropertyTypeRepository
+
+PropertyFiltersRepository --> "1" Filters
+
+Repositories ---> "1" PropertyRepository
+
+BusinessTypeRepository --> "1" BusinessType
+
+PropertyTypeRepository --> "1" PropertyType
+
+PropertyRepository --> "*" Property
+
+
+
+@enduml

@@ -1,0 +1,34 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+ autonumber
+
+participant "dataIntegrityChecker:\nDataIntegrityChecker" as CHECKER
+
+participant "propertyRepository:\nPropertyRepository" as PR
+participant "property:\nProperty" as PROP
+ -> CHECKER : submitPropertyData(propertyValues, address, store, client)
+activate CHECKER
+
+CHECKER -> PR : createProperty(propertyValues, address, store, client)
+activate PR
+PR -> PROP** : create(price, area, address, distanceToCentre, photographs, propertyType, store, creator)
+
+PR -> PR : add(property)
+activate PR
+PR -> PR : validateProperty(property)
+activate PR
+PR --> PR:
+deactivate PR
+PR --> PR:
+deactivate PR
+PR --> CHECKER: property
+deactivate PR
+
+<-- CHECKER : property
+deactivate CHECKER
+
+
+@enduml

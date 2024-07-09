@@ -1,0 +1,241 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+title US008 Sequence Diagram
+autonumber
+
+actor "Agent" as Agent
+
+
+participant ":ListBookingRequestsUI" as UI
+participant ":ListBookingRequestsController" as CTRL
+participant ":Repositories" as MainRepository
+participant "Repository: \nRepositories" as Repository
+participant ":ApplicationSession" as _APP
+participant "appSession\n:ApplicationSession" as APP
+participant "currentSession\n:UserSession" as SESSION
+participant "employeeRepository:\nEmployeeRepository" as ER
+participant " visitRequestRepository:\nVisitRequestRepository" as VRR
+
+
+
+
+participant "VisitRequestMapper" as VRM
+participant "visitRequestDTO:VisitRequestDTO" as VVRDTO
+participant "ListVisitRequestDTO : List<VisitRequestDTO>" as VRDTO
+participant "visitRequestsByAgentInPeriodSorted : List<VisitRequest>" as VR
+
+
+
+
+
+
+
+
+
+    activate Agent
+
+  Agent -> UI : asks for the list of all booking requests made for myself
+    activate UI
+
+    UI -> CTRL** : create
+
+
+     UI --> Agent : asks for the start date to view booking requests
+        deactivate UI
+
+
+     Agent -> UI : selects the start date
+     activate UI
+
+
+
+     UI --> Agent : asks for the end date to view booking requests
+     deactivate UI
+
+
+      Agent -> UI : selects the end date
+       activate UI
+
+
+
+
+
+    UI -> CTRL : getAgentFromSession()
+       activate CTRL
+
+       CTRL -> _APP : getInstance()
+       activate _APP
+
+       _APP --> CTRL : appSession
+       deactivate _APP
+
+       CTRL -> APP : getCurrentSession()
+       activate APP
+
+       APP --> CTRL : currentSession
+       deactivate APP
+
+       CTRL -> SESSION : email = getUserEmail()
+       activate SESSION
+
+       SESSION --> CTRL : email
+       deactivate SESSION
+
+         CTRL -> MainRepository : getInstance()
+         activate MainRepository
+
+       MainRepository -->CTRL : Repositories
+       deactivate MainRepository
+
+       CTRL -> Repository: getEmployeeRepository()
+       activate Repository
+
+       Repository --> CTRL : EmployeeRepository
+       deactivate Repository
+
+       CTRL -> ER: agent = getEmployeeByEmail(email)
+       activate ER
+
+       ER --> CTRL: agent
+       deactivate ER
+
+       CTRL --> UI: agent
+       deactivate CTRL
+
+       UI -> CTRL: getVisitRequestsByAgent(String agent,DateTime begin,DateTime end )
+       activate CTRL
+
+
+      CTRL -> MainRepository : getInstance()
+         activate MainRepository
+
+         MainRepository -->CTRL : Repositories
+         deactivate MainRepository
+
+         CTRL -> VRR: getVisitRequestRepository()
+         activate VRR
+
+         VRR --> CTRL: visitRequestRepository
+         deactivate VRR
+
+         CTRL -> VRR : getVisitRequestsByAgentInPeriod(String email, DateTime begin, DateTime end)
+         activate VRR
+
+         VRR -> ConfigProperties: configureSortingAlgorithm()
+         activate ConfigProperties
+
+         ConfigProperties --> VRR: sortingAlgorithm
+
+         deactivate ConfigProperties
+
+
+         alt if( sortAlgorithm = "BubbleSort")
+
+
+       VRR -> VRR: sort(visitRequestsList)
+       activate VRR
+
+        VRR --> VRR: sort(visitRequestsList)
+              deactivate VRR
+
+
+              else alt if( sortAlgorithm = "InsertionSort")
+
+               VRR -> VRR: sort(visitRequestsList)
+                     activate VRR
+
+                      VRR --> VRR: sort(visitRequestsList)
+                            deactivate VRR
+
+
+
+
+
+
+
+
+
+         end group
+
+         VRR --> CTRL: visitRequestsByAgentInPeriodSorted
+         deactivate VRR
+
+          CTRL -> VRM: getVisitRequestsDTO(visitRequestsByAgentInPeriod)
+             activate VRM
+
+        VRM -> VRDTO**: create()
+
+      loop for each object in ListVisitRequest
+
+
+
+    VRM-> VR: clientName = getClientName()
+    activate VR
+    deactivate VR
+
+     VRM-> VR: Property = getProperty()
+     activate VR
+     deactivate VR
+
+     VRM-> VR: preferredDate = getPreferredDate()
+     activate VR
+     deactivate VR
+
+
+     VRM-> VR: Address = getAddress()
+     activate VR
+     deactivate VR
+
+
+
+
+     VRM-> VR: clientPhoneNumber = getClientPhoneNumber()
+     activate VR
+     deactivate VR
+
+
+
+     VRM-> VR: timeSlot = getTimeSlot()
+      activate VR
+     deactivate VR
+
+      VRM-> VRM: VisitRequestDTO= toDTO(VisitRequest)
+            activate VRM
+
+            VRM --> VVRDTO**: create()
+            deactivate VRM
+
+
+            VRM -> VRDTO: add(VisitRequestDTO)
+            activate VRDTO
+            deactivate VRDTO
+
+
+
+            end group
+
+
+            VRM --> CTRL: visitRequestsDTOListSorted
+            deactivate VRM
+
+            CTRL --> UI : visitRequestsDTOListSorted
+            deactivate CTRL
+
+
+
+
+
+
+
+
+     UI --> Agent : show the list of booking requests based on the selected date range \n and sorted in ascending order and display operation success
+      deactivate UI
+
+
+
+
+
+@enduml

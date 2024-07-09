@@ -1,0 +1,45 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 3
+
+'hide footbox
+participant ":AnnouncementController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "businessTypeRepository:\nBusinessTypeRepository" as BT
+
+autonumber
+     -> CTRL: agent = getBusinessTypeByDescription(businessTypeDescription)
+
+    activate CTRL
+
+
+                         CTRL -> RepositorySingleton : getInstance()
+                          activate RepositorySingleton
+
+                              RepositorySingleton --> CTRL: repositories
+                              deactivate RepositorySingleton
+
+                                 CTRL -> PLAT : getBusinessTypeRepository()
+                                   activate PLAT
+
+                                     PLAT -> CTRL : businessTypeRepository
+                                      deactivate PLAT
+
+                                        CTRL -> BT: getBusinessTypeByDescription(businessTypeDescription)
+                                          activate BT
+
+                                            BT --> CTRL : businessType
+                                              deactivate BT
+
+            <-- CTRL  : businessType
+
+
+
+
+
+
+@enduml

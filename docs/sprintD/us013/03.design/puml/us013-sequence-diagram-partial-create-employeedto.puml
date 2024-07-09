@@ -1,0 +1,69 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+'hide footbox
+participant "employeeMapper:\nEmployeeMapper" as EMPLMAP
+participant "employee:\nEmployee" as EMPL
+participant "employeeDTO:\nEmployeeDTO" as EMPLDTO
+participant "employeeListDTO:\nList<EmployeeDTO>" as LEMPDTO
+autonumber
+
+
+
+                                         -> EMPLMAP: toDTO(employee)
+                                        activate EMPLMAP
+
+                                        EMPLMAP --> EMPL : id = getId()
+                                        activate EMPL
+                                        deactivate EMPL
+
+                                        EMPLMAP -> EMPL : email = getEmail()
+                                        activate EMPL
+                                        deactivate EMPL
+
+                                        EMPLMAP -> EMPL : name = getName()
+                                        activate EMPL
+                                        deactivate EMPL
+
+                                        EMPLMAP -> EMPL : passportNumber = getPassportNumber()
+                                        activate EMPL
+                                        deactivate EMPL
+
+                                        EMPLMAP -> EMPL : phoneNumber = getPhoneNumber()
+                                        activate EMPL
+                                        deactivate EMPL
+
+                                        EMPLMAP -> EMPL : taxNumber = getTaxNumber()
+                                        activate EMPL
+                                        deactivate EMPL
+
+                                        EMPLMAP -> EMPL : address = getAddress()
+                                        activate EMPL
+                                        deactivate EMPL
+
+                                        EMPLMAP -> EMPL : role = getRoles()
+                                        activate EMPL
+                                        deactivate EMPL
+
+                                        EMPLMAP -> EMPL : store = getStore()
+                                        activate EMPL
+                                        deactivate EMPL
+                                        EMPLMAP -> EMPLDTO** : create()
+
+
+                                        <--EMPLMAP : employeeDTO
+                                        deactivate EMPLMAP
+
+
+                                        ->LEMPDTO: add(employeeDTO)
+                                        activate LEMPDTO
+                                        deactivate LEMPDTO
+
+
+
+
+
+@enduml

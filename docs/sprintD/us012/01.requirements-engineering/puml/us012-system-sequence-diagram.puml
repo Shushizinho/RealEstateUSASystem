@@ -1,0 +1,32 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+title System Sequence Diagram (SSD)
+
+
+autonumber
+
+actor "Administrator" as ADM
+participant ":System" as System
+
+activate ADM
+
+    ADM -> System : asks to import a csv file
+    activate System
+
+        System --> ADM : show the list of all csv files in the resources folder
+    deactivate System
+
+    ADM -> System : choose a option to import the file
+        activate System
+
+        System --> ADM :  displays operation success
+'        import the csv file to the system and...
+    deactivate System
+
+
+@enduml

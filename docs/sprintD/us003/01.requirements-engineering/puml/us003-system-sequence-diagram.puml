@@ -1,0 +1,52 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+'title As a system Administrator, I want to register a new employee.
+title System Sequence Diagram (SSD)
+
+autonumber
+
+actor "Administrator" as Administrator
+participant ":System" as System
+
+activate Administrator
+
+    Administrator -> System : asks to register a new employee
+    activate System
+
+    loop until there are no more roles to assign or the administrator decides not to provide more roles
+
+        System --> Administrator : show the list of available roles
+    deactivate System
+
+        Administrator -> System : select one or more roles for the employee
+        activate System
+    end
+        System --> Administrator : show a list of stores for the user select
+    deactivate System
+
+    Administrator -> System : select the store to situate the employee
+        activate System
+
+            System --> Administrator : request data to register a new employee (name,email,passportNumber,taxNumber,address,phoneNumber)
+        deactivate System
+
+        Administrator -> System : submit data of the new employee
+        activate System
+
+'             System --> Administrator : asks for confirmation to know if the data is correct
+'                    deactivate System
+'
+'            Administrator -> System : submit confirmation
+'            activate System
+
+            System --> Administrator : displays operation success
+
+'            and automatically sends a password to the registered employee's email
+        deactivate System
+
+@enduml

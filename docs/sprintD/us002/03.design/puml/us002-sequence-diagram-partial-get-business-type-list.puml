@@ -1,0 +1,89 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 3
+
+'hide footbox
+participant ":AnnouncementController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "BusinessTypeRepository:\nBusinessTypeRepository" as BT
+participant "BusinessTypeMapper" as BTM
+participant "BusinessTypeDTOList : List<BusinessTypeDTO>" as BTDTO
+participant "BusinessTypeDTO : BusinessTypeDTO" as BTTDTO
+participant "BusinessTypeList : List<BusinessType>" as BTL
+
+   autonumber
+      -> CTRL : getBusinessTypes()
+                    activate CTRL
+
+
+                            CTRL -> RepositorySingleton : getInstance()
+                            activate RepositorySingleton
+
+                                RepositorySingleton --> CTRL: repositories
+                            deactivate RepositorySingleton
+
+                            CTRL -> PLAT : getBusinessTypeRepository()
+                            activate PLAT
+
+                                PLAT -> CTRL : businessTypeRepository
+                            deactivate PLAT
+
+                            CTRL -> BT : getBusinessTypes()
+                            activate BT
+
+                                BT --> CTRL : businessTypeList
+                            deactivate BT
+
+
+                             CTRL -> BTM: toDTO(usinessTypeList)
+                                                  activate BTM
+
+                                                  BTM -> BTDTO**: create()
+
+                                           loop for each object in BusinessTypeList
+
+                                             BTM-> BTL: descriptionProperty = getDescriptionProperty()
+                                               activate BTL
+                                               deactivate BTL
+
+
+                                 BTM-> BTM: BusinessTypeDTO= toDTO(businessType)
+                                   activate BTM
+
+
+                                       BTM --> BTTDTO**: create()
+                                          deactivate BTM
+
+                                          BTM -> BTDTO: add(BusinessTypeDTO)
+                                          activate BTDTO
+                                          deactivate BTDTO
+
+
+
+
+
+                                           end group
+
+                            BTM --> CTRL: businessTypeListDTO
+                            deactivate BTM
+
+
+
+
+                            <-- CTRL: businessTypeListDTO
+                            deactivate CTRL
+
+
+
+
+
+
+
+
+
+
+@enduml

@@ -1,0 +1,85 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 3.1
+
+'hide footbox
+
+
+participant ":AnnouncementController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+
+
+participant "propertyRepository:\nPropertyRepository" as PR
+
+
+
+participant "Apartment" as APROP
+
+
+
+
+
+participant "PropertyMapper" as PM
+
+participant "Apartment" as APROP
+
+
+autonumber
+  -> CTRL: createProperty(apartmentDTO)
+        activate CTRL
+
+        CTRL -> RepositorySingleton : getInstance()
+                    activate RepositorySingleton
+
+                    RepositorySingleton --> CTRL: repositories
+                    deactivate RepositorySingleton
+
+                    CTRL -> PLAT : getPropertyRepository()
+                    activate PLAT
+
+                     PLAT -> CTRL : propertyRepository
+                     deactivate PLAT
+
+        CTRL -> PR : createProperty(apartmentDTO)
+        activate PR
+
+
+                            PR -> PM:apartmentToEntity (ApartmentDTO)
+                            activate PM
+
+                            PM -> PM: toEntity(apartmentDTO)
+                            activate PM
+
+                            PM --> PM
+                            deactivate PM
+
+
+
+                         PM -> APROP**: create(apartment)
+
+                          PM --> PR: apartment
+                          deactivate PM
+
+
+
+
+                            PR -> PR: validateApartment(apartment)
+
+                            activate PR
+                                PR -> PR: addApartment(apartment)
+                                activate PR
+                                        PR --> PR
+                                deactivate PR
+                                    PR --> PR
+                            deactivate PR
+
+
+                          PR -> CTRL : apartment
+                        deactivate PR
+
+
+@enduml

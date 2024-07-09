@@ -1,0 +1,182 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+!pragma layout smetana
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class ApplicationSession
+{
+    + static getInstance()
+    + getCurrentSession()
+}
+
+class UserSession
+{
+    + getUserEmail()
+}
+
+
+
+
+
+
+class StoreRepository {
+    + getStore()
+}
+class DivideStoresAlgorithm {
+    +divideStores(Integer[] selectedStoresList,Integer[] numberPropertiesList)
+    -getTotalSum(Integer[] numberPropertiesList)
+    -getBinary(Integer i)
+    -getPartialSum(String binary,Integer[] numberPropertiesList)
+    -saveMinimum(String binary, Integer partial)
+    -getPairOfSublists(String[] minVal, Integer[] selectedStoresList, Integer[] numberPropertiesList)
+}
+class PropertyRepository {
+    + getStore()
+    + getNumberPropertiesFromStore(Store store)
+    - addToNumberPropertiesList(propertyNumber)
+}
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getStoreRepository()
+
+}
+
+class DivideStoresController {
+    + DivideStoresController(storeRepository)
+    - getStoreRepository()
+    - getStore()
+    - getStores()
+}
+
+class Store {
+    - Integer id
+    - String designation
+    - String email
+    - Integer phoneNumber
+    + getId()
+    +getDesignation()
+    +getAddress()
+    +getEmail()
+    +getPhoneNumber()
+}
+
+class Address{
+-String streetAddress
+- String city
+-String state
+-String zipCode
+
+
+}
+
+class StoreMapper{
++toDTO(Store store)
++getStoresDTO(List<store> storelist)
+
+}
+
+class Property{
+-double price
+-double area
+-Address address
+- double distanceToCentre
+-List<Photograph> photographs
+-PropertyType propertyType
+-Store store
+-Person creator
+-DateTime date
+
+
+
+}
+
+
+
+
+class DivideStoresUI {
+}
+
+
+class StoreManager{
+
+
+}
+
+class Employee{
+
+
+
+}
+
+class Person{
+ -String email
+-String name
+-Integer passportNumber
+- long phoneNumber
+- String taxNumber
+
+}
+
+class Role{
+- Integer id
+- String description
+
+}
+class StoreDTO{
+- Integer id
+- String designation
+- AddressDTO address
+-String email
+- long phoneNumber
+
+}
+
+Repositories -> Repositories : instance
+ApplicationSession -> ApplicationSession : instance
+
+DivideStoresUI .> DivideStoresController
+
+DivideStoresController ..> Repositories : repositories
+DivideStoresController .> StoreRepository : StoreRepository
+
+Repositories --> "1" StoreRepository
+StoreManager"1" --|> "1"Employee
+DivideStoresController ..> StoreMapper
+DivideStoresController .> DivideStoresAlgorithm
+DivideStoresController ..> PropertyRepository : propertyRepository
+
+
+
+
+
+ApplicationSession --> "1" UserSession : userSession
+
+
+DivideStoresController ..> ApplicationSession
+DivideStoresController ..> UserSession
+Repositories ---> "1" PropertyRepository
+PropertyRepository --> "*" Property
+
+StoreRepository "1" --> "*" Store: contains
+StoreMapper --> StoreDTO
+StoreMapper ---> Store
+Store "1" --> "1" Address
+Address "1" <- "1" Property
+
+Store"1" --> "1" Property
+Person "1" --> "1" Address
+Employee "1" --|> "1" Person
+Employee "1" --> "1..*" Role
+Employee"1" ---> "1" Store
+
+StoreManager"1" -- "2..*"Store: intends to divide
+
+@enduml

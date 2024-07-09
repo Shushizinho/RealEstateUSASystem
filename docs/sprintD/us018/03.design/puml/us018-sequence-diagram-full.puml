@@ -1,0 +1,167 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+autonumber
+
+actor "Store Manager" as SM
+participant ":AnalyseDealsUI" as UI
+participant ":AnalyseDealsController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "propertyRepository:\nPropertyRepository" as PROPR
+participant "purchaseOrderRepository:\nPurchaseOrderRepository" as OR
+participant "PurchaseOrder" as OFF
+
+
+activate SM
+
+    SM -> UI : request to analyse deals
+
+    activate UI
+    UI -> CTRL** : createAnalyseDealsController()
+
+
+    UI --> UI : displayRegressionModel
+
+    deactivate CTRL
+
+    UI --> SM : request regression model (simple linear or multi-linear)
+
+
+    deactivate UI
+
+
+    SM -> UI : select regression model
+
+    activate UI
+    UI --> UI : keep (regressionModel)
+
+    UI --> CTRL : displayIndependentVariables ()
+   activate CTRL
+
+       CTRL -> RepositorySingleton : getInstance()
+       autonumber 7.1
+              activate RepositorySingleton
+
+                  RepositorySingleton --> CTRL: repositories
+              deactivate RepositorySingleton
+
+              CTRL -> PLAT : getPropertyRepository()
+              activate PLAT
+
+                  PLAT -> CTRL : propertyRepository
+              deactivate PLAT
+
+              CTRL -> PROPR : getIndependentVariables()
+              activate PROPR
+
+                  PROPR --> CTRL : independentVariablesList
+              deactivate PROPR
+
+
+   autonumber 8
+
+    CTRL --> UI : IndependentVariablesList
+    deactivate CTRL
+
+
+    UI --> SM : request the independent variable(s) from the list of property information
+    deactivate UI
+    loop (once) if simple linear\n(while number of selected variables < number of total variables and\n selected variable != 0) if multi-linear
+
+
+    SM -> UI : select the independent variable
+
+    activate UI
+
+
+
+    UI --> UI : keep (IndependentVariable)
+
+    UI --> UI : addToList(IndependentVariable)
+    end
+
+     UI --> UI : getStore (store)
+
+    UI -> CTRL: getDealsFromStore(store)
+    autonumber 14.1
+        activate CTRL
+         CTRL -> RepositorySingleton : getInstance()
+        activate RepositorySingleton
+
+            RepositorySingleton --> CTRL: repositories
+        deactivate RepositorySingleton
+
+        CTRL -> PLAT : getPurchaseOrderRepository()
+        activate PLAT
+
+            PLAT -> CTRL : PurchaseOrderRepository
+        deactivate PLAT
+
+        CTRL -> OR : getDealsByStore(store)
+        activate OR
+        OR --> CTRL : dealsList
+        deactivate OR
+
+
+        autonumber 15
+
+    CTRL --> UI : dealsList
+    deactivate CTRL
+
+    UI -> CTRL: getValueFromDeals(dealsList)
+    autonumber 16.1
+        activate CTRL
+        CTRL -> RepositorySingleton : getInstance()
+            activate RepositorySingleton
+
+                RepositorySingleton --> CTRL: repositories
+            deactivate RepositorySingleton
+
+            CTRL -> PLAT : getPurchaseOrderRepository()
+            activate PLAT
+
+                PLAT -> CTRL : PurchaseOrderRepository
+            deactivate PLAT
+
+            CTRL -> OR : getDealsValue(dealsList)
+            activate OR
+            autonumber 16.5.1
+
+            loop for each deal in dealList
+            OR --> OFF : getOrderAmount()
+             activate OFF
+            OFF --> OR : orderAmount
+            deactivate OFF
+
+
+            OR --> OR : addToList(orderAmount)
+            end
+            autonumber 1.6
+            OR --> CTRL : ValuesList
+            deactivate OR
+
+            autonumber 17
+
+        CTRL --> UI : ValuesList
+        deactivate CTRL
+
+    UI --> UI : RegressionAnalysis (SelectedVariablesList, ValuesList)
+
+
+
+
+    UI --> SM :shows a prediction of the value of a\n property based on the value of the independent variable(s)
+
+    deactivate UI
+
+
+deactivate SM
+
+
+
+@enduml

@@ -1,0 +1,167 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing true
+skinparam linetype ortho
+skinparam shadowing true
+!pragma layout smetana
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class  CreateVisitRequestUI {
+}
+
+class CreateVisitRequestListController {
+    - getClientFromSession()
+    + getPropertyListByAnnouncement()
+    + getClient()
+    + client.getName()
+    + client.getPhoneNumber()
+    + CreateVisitRequest (VisitRequestDTO)
+    + ValidateVisitRequest (VisitRequestDTO)
+}
+
+class ClientRepository{
+    - ArrayList<Client> clients
+    + getClientName()
+    + getClientPhoneNumber()
+    + getClientByEmail(email)
+}
+
+class Person {
+    - String email
+    - String name
+    - Integer passportNumber
+    - long phoneNumber
+    - String taxNumber
+    - Address address
+}
+
+class Client{
+    - Person person
+}
+
+class ApplicationSession
+{
+    + static getInstance()
+    + getCurrentSession()
+}
+
+class UserSession
+{
+    + getUserEmail()
+}
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getCurrentSession()
+    + getClientRepository()
+    + getAnnouncementRepository()
+    + getVisitRequestRepository()
+}
+
+class AnnouncementRepository{
+   - ArrayList<Announcement> announcements
+   - ArrayList<SaleAnnouncement> saleAnnouncements
+   - ArrayList <RentAnnouncement> rentAnnouncements
+   + getPropertyListByAnnouncement()
+}
+
+class VisitRequestRepository{
+    - ArrayList <VisitRequest> visitRequest
+    + CreateVisitRequest (VisitRequestDTO)
+    + validateVisitRequest (VisitRequestDTO)
+}
+
+class VisitRequest{
+    - Property property
+    - String preferredDate
+    - String timeSlot
+    - String clientName
+    - Integer clientPhoneNumber
+    - String clientReply
+    - Agent agent
+    - Integer wasAccepted
+}
+
+class VisitRequestMapper{
+    + toEntity (VisitRequestDTO)
+    + toDTO (VisitRequest)
+}
+
+class VisitRequestDTO {
+    - PropertyDTO property
+    - DateTimeDTO preferredDate
+    - List<DateTime> timeSlot
+    - String clientName
+    - long clientPhoneNumber
+    - Agent agent
+    - Integer wasAccepted
+    + VisitRequestDTO(PropertyDTO property, DateTimeDTO preferredDate, List<DateTime> timeSlot, String clientName, long clientPhoneNumber)
+}
+
+class PropertyDTO{
+    - Double price;
+    - Double area;
+    - AddressDTO address;
+    - Double distanceToCentre;
+    - List<PhotographDTO> photographs;
+    - PropertyTypeDTO propertyType;
+    - StoreDTO store;
+    - PersonDTO creator;
+    - DateTimeDTO date;
+}
+
+class DateTimeDTO{
+    - Integer dayOfMonth;
+    - Integer month;
+    - Integer year;
+    - Integer hour;
+    - Integer minute;
+}
+
+
+
+
+
+ApplicationSession -> ApplicationSession : instance
+ApplicationSession --> "1" UserSession : userSession
+
+CreateVisitRequestListController ..> ApplicationSession
+
+Repositories --> Repositories : instance
+
+CreateVisitRequestUI .> CreateVisitRequestListController
+
+CreateVisitRequestListController .-> Repositories : repositories
+
+Repositories --> "1" ClientRepository
+
+Repositories --> "1" VisitRequestRepository
+
+
+ClientRepository --> "1" Client
+
+Client --> "1" Person
+
+Repositories ---> "1" AnnouncementRepository
+
+
+VisitRequestRepository "1" --> "1" VisitRequestMapper
+
+CreateVisitRequestListController "1" --> "1" VisitRequestMapper
+
+VisitRequestMapper "1" --> "1" VisitRequest
+
+VisitRequestMapper "1" -> "1" VisitRequestDTO
+
+VisitRequestDTO "1" --> "1" PropertyDTO
+
+VisitRequestDTO "1" --> "1" DateTimeDTO
+
+
+
+@enduml

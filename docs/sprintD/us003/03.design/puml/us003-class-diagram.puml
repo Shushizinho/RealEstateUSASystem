@@ -1,0 +1,124 @@
+                                                                                                                                                                                @startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing true
+skinparam linetype polyline
+'skinparam linetype orto
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+
+'class UserSession
+'{
+'    + getUserEmail()
+'}
+
+
+class Store {
+    - Integer id
+    - String designation
+    - String email
+    - Integer phoneNumber
+}
+
+class Employee {
+    - String name
+    - String email
+    - Integer passportNumber
+    - String taxNumber
+    - Integer phoneNumber
+    + getStore()
+}
+
+class Address{
+     - String streetAddress
+     - String state
+     - String city
+     - String zipCode
+}
+
+
+
+class StoreRepository {
+    + getStoreByDescription(storeDescription)
+}
+
+class Role{
+    - Integer id
+    - String description
+}
+
+class RoleRepository {
+    + getRoleByDescription(roleDescription)
+}
+
+class EmployeeRepository {
+     + create(email,passportNumber,\n taxNumber,address,phoneNumber,store,role)
+     + createPassword()
+     + createPasswordTxt(email,pass)
+}
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getRoleRepository()
+    + getStoreRepository()
+    + getEmployeeRepository()
+}
+
+class RegisterEmployeeController {
+    + RegisterEmployeeController()
+    + getRoles()
+    + getStores()
+    + getStoreByDescription(storeDescription)
+    + getRoleByDescription(roleDescription)
+    + registerEmployee(email,passportNumber,\n taxNumber,address,phoneNumber,store,role)
+}
+
+
+
+'note right of RegisterEmployeeController
+'    - userEmail is obtained
+'    from the user session
+'    - categoryDescription
+'    is retrieved from selected data
+'end note
+'
+'note bottom of StoreRepository
+'    - used for displaying
+'    the category list
+'end note
+
+class RegisterEmployeeUI {
+}
+
+Repositories -> Repositories : instance
+
+RegisterEmployeeUI .> RegisterEmployeeController
+
+RegisterEmployeeController .> Repositories : repositories
+
+Repositories -> "1" StoreRepository
+Repositories -> "1" EmployeeRepository
+
+'RegisterEmployeeController ..> Store
+RegisterEmployeeController ..> EmployeeRepository : EmployeeRepository
+RegisterEmployeeController ..> RoleRepository : RoleRepository
+RegisterEmployeeController ..> StoreRepository : StoreRepository
+
+Repositories --> "1" RoleRepository
+
+StoreRepository "1" --> "*" Store : store
+RoleRepository "1" --> "*" Role : role
+EmployeeRepository "1" --> "*" Employee : employee
+
+
+Employee -o Store
+Employee -o Address
+Store --o Address
+Role --o Address
+
+
+
+@enduml

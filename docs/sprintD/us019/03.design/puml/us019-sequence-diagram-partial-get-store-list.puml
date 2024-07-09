@@ -1,0 +1,85 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":DivideStoresController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories:\nRepositories" as PLAT
+participant "storeRepository:\nStoreRepository" as stRep
+participant "StoreMapper" as stMa
+participant "ListStoreDTO:List<StoreDTO>" as listStDTO
+participant "ListStore:List<Store>" as listSt
+participant "StoreDTO:storeDTO" as stDTO
+
+
+autonumber 5
+
+group Get Store List
+--> CTRL : getStores()
+activate CTRL
+CTRL -> RepositorySingleton : getInstance()
+            activate RepositorySingleton
+
+                RepositorySingleton --> CTRL: repositories
+            deactivate RepositorySingleton
+
+            CTRL -> PLAT : getStoreRepository()
+            activate PLAT
+
+                PLAT --> CTRL: storeRepository
+            deactivate PLAT
+
+            CTRL -> stRep : getStores()
+            activate stRep
+
+                stRep -> listSt**
+
+                stRep --> CTRL : storeList
+            deactivate stRep
+
+            CTRL -> stMa : getStoresDTO(storeList)
+            activate stMa
+
+            loop for each object in ListStore
+
+                stMa -> listStDTO** : create()
+
+                stMa -> listSt : id = getId()
+                activate listSt
+                deactivate listSt
+
+                stMa -> listSt : designation = getDesignation()
+                activate listSt
+                deactivate listSt
+
+                stMa -> listSt : adress = getAdress()
+                activate listSt
+                deactivate listSt
+
+                stMa -> listSt : email = getEmail()
+                activate listSt
+                deactivate listSt
+
+                stMa -> listSt : phoneNumber = getPhoneNumber()
+                activate listSt
+                deactivate listSt
+
+                stMa -> stMa :StoreDTO=toDTO(store)
+                activate stMa
+
+                    stMa -> stDTO** : create()
+                deactivate stMa
+
+                stMa -> listStDTO : add(StoreDTO)
+                activate listStDTO
+                   listStDTO -> stMa
+                deactivate listStDTO
+
+                end
+                stMa --> CTRL : storeListDTO
+            deactivate stMa
+            <-- CTRL: storeListDTO
+            deactivate CTRL
+end group
+@enduml

@@ -1,0 +1,75 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+participant ":AnnouncementController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "announcementRepository:\nAnnouncementRepository" as AR
+participant "AnnouncementMapper" as AM
+
+participant "Announcement" as AN
+
+
+     -> CTRL: createRentAnnouncement(AnnouncementDTO)
+     activate CTRL
+
+
+
+ CTRL -> RepositorySingleton : getInstance()
+                           activate RepositorySingleton
+
+        RepositorySingleton --> CTRL: repositories
+            deactivate RepositorySingleton
+
+                           CTRL -> PLAT : getAnnouncementRepository()
+                           activate PLAT
+
+                            PLAT -> CTRL : announcementRepository
+                            deactivate PLAT
+
+
+
+
+  CTRL -> AR: createAnnouncement(AnnouncementDTO)
+          activate AR
+
+
+
+                     AR -> AM: ToEntity(AnnouncementDTO)
+                     activate AM
+
+
+                      AM -> AN**: create(agent, dateTime, Commission,businessType,property, RentDuration, ListedPrice)
+                      AM --> AR: announcement
+                      deactivate AM
+
+
+                     AR -> AR: validateAnnouncement(announcement)
+                     activate AR
+                         AR -> AR: addAnnouncement(announcement)
+                         activate AR
+                             AR --> AR
+                         deactivate AR
+                         AR --> AR
+
+                 deactivate AR
+
+
+
+
+
+   CTRL <-- AR  : announcement
+
+
+    deactivate AR
+
+    <-- CTRL  : announcement
+    deactivate CTRL
+
+
+@enduml

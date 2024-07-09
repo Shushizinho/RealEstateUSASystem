@@ -1,0 +1,65 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant "Configuration" as Config
+participant "EmailFilter" as EmFilter
+participant "GmailFilter" as GmFilter
+participant "HotmailFilter" as HmFilter
+participant "YahooFilter" as YhFilter
+
+
+
+autonumber 3
+
+'hide footbox
+
+         -> Config : createEmail(String sender, String receiver, String subject, String message)
+            activate Config
+
+            alt filter =
+            Config -> EmFilter : createEmail(String sender, String receiver, String subject, String message)
+                activate EmFilter
+
+                    EmFilter -> GmFilter: createEmail(String sender, String receiver, String subject, String message)
+                        activate GmFilter
+
+                        GmFilter -> EmFilter
+                    deactivate GmFilter
+
+                EmFilter --> Config
+            deactivate EmFilter
+            end alt
+
+            alt filter = t
+            Config -> EmFilter : createEmail(String sender, String receiver, String subject, String message)
+                activate EmFilter
+
+                    EmFilter -> HmFilter: createEmail(String sender, String receiver, String subject, String message)
+                        activate HmFilter
+
+                        HmFilter -> EmFilter
+                    deactivate HmFilter
+
+                EmFilter --> Config
+            deactivate EmFilter
+            end alt
+
+            alt filter = t
+            Config -> EmFilter : createEmail(String sender, String receiver, String subject, String message)
+                activate EmFilter
+
+                    EmFilter -> YhFilter: createEmail(String sender, String receiver, String subject, String message)
+                        activate YhFilter
+
+                        YhFilter -> EmFilter
+                    deactivate YhFilter
+
+                EmFilter --> Config
+            deactivate EmFilter
+            end alt
+            <-- Config
+        deactivate Config
+
+@enduml

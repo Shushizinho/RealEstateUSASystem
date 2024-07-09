@@ -1,0 +1,71 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+!pragma layout smetana
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+'title Domain Model
+
+class Employee{
+
+}
+
+class Store {
+    id
+    designation
+    email
+    phoneNumber
+}
+
+interface Property {
+    price
+    area
+    distanceToCentre
+    photographs
+}
+
+class Person{
+    email
+    name
+    passportNumber
+    taxNumber
+    phoneNumber
+}
+
+class StoreManager {
+
+}
+
+class Role{
+id
+description
+
+}
+
+class Address{
+    streetAddress
+    state
+    zipCode
+}
+
+
+
+Store "1" <-- "*" Employee : part of <
+
+Address "1" <-- "1"  Store
+Property "1" --> "1"  Address
+Address "1" <-- "1"  Person
+
+Employee <-- StoreManager
+Role "1..*" <-- "1" Employee
+Property "*" - "1" Store: in associated with >
+Person  <-- Employee
+
+@enduml

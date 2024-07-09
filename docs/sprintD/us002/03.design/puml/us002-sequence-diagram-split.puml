@@ -1,0 +1,358 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Agent" as AG
+participant ":CreateSaleAnnouncementUI" as UI
+participant ":AnnouncementController" as CTRL
+
+
+autonumber
+
+activate AG
+
+        AG -> UI : asks to publish an announcement
+        activate UI
+
+'            UI --> AG : requests data (reference, description,  informal \n description, technical description, duration, cost)
+            'create CTRL
+            UI -> CTRL** : create
+
+
+
+
+
+
+
+
+            UI -> CTRL: getPropertyTypes()
+            activate CTRL
+
+
+
+
+          ref over CTRL
+               get Propety Type list
+               end ref
+
+ CTRL --> UI:propertyTypeListDTO
+ deactivate CTRL
+
+
+
+             autonumber 4
+
+
+
+
+         UI -> AG : provides property type options
+         deactivate UI
+
+        AG -> UI : selects property type
+        activate UI
+
+        UI -> UI: KeepData(propertyTypeDescription)
+
+
+
+
+
+ alt if property type = land
+    UI --> AG : requests land data (price, area, address, distanceToCentre, photographs)
+    deactivate UI
+    AG -> UI : types requested data
+    activate UI
+
+     UI --> AG : request data confirmation
+        deactivate UI
+        AG -> UI : confirms data
+        activate UI
+
+
+
+
+
+
+
+deactivate CTRL
+
+
+
+
+
+
+
+ else if property type = apartment
+    UI --> AG : requests apartment data (price, area, address, distanceToCentre, photographs,\nbedroomNumber,bathroomNumber, parkingSpaceNumber,\nequipmentList)
+    deactivate UI
+    AG -> UI : types requested data
+    activate UI
+
+    UI --> AG : requests apartment data (price, area, address, distanceToCentre, photographs,\nbedroomNumber,bathroomNumber, parkingSpaceNumber,\nequipmentList
+    deactivate UI
+      AG -> UI : types requested data
+      activate UI
+
+          UI --> AG : request data confirmation
+              deactivate UI
+              AG -> UI : confirms data
+              activate UI
+
+
+
+
+
+
+
+
+
+
+
+  else if property type = house
+        UI --> AG : requests house data (price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber,\nequipmentList, hasBasement, hasLoft, sunExposure)
+        deactivate UI
+        AG -> UI : types requested data
+        activate UI
+
+    UI --> AG : request data confirmation
+        deactivate UI
+        AG -> UI : confirms data
+        activate UI
+
+
+
+deactivate CTRL
+
+
+        end
+ UI -> CTRL :  getPropertyTypeByDescription(propertyTypeDescription)
+        activate CTRL
+
+
+ref over CTRL
+     get PropertyType
+     end ref
+                        CTRL --> UI : propertyType
+                        deactivate CTRL
+
+
+autonumber 19
+                     UI -> CTRL : getAgentFromSession()
+                     activate CTRL
+
+
+
+ref over CTRL
+     get Agent From session
+     end ref
+
+
+                     CTRL --> UI: agent
+                     deactivate CTRL
+
+
+
+
+
+
+alt if property type == land
+
+UI -> CTRL: createProperty(landDTO)
+activate CTRL
+
+
+ ref over CTRL
+      get land Objetct
+      end ref
+ CTRL --> UI : land
+   deactivate CTRL
+
+
+
+ else if propertyType == apartment
+
+
+
+
+
+
+        UI -> CTRL: createProperty(apartmentDTO)
+        activate CTRL
+
+      ref over CTRL
+           get Apartment Object
+           end ref
+                      CTRL -> UI : apartment
+                deactivate CTRL
+
+ else if property == house
+         UI -> CTRL: createProperty(houseDTO)
+         activate CTRL
+
+
+        ref over CTRL
+             get House object
+             end ref
+               CTRL -> UI : house
+         deactivate CTRL
+
+
+
+end
+
+ UI -> CTRL : getBusinessTypes()
+                activate CTRL
+
+                   ref over CTRL
+                        get business type list
+                        end ref
+          CTRL-->UI : businessTypeListDTO
+            deactivate CTRL
+
+
+
+
+
+
+UI --> AG : provides business type options
+deactivate UI
+
+AG -> UI: selects business type
+activate UI
+
+           UI -> CTRL : getBusinessTypeByDescription(businessTypeDescription)
+              activate CTRL
+
+
+             ref over CTRL
+                  get business type
+                  end ref
+
+
+             CTRL --> UI : businessType
+
+
+        deactivate CTRL
+
+
+
+
+
+  alt if business = rent
+      UI --> AG : requests data (rentDuration)
+
+      deactivate UI
+      AG -> UI : types requested data
+      activate UI
+
+         UI --> AG: asks if commission is in percentage or fixed
+         deactivate UI
+
+         AG -> UI: inputs the pretend option
+          activate UI
+
+       UI --> AG : asks for announcement data (commission)
+       deactivate UI
+
+
+
+
+         AG -> UI : provide the announcement data
+         activate UI
+
+          UI --> AG : request data confirmation
+                        deactivate UI
+                        AG -> UI : confirms data
+                        activate UI
+
+       UI --> CTRL: createAnnouncement(AnnouncementDTO)
+       activate CTRL
+ref over CTRL
+     create announcement sale
+     end ref
+
+       CTRL --> UI: announcement
+
+       deactivate CTRL
+       end
+
+
+
+alt if business = Sale
+
+  UI --> AG: asks if commission is in percentage or fixed
+         deactivate UI
+
+         AG -> UI: inputs the pretend option
+          activate UI
+
+
+       UI --> AG : asks for announcement data ( commission)
+       deactivate UI
+
+         AG -> UI : provides the announcement data
+         activate UI
+
+             UI --> AG : request data confirmation
+            deactivate UI
+             AG -> UI : confirms data
+               activate UI
+
+
+
+       UI --> CTRL: createAnnouncement(AnnouncementDTO)
+       activate CTRL
+
+        ref over CTRL
+             create announcement rent
+             end ref
+       CTRL --> UI: announcement
+       deactivate CTRL
+
+       end
+
+       UI -> CTRL: createSMS (senderNumber, recipientNumber,dateAvailable, address, message)
+        activate CTRL
+
+      ref over CTRL
+           create sms
+           end ref
+
+
+       UI --> AG: displays operation success
+
+
+       deactivate CTRL
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@enduml

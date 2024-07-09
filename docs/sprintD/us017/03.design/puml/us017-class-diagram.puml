@@ -1,0 +1,77 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing true
+skinparam linetype ortho
+'skinparam linetype orto
+
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class  GetDealListUI {
+}
+
+class GetDealListController {
+   + getDealsOrder()
+   + getBubbleSort (double[] areaProperty)
+   + getInsertionSort (double[] areaProperty)
+}
+
+
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getPurchaseOrderRepository()
+}
+
+class PurchaseOrderRepository{
+   + getDealsFromOrder()
+
+}
+
+class PurchaseOrder{
+    - Double orderAmount;
+    - Announcement announcement;
+    - Client client;
+    - Integer wasAccepted;
+    - DateTime creationDate
+}
+
+class BubbleSort{
+    + sort(double[] arr)
+
+}
+
+class InsertionSort{
+    + sort(double[] arr)
+ }
+
+
+
+
+
+
+
+
+
+Repositories --> Repositories : instance
+
+GetDealListUI .> GetDealListController
+
+GetDealListController .-> Repositories : repositories
+
+GetDealListController --> PurchaseOrderRepository
+
+GetDealListController --> BubbleSort
+
+GetDealListController --> InsertionSort
+
+PurchaseOrderRepository --> PurchaseOrder
+
+
+
+
+@enduml

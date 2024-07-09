@@ -1,0 +1,51 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+autonumber
+
+actor "Agent" as Agent
+participant ":System" as System
+
+activate Agent
+
+    actor "Agent" as Agent
+    participant ":System" as System
+
+    activate Agent
+
+    Agent -> System : asks for the list of all booking requests made for myself
+    activate System
+
+    System --> Agent : asks for the start date to view booking requests
+    deactivate System
+
+
+
+    Agent -> System : selects the start date
+    activate System
+
+
+
+
+    System --> Agent : asks for the end date to view booking requests
+    deactivate System
+
+
+
+    Agent -> System : selects the end date
+    activate System
+
+
+
+
+    System --> Agent : show the list of booking requests based on the selected date range \n and sorted in ascending order and display operation success
+    deactivate System
+
+
+
+
+@enduml

@@ -1,0 +1,50 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+autonumber
+
+actor "Network Manager" as Manager
+participant ":System" as System
+
+activate Manager
+
+    Manager -> System : asks to divide stores into two sublists so that they have the closest number of\nproperties between the sublists
+    activate System
+
+        System --> Manager : requests the number of stores
+        'between 3 and 30 that is a multiple of 3
+    deactivate System
+        Manager -> System : insert number of stores
+        loop number of stores
+    activate System
+        System -> Manager : provides the  stores and asks to select a store from the list of available stores
+    deactivate System
+        Manager -> System : selects store from list
+    activate System
+        end
+        System --> Manager : provide a pair of sublists with minimum difference between the number of\nproperties associated with their stores
+    deactivate System
+
+'    Manager -> System : types requested data (reference, description, \ninformal description, technical description,\nduration, cost)
+'    activate System
+
+'        System --> Manager : shows task category list and asks to select one
+'    deactivate System
+
+'    Manager -> System : selects a task category
+'    activate System
+
+'        System --> Manager : shows selected category
+'    deactivate System
+
+'    Manager -> System : submits data
+'    activate System
+
+'        System --> Manager : displays operation success
+'    deactivate System
+
+@enduml

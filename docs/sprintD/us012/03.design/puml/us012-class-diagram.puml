@@ -1,0 +1,211 @@
+                                                                                                                                                                                @startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing true
+skinparam linetype polyline
+'skinparam linetype orto
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+
+class Store {
+    - Integer id
+    - String designation
+    - String email
+    - Integer phoneNumber
+}
+
+class Employee {
+    - String name
+    - String email
+    - Integer passportNumber
+    - String taxNumber
+    - Integer phoneNumber
+}
+
+class Address{
+     - String streetAddress
+     - String state
+     - String city
+     - String zipCode
+}
+
+
+class EmployeeRepository {
+    + getEmployees()
+}
+
+class PropertyRepository {
+        + getProperties()
+}
+
+class StoreRepository {
+    + getStores()
+}
+
+class AnnouncementRepository {
+        + getAnnouncements();
+}
+
+class PurchaseOrderRepository {
+        + getPurchaseOrders();
+}
+
+
+class Repositories {
+    - Repositories()
+    + getInstance() : Repositories
+    + getEmployeeRepository()
+    + getPropertyRepository()
+    + getStoreRepository()
+    + getAnnouncementRepository()
+    + getPurchaseOrderRepository()
+}
+
+class ImportLegacySystemController {
+    + ImportLegacySystemController()
+    + returnValueHeader(arrayHeaders,headers,values)
+
+
+}
+
+class DataIntegrityChecker {
+    +checkAllData(arrayHeaders, headers, values)
+      +validateClientData(clientValues, address)
+      +validateStoreData(storeValues, address)
+      +validatePropertyData(propertyValues, address)
+      +validateAnnouncementData(announcementValues)
+      +validatePurchaseOrderData(purchaseOrderValues)
+      +submitClientData(clientValues, address)
+      +submitStoreData(storeValues)
+      +submitPropertyData(propertyValues, address, store, client)
+      +submitAnnouncementData(announcementValues, address)
+      +submitPurchaseOrderData(purchaseOrderValues, announcement)
+
+}
+
+class PurchaseOrder{
+    -double orderAmount
+    -Integer wasAccepted
+    -DateTime creationDate
+}
+
+class Property{
+    - Integer price
+    - Integer area
+    - String distanceToCentre
+
+}
+
+class Client {
+    -String email
+    -String name
+    -Integer passportNumber
+    -String taxNumber
+    -Integer phoneNumber
+}
+
+class Announcement {
+
+
+-DateTime date
+-IntegerrentDuration
+- double listedPrice
+
+}
+
+class Commission {
+-Integer value
+-String typeCommission
+}
+
+class BusinessType{
+-String description
+}
+
+class PropertyType{
+-String description
+}
+
+class Inhabitable{
+- Integer bedroomNumber
+-Integer bathroomNumber
+-Integer parkingSpaces
+- List<String> equipmentList
+}
+
+class House{
+-boolean hasBasement
+-boolean hasLoft
+-String sunExposure
+
+}
+
+ class Role {
+    -Integer id
+    -String description
+ }
+
+
+class ImportLegacySystemUI {
++ importFile(file)
+}
+
+Repositories -> Repositories : instance
+
+ImportLegacySystemUI .> ImportLegacySystemController
+
+ImportLegacySystemController .> Repositories : repositories
+
+Repositories --> "1" PropertyRepository
+Repositories --> "1" EmployeeRepository
+Repositories --> "1" StoreRepository
+Repositories --> "1" AnnouncementRepository
+
+ImportLegacySystemController ..> PropertyRepository : PropertyRepository
+ImportLegacySystemController ..> EmployeeRepository : EmployeeRepository
+ImportLegacySystemController ..> StoreRepository : StoreRepository
+ImportLegacySystemController ..> AnnouncementRepository : AnnouncementRepository
+ImportLegacySystemController ..> PurchaseOrderRepository : PurchaseOrderRepository
+
+EmployeeRepository "1" --> "*" Employee : employee
+PropertyRepository "1" --> "*" Property : property
+StoreRepository "1" --> "*" Store : store
+AnnouncementRepository "1" --> "*" Announcement : announcement
+PurchaseOrderRepository "1" --> "*" PurchaseOrder : purchaseOrder
+
+
+
+
+Address  "1" -- "1" Employee : < has an
+Address "1" -- "1" Store : < has an
+Address "1" -- "1"  Property : < has an
+Address "1" -- "1" Client : < has an
+
+
+Employee "1" - "1" Store : > works on a
+Store "1" - "1" Property : < associated with
+
+
+'Employee"1" "1" - "1"  "1..*" Role
+'Role "1..*" "1" -- "1" "1" Employee
+
+PurchaseOrder "0..*" -- "1" Announcement : < provides
+Employee "1" -- "1..*" Role: > has
+Announcement "1" -- "1"  BusinessType : > has a
+Announcement "1" -- "1"  Commission: > has a
+Announcement "1" - "1"  Property : < part of
+Announcement "1" -- "1"  Employee: <  is responsible for
+
+Property "1" -- "1" PropertyType : > has a
+
+Property "1" -- "1"  Inhabitable : < is an
+Inhabitable "1" -- "1" House : < is an
+
+Client "1" -- "1" Property : < has a
+Client "1" - "1" PurchaseOrder: < has a
+
+
+
+@enduml

@@ -1,0 +1,36 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber 58
+
+'hide footbox
+participant "store:\nStore" as STR
+participant "AnnouncementRequest" as ANR
+
+
+     -> STR: createAnnouncementRequest(rentDuration, businessType, property, agent, client)
+                                                                       activate STR
+
+    autonumber 58.1
+            STR -> ANR**: create(rentDuration, businessType, property, agent, client)
+
+                           STR -> STR: addAnnouncement(announcementRequest)
+                           activate STR
+                               STR -> STR: validateAnnouncement(announcementRequest)
+                               activate STR
+                                   STR --> STR
+                               deactivate STR
+                               STR --> STR
+
+
+
+    autonumber 59
+
+    <-- STR  : announcementRequest
+
+    deactivate STR
+
+
+@enduml

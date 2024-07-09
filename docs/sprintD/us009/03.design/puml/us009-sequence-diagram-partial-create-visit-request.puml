@@ -1,0 +1,73 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":CreateVisitRequestController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "Repositories\n:Repositories" as PLAT
+participant "VisitRequestRepository:\VisitRequestRepository" as VRR
+participant "VisitRequestMapper:\VisitRequestMapper" as VRM
+participant "VisitRequestDTO:\VisitRequestDTO" as VRDTO
+participant "VisitRequest:\VisitRequest" as VR
+
+
+autonumber
+-> CTRL : CreateVisitRequest ((VisitRequestDTO)
+
+
+        activate CTRL
+
+            CTRL -> RepositorySingleton : getInstance()
+
+
+            activate RepositorySingleton
+
+            RepositorySingleton --> CTRL: repositories
+            deactivate RepositorySingleton
+
+            CTRL -> PLAT : getVisitRequestRepository()
+            activate PLAT
+
+            PLAT --> CTRL : RequestVisitRepository
+            deactivate PLAT
+
+
+             CTRL -> VRR :createVisitRequest (VisitRequestDTO)
+                        activate VRR
+
+
+            VRR -> VRM :toEntity(VisitRequestDTO)
+            activate VRM
+            
+            VRM --> VRDTO : propertyDTO = getProperty()
+            activate VRDTO
+            VRM --> VRM : convertPropertyDTOToProperty(propertyDTO)
+            deactivate VRDTO
+            VRM --> VRDTO : preferredDate = getPreferredDate()
+            activate VRDTO
+            VRM --> VRM : DateTimeDTOToDateformatted(preferredDate)
+            deactivate VRDTO
+            VRM --> VRDTO : timeSlot = getTimeSlot()
+            activate VRDTO
+            deactivate VRDTO
+            VRM --> VRDTO : clientName = getClientName()
+            activate VRDTO
+            deactivate VRDTO
+            VRM --> VRDTO : clientPhoneNumber = getClientPhoneNumber()
+            activate VRDTO
+            deactivate VRDTO
+
+
+           VRM --> VR** : create(property, preferredDate, timeSlot, clientName, clientPhoneNumber)
+
+           VRR --> VRR : validateVisitRequest (VisitRequestDTO)
+
+            VRR --> CTRL : wasAccepted
+            deactivate VRM
+            deactivate VRR
+
+        <-- CTRL : wasAccepted
+        deactivate CTRL
+@enduml

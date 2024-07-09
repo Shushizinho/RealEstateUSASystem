@@ -1,0 +1,39 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+ autonumber
+
+participant "dataIntegrityChecker:\nDataIntegrityChecker" as CHECKER
+
+participant "announcementRepository:\nAnnouncementRepository" as ACMR
+
+participant ANNC as "announcement:\nAnnouncement"
+
+ -> CHECKER : submitAnnouncementData(announcementValues, address)
+activate CHECKER
+
+CHECKER -> ACMR : createAnnouncement(announcementValues, address)
+activate ACMR
+
+
+
+ACMR -> ANNC** : create(listedPrice, rentDuration, agent, date, businessType, property)
+
+
+ACMR -> ACMR : add(announcement)
+activate ACMR
+ACMR -> ACMR : validateAnnouncement(announcement)
+activate ACMR
+ACMR --> ACMR:
+deactivate ACMR
+ACMR --> ACMR:
+deactivate ACMR
+ACMR --> CHECKER: announcement
+deactivate ACMR
+
+<-- CHECKER  : announcement
+deactivate CHECKER
+
+@enduml

@@ -1,0 +1,135 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Client UI" as CLN
+participant ":ReplyToAgentAboutVisitRequestUI" as UI
+participant ":ReplyToAgentAboutVisitRequestController" as CTRL
+
+
+
+activate CLN
+
+    CLN -> UI : asks to see the agent's response to my visit requests
+
+        activate UI
+
+        UI -> CTRL** : createGetReplyFromAgentAboutVisitRequestController
+
+        UI -> CTRL :  GetVisitRequests()
+        autonumber 3.1
+        activate CTRL
+       ref over CTRL
+        getVisitRequests
+       end
+
+        autonumber 4
+        CTRL --> UI : VisitRequests
+        deactivate CTRL
+
+
+
+        UI --> CLN : show list of response (display property, date of the appointment, agent's name and phone number)
+        deactivate UI
+
+
+        CLN -> UI : select appointment
+
+
+
+        activate UI
+
+        UI --> UI : displayAppointment()
+
+        UI --> CTRL : getClientList()
+        activate CTRL
+        ref over CTRL
+        get Client List
+        end
+        CTRL --> UI : clientList
+        deactivate CTRL
+
+        UI -> CTRL : createEmail(clientEmail, agentEmail, subject, mesage)
+        activate CTRL
+       ref over CTRL
+        createEmail
+        end
+
+
+
+        UI --> CLN : display property, date of the appointment, agent's name and phone number and asks to accept or reject it
+        deactivate CTRL
+
+        deactivate UI
+
+
+
+        CLN -> UI : accept the appointment
+
+
+
+        activate UI
+
+        UI --> UI : keep(reply)
+
+        UI -> CTRL : setVisitRequestClientReply(reply)
+
+        activate CTRL
+        ref over CTRL
+        setVisitRequestClientReply
+        end
+
+        autonumber 16
+        CTRL --> UI : wasAccepted
+
+        deactivate CTRL
+
+        UI --> CLN : display success message
+
+        deactivate UI
+
+        opt appointment was rejected
+        CLN -> UI : reject the appointment
+
+        activate UI
+
+        UI --> CLN : asks the reason to reject the appointment
+
+        deactivate UI
+
+        CLN -> UI : write message
+
+        activate UI
+
+        UI --> UI : keep(reply)
+
+        UI -> CTRL : setVisitRequestClientReply(reply)
+
+        activate CTRL
+       ref over CTRL
+               setVisitRequestClientReply
+       end
+
+        autonumber 23
+        CTRL --> UI : wasAccepted
+
+        deactivate CTRL
+
+        UI --> CLN : display success message
+
+        deactivate UI
+
+        end
+
+        deactivate CLN
+
+
+@enduml
+@enduml

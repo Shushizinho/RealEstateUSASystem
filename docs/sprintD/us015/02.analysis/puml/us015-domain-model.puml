@@ -1,0 +1,156 @@
+@startuml
+
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+
+hide circle
+hide methods
+
+class Agent {
+
+}
+
+
+
+
+class Store{
+id
+designation
+address
+email
+phoneNumber
+
+}
+
+
+
+
+
+
+
+class Inhabitable{
+bedroomNumber
+bathroomNumber
+parkingSpaces
+hasEquipment
+}
+
+class House{
+hasBasement
+hasLoft
+sunExposure
+
+}
+
+class Address{
+streetAddress
+state
+zipCode
+
+}
+
+
+
+
+
+class PropertyType{
+description
+}
+class Property{
+price
+area
+distanceToCentre
+}
+
+class Employee{
+
+
+}
+
+class Photographs{
+uri
+}
+
+
+class Person{
+email
+name
+passportNumber
+taxNumber
+phoneNumber
+}
+
+
+
+
+
+
+
+class VisitRequest{
+clientName
+clientPhoneNumber
+clientReply
+timeSlot
+preferredDate
+wasAccepted
+}
+
+class Role{
+ id
+ description
+
+}
+
+Agent"1" --"*" VisitRequest: intends to see
+
+Agent ---|> Employee
+
+Employee ---|> Person
+
+
+
+VisitRequest "*" -- "1" Property: refers to >
+Inhabitable --|> Property
+House --|> Inhabitable
+Property "*" -- "1" Store: listed under >
+
+Property"1" --"1" Address: has an >
+
+
+PropertyType "1" -- "*" Property: cataloged as <
+Property -- "1..30" Photographs: has >
+
+Person"1" -- "1"Address: has an >
+Employee"*" -- "1"Store: works on a >
+Employee"1" --"1..*" Role: has  >
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@enduml

@@ -1,0 +1,836 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Agent" as AG
+participant ":CreateSaleAnnouncementUI" as UI
+participant ":AnnouncementController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "propertyTypeRepository:\nPropertyTypeRepository" as PTR
+participant "BusinessTypeRepository:\nBusinessTypeRepository" as BT
+participant "announcementRepository:\nAnnouncementRepository" as AR
+participant "AnnouncementMapper" as AM
+participant "BusinessTypeMapper" as BTM
+participant "announcement\n:Announcement" as AN
+participant "propertyRepository:\nPropertyRepository" as PR
+
+
+
+participant "Apartment" as APROP
+
+participant ":ApplicationSession" as _APP
+participant "appSession\n:ApplicationSession" as APP
+participant "currentSession\n:UserSession" as SESSION
+
+
+participant "BusinessTypeDTOList : List<BusinessTypeDTO>" as BTDTO
+participant "BusinessTypeDTO : BusinessTypeDTO" as BTTDTO
+participant "BusinessTypeList : List<BusinessType>" as BTL
+participant "PropertyTypeMapper" as PTM
+participant "PropertyMapper" as PM
+participant "Land" as LPROP
+participant "PropertyTypeDTOList : List<PropertyTypeDTO>" as PTDTO
+participant "PropertyTypeDTO : PropertyTypeDTO" as PTTDTO
+participant "PropertyTypeList : List<PropertyType>" as PTL
+participant "employeeRepository:\nEmployeeRepository" as CLI
+participant "Apartment" as APROP
+participant "House" as HPROP
+
+
+
+
+
+activate AG
+
+        AG -> UI : asks to publish an announcement
+        activate UI
+
+'            UI --> AG : requests data (reference, description,  informal \n description, technical description, duration, cost)
+            'create CTRL
+            UI -> CTRL** : create
+
+
+
+
+
+
+
+
+            UI -> CTRL: getPropertyTypes()
+            activate CTRL
+
+
+
+            autonumber 3.1
+            CTRL -> RepositorySingleton : getInstance()
+            activate RepositorySingleton
+
+            RepositorySingleton --> CTRL: repositories
+            deactivate RepositorySingleton
+
+            CTRL -> PLAT : getPropertyTypeRepository()
+            activate PLAT
+
+             PLAT -> CTRL : propertyTypeRepository
+             deactivate PLAT
+
+             CTRL -> PTR : getPropertyTypes()
+             activate PTR
+
+             PTR --> CTRL : propertyTypeList
+             deactivate PTR
+
+             CTRL -> PTM: toDTO(propertyTypeList)
+             activate PTM
+
+
+           PTM -> PTDTO**: create()
+
+           loop for each object in PropertyTypeList
+
+                 PTM-> PTL: Description = getDescription()
+                 activate PTL
+                 deactivate PTL
+
+                  PTM-> PTM: PropertyTypeDTO= toDTO(propertyType)
+                  activate PTM
+
+                  PTM --> PTTDTO**: create()
+                  deactivate PTM
+
+
+                  PTM -> PTDTO: add(PropertyTypeDTO)
+                  activate PTDTO
+                  deactivate PTDTO
+
+
+
+           end group
+
+ PTM --> CTRL: propertyTypeListDTO
+                  deactivate PTM
+
+ CTRL --> UI:propertyTypeListDTO
+ deactivate CTRL
+
+
+
+             autonumber 4
+
+
+
+
+         UI -> AG : provides property type options
+         deactivate UI
+
+        AG -> UI : selects property type
+        activate UI
+
+        UI -> UI: KeepData(propertyTypeDescription)
+
+
+
+
+
+ alt if property type = land
+    UI --> AG : requests land data (price, area, address, distanceToCentre, photographs)
+    deactivate UI
+    AG -> UI : types requested data
+    activate UI
+
+     UI --> AG : request data confirmation
+        deactivate UI
+        AG -> UI : confirms data
+        activate UI
+
+
+
+
+
+
+
+deactivate CTRL
+
+
+
+
+
+
+
+ else if property type = apartment
+    UI --> AG : requests apartment data (price, area, address, distanceToCentre, photographs,\nbedroomNumber,bathroomNumber, parkingSpaceNumber,\nequipmentList)
+    deactivate UI
+    AG -> UI : types requested data
+    activate UI
+
+    UI --> AG : requests apartment data (price, area, address, distanceToCentre, photographs,\nbedroomNumber,bathroomNumber, parkingSpaceNumber,\nequipmentList
+    deactivate UI
+      AG -> UI : types requested data
+      activate UI
+
+          UI --> AG : request data confirmation
+              deactivate UI
+              AG -> UI : confirms data
+              activate UI
+
+
+
+
+
+
+
+
+
+
+
+  else if property type = house
+        UI --> AG : requests house data (price, area, address, distanceToCentre, photographs,\nbedroomNumber, bathroomNumber, parkingSpaceNumber,\nequipmentList, hasBasement, hasLoft, sunExposure)
+        deactivate UI
+        AG -> UI : types requested data
+        activate UI
+
+    UI --> AG : request data confirmation
+        deactivate UI
+        AG -> UI : confirms data
+        activate UI
+
+
+
+deactivate CTRL
+
+
+        end
+ UI -> CTRL :  getPropertyTypeByDescription(propertyTypeDescription)
+        activate CTRL
+
+        autonumber 18.1
+
+                        CTRL -> RepositorySingleton : getInstance()
+                        activate RepositorySingleton
+
+                            RepositorySingleton --> CTRL: repositories
+                        deactivate RepositorySingleton
+
+                        CTRL -> PLAT : getPropertyTypeRepository()
+                        activate PLAT
+
+                            PLAT -> CTRL : PropertyTypeRepository
+                        deactivate PLAT
+
+                        CTRL -> PTR : getPropertyTypeByDescription(propertyTypeDescription)
+                        activate PTR
+
+                            PTR --> CTRL : propertyType
+                        deactivate PTR
+                        CTRL --> UI : propertyType
+                        deactivate CTRL
+
+
+autonumber 19
+                     UI -> CTRL : getAgentFromSession()
+                     activate CTRL
+                     autonumber 20.1
+
+
+
+
+                     CTRL -> _APP: getInstance()
+                     activate _APP
+                     _APP -> CTRL: appSession
+                     deactivate _APP
+
+
+                    CTRL -> APP: getCurrentSession()
+                    activate APP
+
+                    APP --> CTRL: currentSession
+                    deactivate APP
+
+                   CTRL -> SESSION: email = getUserEmail()
+                   activate SESSION
+
+                   SESSION --> CTRL: email
+                   deactivate SESSION
+                    CTRL -> RepositorySingleton : getInstance()
+                    activate RepositorySingleton
+
+                    RepositorySingleton --> CTRL: repositories
+                    deactivate RepositorySingleton
+
+                    CTRL -> PLAT : getEmployeeRepository()
+                    activate PLAT
+
+                    PLAT -> CTRL : employeeRepository
+                     deactivate PLAT
+                     CTRL -> CLI: agent = getEmployeeByEmail(email)
+                     activate CLI
+
+                     CLI --> CTRL : agent
+                     deactivate CLI
+
+                     autonumber 21
+                     CTRL --> UI: agent
+                     deactivate CTRL
+
+
+
+
+
+
+alt if property type == land
+
+UI -> CTRL: createProperty(landDTO)
+activate CTRL
+
+
+ CTRL -> RepositorySingleton : getInstance()
+            activate RepositorySingleton
+
+            RepositorySingleton --> CTRL: repositories
+            deactivate RepositorySingleton
+
+            CTRL -> PLAT : getPropertyRepository()
+            activate PLAT
+
+             PLAT -> CTRL : propertyRepository
+             deactivate PLAT
+
+
+
+
+
+CTRL -> PR : createProperty(PropertyDTO)
+activate  PR
+
+
+
+
+
+PR -> PM : landToEntity(landDTO)
+activate PM
+
+PM -> PM: toEntity(landDTO)
+activate PM
+
+
+PM --> PM
+deactivate PM
+
+PM -> LPROP**: create(land)
+
+PM --> PR: land
+deactivate
+
+
+
+
+
+
+
+                     PR -> PR: validateLand(house)
+                     activate PR
+                         PR -> PR: addLand(land)
+                         activate PR
+                             PR --> PR
+                         deactivate PR
+                             PR --> PR
+                     deactivate PR
+
+
+                     autonumber 25
+ PR --> CTRL : land
+deactivate PR
+ CTRL --> UI : land
+   deactivate CTRL
+
+
+
+ else if propertyType == apartment
+
+
+
+
+
+
+        UI -> CTRL: createProperty(apartmentDTO)
+        activate CTRL
+
+        CTRL -> RepositorySingleton : getInstance()
+                    activate RepositorySingleton
+
+                    RepositorySingleton --> CTRL: repositories
+                    deactivate RepositorySingleton
+
+                    CTRL -> PLAT : getPropertyRepository()
+                    activate PLAT
+
+                     PLAT -> CTRL : propertyRepository
+                     deactivate PLAT
+
+        CTRL -> PR : createProperty(apartmentDTO)
+        activate PR
+                        autonumber 29.1
+
+                            PR -> PM:apartmentToEntity (ApartmentDTO)
+                            activate PM
+
+                            PM -> PM: toEntity(apartmentDTO)
+                            activate PM
+
+                            PM --> PM
+                            deactivate PM
+
+
+
+                         PM -> APROP**: create(apartment)
+
+                          PM --> PR: apartment
+                          deactivate PM
+
+
+
+
+                            PR -> PR: validateApartment(apartment)
+
+                            activate PR
+                                PR -> PR: addApartment(apartment)
+                                activate PR
+                                        PR --> PR
+                                deactivate PR
+                                    PR --> PR
+                            deactivate PR
+
+                        autonumber 30
+                          PR -> CTRL : apartment
+                        deactivate PR
+                      CTRL -> UI : apartment
+                deactivate CTRL
+                deactivate PR
+
+ else if property == house
+         UI -> CTRL: createProperty(houseDTO)
+         activate CTRL
+
+
+         CTRL -> RepositorySingleton : getInstance()
+                     activate RepositorySingleton
+
+                     RepositorySingleton --> CTRL: repositories
+                     deactivate RepositorySingleton
+
+                     CTRL -> PLAT : getPropertyRepository()
+                     activate PLAT
+
+                      PLAT -> CTRL : propertyRepository
+                      deactivate PLAT
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+             CTRL -> PR : createProperty(houseDTO)
+             activate PR
+                 autonumber 34.1
+
+
+                 PR -> PM: houseToEntity(houseDTO)
+                 activate PM
+
+
+
+                   PM -> PM: toEntity(houseDTO)
+                   activate PM
+
+                  PM --> PM
+                  deactivate PM
+
+
+
+                                          PM -> HPROP**: create(house)
+
+                                           PM --> PR: house
+                                           deactivate PM
+
+
+
+                      PR -> PR: validateHouse(house)
+                      activate PR
+
+                         PR ->PR: addHouse(house)
+                         activate PR
+                             PR --> PR
+                         deactivate PR
+                             PR --> PR
+                     deactivate PR
+
+                 autonumber 35
+                   PR -> CTRL : house
+                 deactivate PR
+               CTRL -> UI : house
+         deactivate CTRL
+
+
+
+end
+
+ UI -> CTRL : getBusinessTypes()
+                activate CTRL
+
+                        autonumber 38.1
+                        CTRL -> RepositorySingleton : getInstance()
+                        activate RepositorySingleton
+
+                            RepositorySingleton --> CTRL: repositories
+                        deactivate RepositorySingleton
+
+                        CTRL -> PLAT : getBusinessTypeRepository()
+                        activate PLAT
+
+                            PLAT -> CTRL : businessTypeRepository
+                        deactivate PLAT
+
+                        CTRL -> BT : getBusinessTypes()
+                        activate BT
+
+                            BT --> CTRL : businessTypeList
+                        deactivate BT
+
+                      CTRL -> BTM: toDTO(BusinessTypeList)
+                      activate BTM
+
+                      BTM -> BTDTO**: create()
+
+               loop for each object in BusinessTypeList
+
+                 BTM-> BTL: descriptionProperty = getDescriptionProperty()
+                   activate BTL
+                   deactivate BTL
+
+
+
+                                      deactivate BTL
+
+     BTM-> BTM: BusinessTypeDTO= toDTO(businessType)
+       activate BTM
+
+
+           BTM --> BTTDTO**: create()
+              deactivate BTM
+
+              BTM -> BTDTO: add(BusinessTypeDTO)
+              activate BTDTO
+              deactivate BTDTO
+
+
+
+
+
+               end group
+
+BTM --> CTRL: businessTypeListDTO
+deactivate BTM
+
+autonumber 39
+          CTRL-->UI : businessTypeListDTO
+            deactivate CTRL
+
+
+
+
+
+
+UI --> AG : provides business type options
+deactivate UI
+
+AG -> UI: selects business type
+activate UI
+
+           UI -> CTRL : getBusinessTypeByDescription(businessTypeDescription)
+              activate CTRL
+
+
+                 autonumber 43.1
+
+                      CTRL -> RepositorySingleton : getInstance()
+                       activate RepositorySingleton
+
+                           RepositorySingleton --> CTRL: repositories
+                           deactivate RepositorySingleton
+
+                              CTRL -> PLAT : getBusinessTypeRepository()
+                                activate PLAT
+
+                                  PLAT -> CTRL : businessTypeRepository
+                                   deactivate PLAT
+
+                                     CTRL -> BT: getBusinessTypeByDescription(businessTypeDescription)
+                                       activate BT
+
+                                         BT --> CTRL : businessType
+                                           deactivate BT
+
+
+                                          autonumber 44
+                                          CTRL --> UI : businessType
+
+
+        deactivate CTRL
+
+
+
+
+
+  alt if business = rent
+      UI --> AG : requests data (rentDuration)
+
+      deactivate UI
+      AG -> UI : types requested data
+      activate UI
+
+         UI --> AG: asks if commission is in percentage or fixed
+         deactivate UI
+
+         AG -> UI: inputs the pretend option
+          activate UI
+
+       UI --> AG : asks for announcement data (commission)
+       deactivate UI
+
+
+
+
+         AG -> UI : provide the announcement data
+         activate UI
+
+          UI --> AG : request data confirmation
+                        deactivate UI
+                        AG -> UI : confirms data
+                        activate UI
+
+       UI --> CTRL: createAnnouncement(AnnouncementDTO)
+       activate CTRL
+
+        CTRL -> RepositorySingleton : getInstance()
+                           activate RepositorySingleton
+
+        RepositorySingleton --> CTRL: repositories
+            deactivate RepositorySingleton
+
+                           CTRL -> PLAT : getAnnouncementRepository()
+                           activate PLAT
+
+                            PLAT -> CTRL : announcementRepository
+                            deactivate PLAT
+
+
+
+
+  CTRL -> AR: createAnnouncement(AnnouncementDTO)
+          activate AR
+
+
+
+                     AR -> AM: ToEntity(AnnouncementDTO)
+                     activate AM
+
+
+
+                      AM -> AN**: create(agent, dateTime, Commission,businessType,property, RentDuration, ListedPrice)
+                      AM --> AR: announcement
+                      deactivate AM
+
+
+                     AR -> AR: validateAnnouncement(announcement)
+                     activate AR
+                         AR -> AR: addAnnouncement(announcement)
+                         activate AR
+                             AR --> AR
+                         deactivate AR
+                         AR --> AR
+
+                 deactivate AR
+
+
+
+
+
+ autonumber 52
+
+       AR --> CTRL: announcement
+          deactivate AR
+
+       CTRL --> UI: announcement
+
+       deactivate CTRL
+       end
+
+
+
+alt if business = Sale
+
+  UI --> AG: asks if commission is in percentage or fixed
+         deactivate UI
+
+         AG -> UI: inputs the pretend option
+          activate UI
+
+
+       UI --> AG : asks for announcement data ( commission)
+       deactivate UI
+
+         AG -> UI : provides the announcement data
+         activate UI
+
+             UI --> AG : request data confirmation
+            deactivate UI
+             AG -> UI : confirms data
+               activate UI
+
+
+
+       UI --> CTRL: createAnnouncement(AnnouncementDTO)
+       activate CTRL
+
+        CTRL -> RepositorySingleton : getInstance()
+                                  activate RepositorySingleton
+
+               RepositorySingleton --> CTRL: repositories
+                   deactivate RepositorySingleton
+
+                                  CTRL -> PLAT : getAnnouncementRepository()
+                                  activate PLAT
+
+                                   PLAT -> CTRL : announcementRepository
+                                   deactivate PLAT
+
+
+
+
+
+  CTRL -> AR: createAnnouncement(AnnouncementDTO)
+          activate AR
+
+
+                     autonumber 60.1
+
+                       AR -> AM: toEntity(AnnouncementDTO)
+                       activate AM
+
+
+                                            AM -> AN**: create(agent, dateTime, Commission,businessType,property, ListedPrice)
+                                            AM --> AR: announcement
+                                            deactivate AM
+
+
+                                           AR -> AR: validateAnnouncement(announcement)
+                                           activate AR
+                                               AR -> AR: addAnnouncement(announcement)
+                                               activate AR
+                                                   AR --> AR
+                                               deactivate AR
+                                               AR --> AR
+
+                                       deactivate AR
+
+
+
+
+
+
+
+
+         autonumber 61
+
+       AR --> CTRL: announcement
+          deactivate AR
+
+       CTRL --> UI: announcement
+       deactivate CTRL
+
+       end
+
+       UI -> CTRL: createSMS (senderNumber, recipientNumber,dateAvailable, address, message)
+        activate CTRL
+
+        CTRL -> RepositorySingleton : getInstance()
+        activate RepositorySingleton
+
+
+
+               RepositorySingleton --> CTRL: repositories
+                   deactivate RepositorySingleton
+
+
+                       CTRL -> PLAT : getAnnouncementRepository()
+                                      activate PLAT
+
+
+
+                                  PLAT -> CTRL : announcementRepository
+                                  deactivate PLAT
+
+
+
+                                  CTRL -> AR: createSMS(senderNumber, recipientNumber,dateAvailable, address, message)
+                                  deactivate CTRL
+                                  activate AR
+
+
+
+                                  AR -> AR: createSMS(senderNumber, recipientNumber,dateAvailable, address, message)
+                                  activate AR
+
+
+
+                                  AR --> AR
+                                  deactivate AR
+
+
+
+       UI --> AG: displays operation success
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@enduml

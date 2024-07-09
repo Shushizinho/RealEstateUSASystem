@@ -1,0 +1,42 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+autonumber 7
+'hide footbox
+participant ":AnalyseDealsController" as CTRL
+participant ":Repositories" as RepositorySingleton
+participant "repositories\n:Repositories" as PLAT
+participant "propertyRepository:\nPropertyRepository" as PROPR
+
+
+     -> CTRL: getIndependentVariables()
+        activate CTRL
+
+            CTRL -> RepositorySingleton : getInstance()
+            autonumber 7.1
+                   activate RepositorySingleton
+
+                       RepositorySingleton --> CTRL: repositories
+                   deactivate RepositorySingleton
+
+                   CTRL -> PLAT : getPropertyRepository()
+                   activate PLAT
+
+                       PLAT -> CTRL : propertyRepository
+                   deactivate PLAT
+
+                   CTRL -> PROPR : getIndependentVariables()
+                   activate PROPR
+
+                       PROPR --> CTRL : independentVariablesList
+                   deactivate PROPR
+
+
+        autonumber 8
+    <-- CTRL  : independentVariablesList
+
+    deactivate CTRL
+
+
+@enduml

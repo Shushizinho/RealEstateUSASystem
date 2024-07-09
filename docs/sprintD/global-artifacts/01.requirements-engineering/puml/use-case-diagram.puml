@@ -1,0 +1,58 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+'skinparam shadowing false
+
+
+'title Use Case Diagram Example
+
+left to right direction
+
+actor "Unregistered User" as UR
+actor "Agent" as Agent
+actor "Owner" as Owner
+actor "System Administrator" as SysAdmin
+actor "Network Manager" as NM
+actor "Store Manager" as SM
+
+
+usecase "UC1 - Display Listed Properties " as UC1
+usecase "UC2 - Publish Sale Announcements" as UC2
+usecase "UC3 - Register a new employee " as UC3
+usecase "UC4 - Submit request for listing a property sale/rent" as UC4
+usecase "UC5 - Register a new store" as UC5
+usecase "UC7 - Register in the system" as UC7
+usecase "UC8 - Select and Post Announcement Request from list" as UC8
+usecase "UC9 - Leave a message to the agent to schedule a visit to a property" as UC9
+usecase "UC10 - Place an order to purchase the property submitting the order amount" as UC10
+usecase "UC11 - List real estate purchase orders to accept or decline a purchase order for a property" as UC11
+usecase "UC12 - Import information from a legacy system" as UC12
+usecase "UC13 - List all employees working in every store of the network" as UC13
+usecase "UC15 - List all booking requests for properties managed by me" as UC15
+usecase "UC16 - Respond to the user that scheduled the visit" as UC16
+usecase "UC17 - List all deals made" as UC17
+usecase "UC18 - Analyse the deals" as UC18
+usecase "UC19 - Divide Stores into two subsets" as UC19
+usecase "UC20 - Accept or reject the response for the appointment request" as UC20
+
+UR --> UC1
+Agent --> UC2
+Agent --> UC11
+Agent --> UC15
+Agent --> UC16
+SysAdmin --> UC3
+SysAdmin --> UC12
+Owner --> UC4
+Owner --> UC9
+Owner --> UC10
+Owner --> UC20
+SysAdmin --> UC5
+UR --> UC7
+Agent --> UC8
+NM --> UC13
+NM --> UC17
+NM --> UC19
+SM --> UC18
+
+
+@enduml

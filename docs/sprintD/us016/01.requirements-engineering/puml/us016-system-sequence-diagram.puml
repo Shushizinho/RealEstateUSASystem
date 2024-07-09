@@ -1,0 +1,33 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+autonumber
+
+actor "Agent" as Agent
+participant ":System" as System
+
+activate Agent
+
+'    Agent -> System : asks to list all the visit requests
+'    activate System
+
+'        System --> Agent : provide visit requests
+'    deactivate System
+
+    Agent -> System : selectes visit request
+    activate System
+
+        System --> Agent :asks what message wants to write
+    deactivate System
+
+    Agent -> System : submit answer
+        activate System
+
+        System --> Agent : displays operation success and send email to client
+    deactivate System
+
+@enduml
