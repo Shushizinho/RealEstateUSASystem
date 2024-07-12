@@ -69,7 +69,7 @@ telephone number. The Agent is an employee of the company.
 > **Question:** In US002, does the agent only register the request in the system that he receives from the owner in a phone call, or can he (the agent) also accept/reject requests that the owner registers in the system (without a phone call)?
 > 
 > **Answer:** The agent only publishes the sale announcement that he receives from the owner in a phone call.  The agent that receives the phone call is the property responsible agent.
-> 
+
 > **Question:** In one of the previous questions you have stated that for now the only way that an agent can receive the sale announcement request is through a phone call. However, US004 states that "As an owner, I intend to submit a request for listing a property sale or rent, choosing the responsible agent". Isn't submitting a request for listing a property the same as a sale announcement request? If not, can you clarify?
 > 
 > **Answer:**  In my previous answer, when I said "...the only way that an agent can receive the sale announcement..." I was talking about the agent as an actor of the system that introduces in the system property data.

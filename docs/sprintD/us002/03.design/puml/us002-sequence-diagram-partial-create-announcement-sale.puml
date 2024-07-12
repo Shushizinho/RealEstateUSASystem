@@ -11,11 +11,12 @@ participant ":AnnouncementController" as CTRL
 participant ":Repositories" as RepositorySingleton
 participant "repositories\n:Repositories" as PLAT
 participant "announcementRepository:\nAnnouncementRepository" as AR
-participant "AnnouncementMapper" as AM
 participant "Announcement" as AN
+participant "AnnouncementMapper" as AM
 
   autonumber 59
-     -> CTRL: createAnnouncement(AnnouncementDTO)
+     -> CTRL: createAnnouncement(date,commission,businessTypeDescription,property,listedPrice, agent)
+
      activate CTRL
 
 
@@ -32,18 +33,17 @@ participant "Announcement" as AN
                    PLAT -> CTRL : announcementRepository
                                    deactivate PLAT
 
-               CTRL -> AR: createAnnouncement(AnnouncementDTO)
+               CTRL -> AR: createAnnouncement(date,commission,businessTypeDescription,property,listedPrice,agent)
                  activate AR
 
            autonumber 51.1
-                               AR -> AM: toEntity(AnnouncementDTO)
-                               activate AM
+                               AR --> AR :getBusinessTypeByDescription(businessTypeDescription)
+                               AR -> AN**: create(date, commission,businessType,property, listedPrice, agent)
+                               activate AN
 
+                               AN --> AR: announcement
+                               deactivate AN
 
-
-                                AM -> AN**: create(agent, dateTime, Commission,businessType,property, RentDuration, ListedPrice)
-                                AM --> AR: announcement
-                                deactivate AM
 
 
                                AR -> AR: validateAnnouncement(announcement)
@@ -56,11 +56,19 @@ participant "Announcement" as AN
 
                            deactivate AR
 
+                            AR -> AM: toDTO(announcement)
+                               activate AM
 
-              AR --> CTRL: announcement
+                               AM--> AR : announcementDTO
+                               deactivate AM
 
 
-               <-- CTRL : announcement
+              AR --> CTRL: announcementDTO
+
+              deactivate AR
+
+
+               <-- CTRL : announcementDTO
               deactivate CTRL
 
 

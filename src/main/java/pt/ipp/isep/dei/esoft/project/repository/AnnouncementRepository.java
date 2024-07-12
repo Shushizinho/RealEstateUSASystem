@@ -22,9 +22,9 @@ import java.util.ArrayList;
 public class AnnouncementRepository {
 
     private final List<Announcement> announcements =new ArrayList<>();
-    private final List<SaleAnnouncement> saleAnnouncements= new ArrayList<>();
-
-    private final List <RentAnnouncement> rentAnnouncements= new ArrayList<>();
+//    private final List<SaleAnnouncement> saleAnnouncements= new ArrayList<>();
+//
+//    private final List <RentAnnouncement> rentAnnouncements= new ArrayList<>();
 
 
     /**
@@ -41,7 +41,7 @@ public class AnnouncementRepository {
 
         if (validateSaleAnnouncement(saleAnnouncement)) {
             newSaleAnnouncement = Optional.of(saleAnnouncement.clone());
-            operationSuccess = (saleAnnouncements.add(newSaleAnnouncement.get()) && announcements.add(newSaleAnnouncement.get().getAnnouncement()));
+            operationSuccess = announcements.add(newSaleAnnouncement.get().getAnnouncement());
         }
 
         if (!operationSuccess) {
@@ -93,7 +93,7 @@ public class AnnouncementRepository {
 
         if (validateRentAnnouncement(rentAnnouncement)) {
             newRentAnnouncement = Optional.of(rentAnnouncement.clone());
-            operationSuccess = rentAnnouncements.add(newRentAnnouncement.get()) && announcements.add(newRentAnnouncement.get().getAnnouncement());
+            operationSuccess = announcements.add(newRentAnnouncement.get().getAnnouncement());
 
         }
 
@@ -125,7 +125,7 @@ public class AnnouncementRepository {
 
         Optional<SaleAnnouncement> newAnnouncement = Optional.of(saleAnnouncement.clone());
 
-        saleAnnouncements.add(saleAnnouncement);
+        announcements.add(saleAnnouncement.getAnnouncement());
 
         return newAnnouncement;
 
@@ -150,9 +150,40 @@ public class AnnouncementRepository {
 
         Optional<RentAnnouncement> newAnnouncement = Optional.of(rentAnnouncement.clone());
 
-        rentAnnouncements.add(rentAnnouncement);
+        announcements.add(rentAnnouncement.getAnnouncement());
 
         return newAnnouncement;
+
+
+    }
+
+
+    public Optional<AnnouncementDTO> createAnnouncement(DateTime date, double commission, BusinessType businessType, Property property, Integer rentDuration, Agent agent){
+
+        Announcement announcement = new Announcement(agent, date, commission, businessType, property, rentDuration);
+        if (!validateAnnouncement(announcement)) {
+            return Optional.empty();
+        }
+
+        announcements.add(announcement);
+
+        AnnouncementDTO announcementDTO = AnnouncementMapper.toDTO(announcement);
+
+        return Optional.of(announcementDTO);
+    }
+
+    public Optional<AnnouncementDTO> createAnnouncement(DateTime date, double commission, BusinessType businessType, Property property, double listedPrice, Agent agent){
+
+        Announcement announcement = new Announcement(agent, date, commission, businessType, property, listedPrice);
+        if (!validateAnnouncement(announcement)) {
+            return Optional.empty();
+        }
+
+        announcements.add(announcement);
+
+        AnnouncementDTO announcementDTO = AnnouncementMapper.toDTO(announcement);
+
+        return Optional.of(announcementDTO);
 
 
     }
@@ -210,62 +241,62 @@ public class AnnouncementRepository {
     }
 
 
-    /**
-     * Creates a new sale announcement based on the provided parameters.
-     *
-     * @param date         the date of the announcement
-     * @param commission   the commission for the announcement
-     * @param businessType the business type of the announcement
-     * @param property     the property associated with the announcement
-     * @param listedPrice  the listed price for the property
-     * @param agent        the employee responsible for the announcement
-     * @return an Optional containing the new sale announcement if it was successfully created, or an empty Optional if the announcement was not valid
-     */
-    public Optional<SaleAnnouncement> createSaleAnnouncement2(DateTime date, double commission, BusinessType businessType, Property property, double listedPrice, Agent agent){
-
-
-
-        SaleAnnouncement saleAnnouncement = new SaleAnnouncement(agent,date,commission,businessType,property,listedPrice);
-
-        if (!validateSaleAnnouncement(saleAnnouncement)) {
-            return Optional.empty();
-        }
-
-        Optional<SaleAnnouncement> newAnnouncement = Optional.of(saleAnnouncement.clone());
-
-        saleAnnouncements.add(saleAnnouncement);
-
-        return newAnnouncement;
-
-
-    }
-
-    /**
-     * Creates a new rent announcement based on the provided parameters.
-     *
-     * @param date         the date of the announcement
-     * @param commission   the commission for the announcement
-     * @param businessType the business type of the announcement
-     * @param property     the property associated with the announcement
-     * @param rentDuration the duration of the rent for the property
-     * @param agent        the employee responsible for the announcement
-     * @return an Optional containing the new rent announcement if it was successfully created, or an empty Optional if the announcement was not valid
-     */
-    public Optional<RentAnnouncement> createRentAnnouncement2(DateTime date, double commission, BusinessType businessType, Property property, Integer rentDuration, Agent agent){
-
-        RentAnnouncement rentAnnouncement = new RentAnnouncement(agent,date,commission,businessType,property,rentDuration);
-        if (!validateRentAnnouncement(rentAnnouncement)) {
-            return Optional.empty();
-        }
-
-        Optional<RentAnnouncement> newAnnouncement = Optional.of(rentAnnouncement.clone());
-
-        rentAnnouncements.add(rentAnnouncement);
-
-        return newAnnouncement;
-
-
-    }
+//    /**
+//     * Creates a new sale announcement based on the provided parameters.
+//     *
+//     * @param date         the date of the announcement
+//     * @param commission   the commission for the announcement
+//     * @param businessType the business type of the announcement
+//     * @param property     the property associated with the announcement
+//     * @param listedPrice  the listed price for the property
+//     * @param agent        the employee responsible for the announcement
+//     * @return an Optional containing the new sale announcement if it was successfully created, or an empty Optional if the announcement was not valid
+//     */
+//    public Optional<SaleAnnouncement> createSaleAnnouncement2(DateTime date, double commission, BusinessType businessType, Property property, double listedPrice, Agent agent){
+//
+//
+//
+//        SaleAnnouncement saleAnnouncement = new SaleAnnouncement(agent,date,commission,businessType,property,listedPrice);
+//
+//        if (!validateSaleAnnouncement(saleAnnouncement)) {
+//            return Optional.empty();
+//        }
+//
+//        Optional<SaleAnnouncement> newAnnouncement = Optional.of(saleAnnouncement.clone());
+//
+//        announcements.add(saleAnnouncement.getAnnouncement());
+//
+//        return newAnnouncement;
+//
+//
+//    }
+//
+//    /**
+//     * Creates a new rent announcement based on the provided parameters.
+//     *
+//     * @param date         the date of the announcement
+//     * @param commission   the commission for the announcement
+//     * @param businessType the business type of the announcement
+//     * @param property     the property associated with the announcement
+//     * @param rentDuration the duration of the rent for the property
+//     * @param agent        the employee responsible for the announcement
+//     * @return an Optional containing the new rent announcement if it was successfully created, or an empty Optional if the announcement was not valid
+//     */
+//    public Optional<RentAnnouncement> createRentAnnouncement2(DateTime date, double commission, BusinessType businessType, Property property, Integer rentDuration, Agent agent){
+//
+//        RentAnnouncement rentAnnouncement = new RentAnnouncement(agent,date,commission,businessType,property,rentDuration);
+//        if (!validateRentAnnouncement(rentAnnouncement)) {
+//            return Optional.empty();
+//        }
+//
+//        Optional<RentAnnouncement> newAnnouncement = Optional.of(rentAnnouncement.clone());
+//
+//        announcements.add(rentAnnouncement.getAnnouncement());
+//
+//        return newAnnouncement;
+//
+//
+//    }
 
     /**
      * Retrieves a copy of the list of sale announcements.
@@ -282,17 +313,17 @@ public class AnnouncementRepository {
 //        saleAnnouncementsCopy.addAll(saleAnnouncements);
         return saleAnnouncements;
     }
-
-    /**
-     * Gets rent announcements.
-     *
-     * @return the rent announcements
-     */
-    public List<RentAnnouncement> getRentAnnouncements() {
-        List<RentAnnouncement> rentAnnouncementsCopy = new ArrayList<>();
-        rentAnnouncementsCopy.addAll(rentAnnouncements);
-        return rentAnnouncementsCopy;
-    }
+//
+//    /**
+//     * Gets rent announcements.
+//     *
+//     * @return the rent announcements
+//     */
+//    public List<RentAnnouncement> getRentAnnouncements() {
+//        List<RentAnnouncement> rentAnnouncementsCopy = new ArrayList<>();
+//        rentAnnouncementsCopy.addAll(rentAnnouncements);
+//        return rentAnnouncementsCopy;
+//    }
 
 
     /**
@@ -319,8 +350,8 @@ public class AnnouncementRepository {
      * @return true if the SaleAnnouncement is valid, false otherwise
      */
     public boolean validateSaleAnnouncement(SaleAnnouncement saleAnnouncement) {
-      for(SaleAnnouncement sa : saleAnnouncements){
-          if(sa.equals(saleAnnouncement)){
+      for(Announcement sa : announcements){
+          if(sa.equals(saleAnnouncement.getAnnouncement())){
               return false;
           }
       }
@@ -335,9 +366,9 @@ public class AnnouncementRepository {
      * @return true if the RentAnnouncement is valid, false otherwise
      */
     public boolean validateRentAnnouncement(RentAnnouncement rentAnnouncement) {
-        for(RentAnnouncement ra : rentAnnouncements){
+        for(Announcement ra : announcements){
 
-            if(ra.equals(rentAnnouncement)){
+            if(ra.equals(rentAnnouncement.getAnnouncement())){
                 return false;
             }
 
@@ -354,7 +385,7 @@ public class AnnouncementRepository {
      */
     public boolean removeSaleAnnouncement(SaleAnnouncement saleAnnouncement){
 
-        return saleAnnouncements.remove(saleAnnouncement);
+        return announcements.remove(saleAnnouncement.getAnnouncement());
     }
 
     /**
@@ -440,7 +471,8 @@ public class AnnouncementRepository {
      * @param dateTime        the date time
      * @param address         the address
      */
-    public void createSMS(long senderNumber,String agentName, DateTimeDTO dateTime, AddressDTO address) {
+    public boolean createSMS(long senderNumber,String agentName, DateTimeDTO dateTime, AddressDTO address) {
+        boolean flag = false;
         String fileName = "Sms.txt";
 
 
@@ -467,12 +499,12 @@ public class AnnouncementRepository {
             writer.append("\n\n");
             writer.write(fileContent);
             writer.close();
-            System.out.println("=====================");
-            System.out.println("Sms was sent successfully.");
+            flag = true;
         } catch (IOException e) {
-            System.out.println("An error occurred while creating the sms.");
             e.printStackTrace();
         }
+
+        return flag;
     }
 
 
@@ -486,11 +518,11 @@ public class AnnouncementRepository {
     public List<Announcement> getRentAnnouncementByProperty(String businessType) {
         List<Announcement> an= new ArrayList<>();
         BusinessTypeRepository businessTypeRepository = Repositories.getInstance().getBusinessTypeRepository();
-        for (RentAnnouncement announcement : rentAnnouncements) {
-            BusinessType businessType1 = announcement.getAnnouncement().getBusinessType();
+        for (Announcement announcement : announcements) {
+            BusinessType businessType1 = announcement.getBusinessType();
             BusinessType businessType2 = businessTypeRepository.getBusinessTypeByDescription(businessType, true);
             if (businessType1.equals(businessType2)) {
-                an.add(announcement.getAnnouncement());
+                an.add(announcement);
             }
         }
         return an;

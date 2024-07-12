@@ -25,29 +25,11 @@ public class CreateSaleAnnouncementUI implements Runnable {
      * The Scanner.
      */
     static Scanner scanner = new Scanner(System.in);
-    /**
-     * The Property type repository.
-     */
-    PropertyTypeRepository propertyTypeRepository= new PropertyTypeRepository();
 
-    /**
-     * The Property types.
-     */
-    List<PropertyType> propertyTypes = Repositories.getInstance().getPropertyTypeRepository().getPropertyTypes();
+    private final String APPROVED = "yes";
 
-
-    /**
-     * The Business type repository.
-     */
-    BusinessTypeRepository businessTypeRepository = new BusinessTypeRepository();
-    /**
-     * The Business types.
-     */
-    List<BusinessType> businessTypes = Repositories.getInstance().getBusinessTypeRepository().getBusinessTypes();
-    /**
-     * The Announcement title.
-     */
-    String announcementTitle;
+    private final String REJECTED = "no";
+    
     /**
      * The Commission.
      */
@@ -60,76 +42,23 @@ public class CreateSaleAnnouncementUI implements Runnable {
      * The Rent duration.
      */
     int rentDuration=0;
-    /**
-     * The Rent price.
-     */
-    double rentPrice=0.0;
-    /**
-     * The Phone number.
-     */
-    long phoneNumber=0;
-    /**
-     * The Date.
-     */
+
     DateTime date = new DateTime();
-    /**
-     * The Price.
-     */
-    double price= 0.0;
-    /**
-     * The Property.
-     */
-    Property property = null;
+
     /**
      * The Store description.
      */
     String storeDescription="PPROG";
-    /**
-     * The Address.
-     */
-    Address address= new Address("test","test","teste","teste");
 
     /**
      * The Agent.
      */
     Agent agent = getController().getAgentFromSession();
-    /**
-     * The Agent dto.
-     */
-    AgentDTO agentDTO = AnnouncementMapper.employeeToEmployeeDTO(agent);
 
-    /**
-     * The Agent descripton.
-     */
-    String agentDescripton;
     /**
      * The Business type description.
      */
     String BusinessTypeDescription;
-    /**
-     * The Property type description.
-     */
-    String propertyTypeDescription;
-    /**
-     * The Property price.
-     */
-    Double propertyPrice;
-    /**
-     * The Property area.
-     */
-    Double propertyArea;
-    /**
-     * The Property address.
-     */
-    Address propertyAddress;
-    /**
-     * The Property distance to centre.
-     */
-    Double propertyDistanceToCentre;
-    /**
-     * The Property photographs.
-     */
-    List<Photograph> propertyPhotographs;
     /**
      * The Property bedroom number.
      */
@@ -170,7 +99,7 @@ public class CreateSaleAnnouncementUI implements Runnable {
     /**
      * The Client dto.
      */
-    Client clientDTO;
+    Client client;
 
 
 
@@ -181,11 +110,11 @@ public class CreateSaleAnnouncementUI implements Runnable {
 
     public void run(){
 
+        requestClientInfo();
+
+        requestPropertyInfo();
 
         createAnnouncement();
-
-
-
 
     }
 
@@ -349,7 +278,7 @@ public class CreateSaleAnnouncementUI implements Runnable {
         String taxNumber;
 
         try {
-            System.out.print("Enter the client tax number: ");
+            System.out.println("Enter the client tax number (e.g 111-11-0432) : ");
             String input = scanner.nextLine();
 
             if (input.trim().isEmpty()) {
@@ -395,12 +324,6 @@ public class CreateSaleAnnouncementUI implements Runnable {
     }
 
 
-
-
-
-
-
-
     /**
 
      Requests the user to input the price of the property and validates the input to ensure it is greater than 0.
@@ -410,12 +333,12 @@ public class CreateSaleAnnouncementUI implements Runnable {
      @throws IllegalArgumentException if the input is less than or equal to 0
      */
 
-    private Double requestPropertyPrice() {
+    private double requestPropertyPrice() {
         double price= 0.0;
         boolean validPrice = false;
         while (!validPrice) {
             try {
-                System.out.print("Enter the price of the property: ");
+                System.out.println("Enter the price of the property: ");
                 price = scanner.nextDouble();
                 scanner.nextLine();
 
@@ -445,7 +368,7 @@ public class CreateSaleAnnouncementUI implements Runnable {
                 boolean positive = false;
                 while (!positive) {
                     System.out.println("\u001B[36m#=======Property Area=======#");
-                    String input = Utils.readLineFromConsole("Enter Area: ");
+                    String input = Utils.readLineFromConsole("Enter Area (e.g 2): ");
                     area = Double.parseDouble(input);
                     positive = area >= 0;
                     if (!positive) {
@@ -487,15 +410,6 @@ public class CreateSaleAnnouncementUI implements Runnable {
             }
         }
     }
-
-
-
-
-
-
-
-
-
 
 
     /**
@@ -702,22 +616,22 @@ public class CreateSaleAnnouncementUI implements Runnable {
 
     private Boolean requestPropertyHasBasement() {
         Scanner input = new Scanner(System.in);
-        System.out.println("Does the House have a basement? (Y/N):");
+        System.out.println("Does the House have a basement?" + APPROVED + "/" + REJECTED +"):");
         String text = input.nextLine();
-        while(text.trim().isEmpty() || (text.compareToIgnoreCase("Y")!=0 && text.compareToIgnoreCase("n")!=0)) {
-            System.out.println("\u001B[31mMust be either Y or N.\u001B[0m");
+        while(text.trim().isEmpty() || (text.compareToIgnoreCase(APPROVED)!=0 && text.compareToIgnoreCase(REJECTED)!=0)) {
+            System.out.println("\u001B[31mMust be either" + APPROVED + " or " + REJECTED + "\u001B[0m");
             text = input.nextLine();
         }
-        return (!(text.compareToIgnoreCase("n")==0));
+        return (!(text.compareToIgnoreCase(REJECTED)==0));
     }
 
 
     private Boolean requestPropertyHasLoft() {
         Scanner input = new Scanner(System.in);
-        System.out.println("Does the House have a loft? (Y/N):");
+        System.out.println("Does the House have a loft?" + APPROVED + "/" + REJECTED +"):");
         String text = input.nextLine();
         while(text.trim().isEmpty() || (text.compareToIgnoreCase("Y")!=0 && text.compareToIgnoreCase("n")!=0)) {
-            System.out.println("\u001B[31mMust be either Y or N.\u001B[0m");
+            System.out.println("\u001B[31mMust be either" + APPROVED + " or " + REJECTED + "\u001B[0m");
             text = input.nextLine();
         }
         return (!(text.compareToIgnoreCase("n")==0));
@@ -812,17 +726,6 @@ public class CreateSaleAnnouncementUI implements Runnable {
         }
     }
 
-
-
-
-
-    //////ANOUNCEMENT//////
-
-
-
-
-
-
     private double requestAnnouncementCommission(){
         double commission = 0.0;
 
@@ -853,14 +756,6 @@ public class CreateSaleAnnouncementUI implements Runnable {
         System.out.println("Property type = " + propertyTypeDescription + "\nProperty Address = " + propertyAddress + "\nProperty Distance To Centre = " + propertyDistanceToCentre + "\nProperty Area = " + propertyArea + "\n Property Price = " + propertyPrice + "\nStore = " + storeDescription + "\nClient = " + client);
 
 
-        Property property2 = new Property(propertyPrice, propertyArea,propertyAddress,propertyDistanceToCentre,propertyPhotographs,getController().getPropertyTypeByDescription(propertyTypeDescription), getController().getStoreByDescription(storeDescription),client,date);
-        PropertyDTO propertyDTO = PropertyMapper.toDTO(property2);
-
-        LandDTO landDTO = new LandDTO(propertyDTO);
-
-
-
-
         boolean validInput = false;
         while (!validInput){
 
@@ -868,12 +763,11 @@ public class CreateSaleAnnouncementUI implements Runnable {
             System.out.print("Yes/No:");
             String input = scanner.nextLine().trim().toLowerCase();
 
-            if (input.equals("yes")) {
-                trueProperty = getController().createProperty(landDTO);
-                validInput = true;
-
+            if (input.equals(APPROVED)) {
+                trueProperty = getController().createProperty(propertyPrice, propertyArea,propertyAddress,propertyDistanceToCentre,propertyPhotographs,propertyTypeDescription, storeDescription,client,date);
                 return trueProperty;
-            } else if (input.equals("no")) {
+
+            } else if (input.equals(REJECTED)) {
                 run();
                 validInput = true;
             } else {
@@ -907,21 +801,12 @@ public class CreateSaleAnnouncementUI implements Runnable {
             System.out.print("Yes/No:");
             String input = scanner.nextLine().trim().toLowerCase();
 
-            Property property2 = new Property(propertyPrice, propertyArea,propertyAddress,propertyDistanceToCentre,propertyPhotographs,getController().getPropertyTypeByDescription(propertyTypeDescription), getController().getStoreByDescription(storeDescription),client,date);
 
-            Inhabitable inhabitable = new Inhabitable(property2,propertyBedroomNumber,propertyBathroomNumber,propertyParkingSpaceNumber,propertyEquipmentList);
-
-            InhabitableDTO inhabitableDTO = PropertyMapper.toDTO(inhabitable);
-
-
-            ApartmentDTO apartmentDTO = new ApartmentDTO(inhabitableDTO);
-
-            if (input.equals("yes")) {
-                trueProperty = getController().createProperty(apartmentDTO);
-                validInput = true;
+            if (input.equals(APPROVED)) {
+                trueProperty = getController().createProperty(propertyPrice, propertyArea,propertyAddress,propertyDistanceToCentre,propertyPhotographs,propertyBedroomNumber,propertyBathroomNumber,propertyParkingSpaceNumber,propertyEquipmentList, propertyTypeDescription, storeDescription,client);
                 return trueProperty;
 
-            } else if (input.equals("no")) {
+            } else if (input.equals(REJECTED)) {
                 run();
                 validInput = true;
             } else {
@@ -942,8 +827,8 @@ public class CreateSaleAnnouncementUI implements Runnable {
         System.out.println("Bathroom number: " + propertyBathroomNumber);
         System.out.println("Parking spaces: " + propertyParkingSpaceNumber);
 
-        System.out.printf("Basement: %s\n", propertyHasBasement ? "yes" : "no");
-        System.out.printf("Inhabitable : %s\n", propertyHasLoft ? "yes" : "no");
+        System.out.printf("Basement: %s\n", propertyHasBasement ? APPROVED : REJECTED);
+        System.out.printf("Inhabitable : %s\n", propertyHasLoft ? APPROVED : REJECTED);
         System.out.printf("Sun exposure: %s\n", propertySunExposure);
         Property trueProperty = null;
 
@@ -951,28 +836,17 @@ public class CreateSaleAnnouncementUI implements Runnable {
         while (!validInput){
 
             System.out.println("Can you confirm the data entered?");
-            System.out.print("Yes/No:");
+            System.out.print("yes/no:");
             String input = scanner.nextLine().trim().toLowerCase();
 
 
-            Property property2 = new Property(propertyPrice, propertyArea,propertyAddress,propertyDistanceToCentre,propertyPhotographs,getController().getPropertyTypeByDescription(propertyTypeDescription), getController().getStoreByDescription(storeDescription),client,date);
 
-            Inhabitable inhabitable = new Inhabitable(property2,propertyBedroomNumber,propertyBathroomNumber,propertyParkingSpaceNumber,propertyEquipmentList);
+            if (input.equals(APPROVED)) {
 
-            InhabitableDTO inhabitableDTO = PropertyMapper.toDTO(inhabitable);
-
-            HouseDTO houseDTO = new HouseDTO(propertyHasBasement,propertyHasLoft,propertySunExposure,inhabitableDTO);
-
-
-
-            if (input.equals("yes")) {
-
-                trueProperty = getController().createProperty(houseDTO);
-                validInput = true;
+                trueProperty = getController().createProperty(propertyPrice, propertyArea,propertyAddress,propertyDistanceToCentre,propertyPhotographs, propertyBedroomNumber,propertyBathroomNumber,propertyParkingSpaceNumber,propertyEquipmentList, propertyHasBasement,propertyHasLoft,propertySunExposure, propertyTypeDescription, storeDescription,client,date);
                 return trueProperty;
 
-
-            } else if (input.equals("no")) {
+            } else if (input.equals(REJECTED)) {
                 run();
                 validInput = true;
             } else {
@@ -982,22 +856,24 @@ public class CreateSaleAnnouncementUI implements Runnable {
         return null;
     }
 
-    private void SaleAnnouncementConfirmation(Property property){
+    private void announcementConfirmation(Property property, boolean sale){
         double percentage = commission / 100;
 
-        listedPrice = property1.getPrice() * percentage + property1.getPrice();
-
-        Announcement announcement = new Announcement(agent,date,commission,getController().getBusinessTypeByDescription(BusinessTypeDescription),property,listedPrice);
-
-        AnnouncementDTO announcementDTO = AnnouncementMapper.toDTO(announcement);
-
-        System.out.println("\u001B[36m#=== Sale Announcement ===#\u001B[0m");
+        listedPrice = property.getPrice() * percentage + property.getPrice();
 
 
-        System.out.printf("Comission: %.2f\n", announcementDTO.getCommission());
-        System.out.printf("Listed price: %.2f\n", announcementDTO.getListedPrice());
-        Optional<Announcement> saleAnnouncement = null;
+        if (sale){
+            System.out.println("\u001B[36m#=== Sale Announcement ===#\u001B[0m");
+        } else {
+            System.out.println("\u001B[36m#=== Rent Announcement ===#\u001B[0m");
+        }
+
+
+        System.out.printf("Comission: %.2f\n", commission);
+        System.out.printf("Listed price: %.2f\n", listedPrice);
+        Optional<AnnouncementDTO> announcement = Optional.empty();
         boolean validInput = false;
+        boolean sms = false;
         while (!validInput){
 
             System.out.println("Can you confirm the data entered?(Yes/No:)");
@@ -1005,16 +881,29 @@ public class CreateSaleAnnouncementUI implements Runnable {
             scanner.nextLine();
             String input = scanner.nextLine().trim().toLowerCase();
 
-            if (input.equalsIgnoreCase("yes")){
-                saleAnnouncement = controller.createAnnouncement ( announcementDTO);
-                getController().createSMS(agent.getPhoneNumber(),announcementDTO.getAgent().getEmployee().getName(),announcementDTO.getDate(),announcementDTO.getProperty().getAddress());
+            if (input.equalsIgnoreCase(APPROVED)){
+                if(sale){
+                    announcement = controller.createAnnouncement(date,commission,BusinessTypeDescription ,property,listedPrice, agent);
+                } else {
+                    announcement = controller.createAnnouncement(date,commission,BusinessTypeDescription ,property,rentDuration, agent);
+                }
+
+
                 validInput = true;
-              if(saleAnnouncement.isPresent())  {
+              if(announcement.isPresent())  {
                   System.out.println("Announcement was created.");
+                  sms = controller.createSMS(agent.getPhoneNumber(), announcement.get().getAgent().getEmployee().getName(),announcement.get().getDate(),announcement.get().getProperty().getAddress());
+                  if(sms){
+                      System.out.println("=====================");
+                      System.out.println("SMS was sent successfully.");
+                  }
+                  else System.out.println("An error occurred!! The SMS was not sent.");
+                  return;
+
               }else{
                   System.out.println("Announcement was not created.");
               }
-            } else if (input.equalsIgnoreCase("no")){
+            } else if (input.equalsIgnoreCase(REJECTED)){
                 System.out.println("Announcement was not created");
                 return;
 
@@ -1024,57 +913,8 @@ public class CreateSaleAnnouncementUI implements Runnable {
         }
     }
 
-    private void RentAnnouncementConfirmation(Property property1){
-        double percentage = commission / 100;
 
-        listedPrice = property1.getPrice() * percentage + property1.getPrice();
-
-        Announcement announcement = new Announcement(agent,date,commission,getController().getBusinessTypeByDescription(BusinessTypeDescription),property1,rentDuration,listedPrice);
-
-        AnnouncementDTO announcementDTO = AnnouncementMapper.toDTO(announcement);
-
-        System.out.println("\u001B[36m#=== Rent Announcement ===#\u001B[0m");
-
-
-        System.out.printf("Comission: %.1f\n", announcementDTO.getCommission());
-        System.out.printf("Listed price: %.2f\n", announcementDTO.getListedPrice());
-        Optional<Announcement> rentAnnouncement = null;
-
-
-        boolean validInput = false;
-        while (!validInput){
-
-            System.out.println("Can you confirm the data entered?(Yes/No):");
-            scanner.next();
-            scanner.nextLine();
-            String input = scanner.next().trim().toLowerCase();
-
-            if (input.equalsIgnoreCase("Yes")) {
-                rentAnnouncement = getController().createAnnouncement(announcementDTO);
-                getController().createSMS(announcementDTO.getAgent().getEmployee().getPhoneNumber(),announcementDTO.getAgent().getEmployee().getName(),announcementDTO.getDate(),announcementDTO.getProperty().getAddress());
-
-                validInput = true;
-                if(rentAnnouncement.isPresent()){
-                    System.out.println("Announcement was created.");
-                }else{
-                    System.out.println("Announcement was not created.");
-                }
-
-
-            } else if (input.equalsIgnoreCase("No")) {
-                System.out.println("Announcement was not created.");
-                return;
-
-            } else {
-                System.out.println("Invalid input. Please enter 'yes' or 'no'.");
-            }
-        }
-    }
-
-
-
-    private void createAnnouncement(){
-
+    private void requestClientInfo(){
         System.out.println("\u001B[36m#=== Create Announcement ===#\u001B[0m");
 
         String clientName = requestClientName();
@@ -1084,21 +924,20 @@ public class CreateSaleAnnouncementUI implements Runnable {
         long clientPassportNumber = requestPassportNumber();
         Address address = requestClientAddress();
 
+        client = new Client(clientName,clientEmail, (int) clientPassportNumber,clientTaxNumber,address,clientPhoneNumber);
 
+    }
 
+    private void requestPropertyInfo(){
+        String propertyTypeDescription=displayAndSelectPropertyType();
 
-        clientDTO = new Client(clientName,clientEmail, (int) clientPassportNumber,clientTaxNumber,address,clientPhoneNumber);
+        String BusinessTypeDescription=displayAndSelectBusinessType();
 
-
-        propertyTypeDescription=displayAndSelectPropertyType();
-
-        BusinessTypeDescription=displayAndSelectBusinessType();
-
-        propertyArea= requestPropertyArea();
-        propertyDistanceToCentre = requestPropertyDistanceToCentre();
-        propertyPrice = requestPropertyPrice();
-        propertyPhotographs=requestPropertyPhotographs();
-        propertyAddress=requestPropertyAddress();
+        double propertyArea= requestPropertyArea();
+        double propertyDistanceToCentre = requestPropertyDistanceToCentre();
+        double propertyPrice = requestPropertyPrice();
+        List<Photograph> propertyPhotographs=requestPropertyPhotographs();
+        Address propertyAddress=requestPropertyAddress();
 
 
         if (Objects.equals(propertyTypeDescription, "Apartment") || Objects.equals(propertyTypeDescription, "House") ) {
@@ -1127,9 +966,10 @@ public class CreateSaleAnnouncementUI implements Runnable {
             }
         }
 
+
         if (Objects.equals(propertyTypeDescription, "Land")){
             try{
-                property1= LandConfirmation(  propertyTypeDescription, propertyAddress, propertyPhotographs,  propertyDistanceToCentre,  propertyArea,  propertyPrice, storeDescription,clientDTO);
+                property1= LandConfirmation(propertyTypeDescription, propertyAddress, propertyPhotographs,  propertyDistanceToCentre,  propertyArea,  propertyPrice, storeDescription,client);
             } catch (Exception e){
                 System.out.println("\nError!");
                 System.out.print(e.getMessage());
@@ -1139,7 +979,7 @@ public class CreateSaleAnnouncementUI implements Runnable {
 
         if (Objects.equals(propertyTypeDescription, "Apartment")){
             try{
-                property1= ApartmentConfirmation(propertyTypeDescription, propertyAddress,storeDescription, propertyPhotographs, propertyDistanceToCentre,  propertyArea,propertyPrice,  propertyBedroomNumber,clientDTO,  propertyBathroomNumber,  propertyParkingSpaceNumber,  propertyEquipmentList, propertyHasBasement,  propertyHasLoft,  propertySunExposure);
+                property1= ApartmentConfirmation(propertyTypeDescription, propertyAddress,storeDescription, propertyPhotographs, propertyDistanceToCentre,  propertyArea,propertyPrice,  propertyBedroomNumber,client,  propertyBathroomNumber,  propertyParkingSpaceNumber,  propertyEquipmentList, propertyHasBasement,  propertyHasLoft,  propertySunExposure);
             } catch (Exception e){
                 System.out.println("\nError!");
                 System.out.print(e.getMessage());
@@ -1149,37 +989,8 @@ public class CreateSaleAnnouncementUI implements Runnable {
 
         if (Objects.equals(propertyTypeDescription, "House")){
             try{
-                property1= HouseConfirmation(propertyTypeDescription,propertyAddress,  propertyPhotographs,  propertyDistanceToCentre,  propertyArea,  propertyPrice,  propertyBedroomNumber,  propertyBathroomNumber,  propertyParkingSpaceNumber,  propertyEquipmentList, propertyHasBasement,  propertyHasLoft,  propertySunExposure,  storeDescription,clientDTO);
+                property1= HouseConfirmation(propertyTypeDescription,propertyAddress,  propertyPhotographs,  propertyDistanceToCentre,  propertyArea,  propertyPrice,  propertyBedroomNumber,  propertyBathroomNumber,  propertyParkingSpaceNumber,  propertyEquipmentList, propertyHasBasement,  propertyHasLoft,  propertySunExposure,  storeDescription,client);
 
-            } catch (Exception e){
-                System.out.println("\nError!");
-                System.out.print(e.getMessage());
-            }
-        }
-
-        commission = requestAnnouncementCommission();
-
-
-
-
-
-        if(Objects.equals(BusinessTypeDescription, "Buy")){
-
-            try {
-
-                SaleAnnouncementConfirmation(property1);
-
-
-            } catch (Exception e){
-                System.out.println("\nError!");
-                System.out.print(e.getMessage());
-            }
-        }
-
-        if (Objects.equals(BusinessTypeDescription, "Rent")){
-            try {
-                rentDuration = requestPropertyRentDuration();
-                RentAnnouncementConfirmation(property1);
             } catch (Exception e){
                 System.out.println("\nError!");
                 System.out.print(e.getMessage());
@@ -1192,6 +1003,22 @@ public class CreateSaleAnnouncementUI implements Runnable {
 
 
 
+    private void createAnnouncement(){
 
+        commission = requestAnnouncementCommission();
+
+        boolean sale = true;
+        try {
+            if (Objects.equals(BusinessTypeDescription, "Rent")) {
+                rentDuration = requestPropertyRentDuration();
+                sale = false;
+            }
+            announcementConfirmation(property1, sale);
+        } catch (Exception e){
+            System.out.println("\nError!");
+            System.out.print(e.getMessage());
+        }
+
+    }
 
 }

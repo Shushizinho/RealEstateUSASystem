@@ -88,29 +88,7 @@ activate Agent
      Agent -> System : types requested data
      activate System
 
-        System --> Agent: asks if commission is in percentage or fixed
-                  deactivate System
-
-            Agent -> System: inputs the pretend option
-            activate System
-
-
-          System --> Agent : asks for announcement data (commission)
-          deactivate System
-
-          Agent -> System : provides the announcement data
-          activate System
-
-
-            System --> Agent: request data confirmation
-                     deactivate System
-
-            Agent -> System: confirms data
-            activate System
-
-
-
-   else if business = sale
+     end alt
 
       System --> Agent: asks if commission is in percentage or fixed
                      deactivate System
@@ -131,17 +109,6 @@ activate Agent
 
                   Agent -> System: confirms data
                   activate System
-
-
-
-
-
-     end
-
-
-
-
-
 
 
        System --> Agent : display operation success

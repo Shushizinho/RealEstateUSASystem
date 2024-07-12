@@ -3,73 +3,83 @@ skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
 
-autonumber
+autonumber 62
 
 'hide footbox
 participant ":AnnouncementController" as CTRL
+
 participant ":Repositories" as RepositorySingleton
 participant "repositories\n:Repositories" as PLAT
 participant "announcementRepository:\nAnnouncementRepository" as AR
+participant "Announcement" as AN
 participant "AnnouncementMapper" as AM
 
-participant "Announcement" as AN
+  autonumber 59
+     -> CTRL: createAnnouncement(date,commission,businessTypeDescription,property,rentDuration, agent)
 
-
-     -> CTRL: createRentAnnouncement(AnnouncementDTO)
      activate CTRL
 
 
+    autonumber 60.1
+         CTRL -> RepositorySingleton : getInstance()
+          activate RepositorySingleton
 
- CTRL -> RepositorySingleton : getInstance()
-                           activate RepositorySingleton
+          RepositorySingleton --> CTRL: repositories
+          deactivate RepositorySingleton
 
-        RepositorySingleton --> CTRL: repositories
-            deactivate RepositorySingleton
+     CTRL -> PLAT : getAnnouncementRepository()
+                  activate PLAT
 
-                           CTRL -> PLAT : getAnnouncementRepository()
-                           activate PLAT
+                   PLAT -> CTRL : announcementRepository
+                                   deactivate PLAT
 
-                            PLAT -> CTRL : announcementRepository
-                            deactivate PLAT
+               CTRL -> AR: createAnnouncement(date,commission,businessTypeDescription,property,rentDuration,agent)
+                 activate AR
 
+           autonumber 51.1
+                               AR --> AR :getBusinessTypeByDescription(businessTypeDescription)
+                               AR -> AN**: create(date, commission,businessType,property, rentDuration, agent)
+                               activate AN
 
-
-
-  CTRL -> AR: createAnnouncement(AnnouncementDTO)
-          activate AR
-
-
-
-                     AR -> AM: ToEntity(AnnouncementDTO)
-                     activate AM
-
-
-                      AM -> AN**: create(agent, dateTime, Commission,businessType,property, RentDuration, ListedPrice)
-                      AM --> AR: announcement
-                      deactivate AM
-
-
-                     AR -> AR: validateAnnouncement(announcement)
-                     activate AR
-                         AR -> AR: addAnnouncement(announcement)
-                         activate AR
-                             AR --> AR
-                         deactivate AR
-                         AR --> AR
-
-                 deactivate AR
+                               AN --> AR: announcement
+                               deactivate AN
 
 
 
+                               AR -> AR: validateAnnouncement(announcement)
+                               activate AR
+                                   AR -> AR: addAnnouncement(announcement)
+                                   activate AR
+                                       AR --> AR
+                                   deactivate AR
+                                   AR --> AR
+
+                           deactivate AR
+
+                            AR -> AM: toDTO(announcement)
+                               activate AM
+
+                               AM--> AR : announcementDTO
+                               deactivate AM
 
 
-   CTRL <-- AR  : announcement
+              AR --> CTRL: announcementDTO
+
+              deactivate AR
 
 
-    deactivate AR
+               <-- CTRL : announcementDTO
+              deactivate CTRL
 
-    <-- CTRL  : announcement
-    deactivate CTRL
+
+
+
+
+    autonumber 61
+
+
+
+
 
 
 @enduml

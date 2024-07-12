@@ -277,50 +277,50 @@ public class AnnouncementRequestController {
         return employeeRepository;
     }
 
-    /**
-     * Creates a new SaleAnnouncement with the specified details and adds it to the announcement repository.
-     *
-     * @param date         The formatted date of the announcement.
-     * @param commission   The commission amount for the sale.
-     * @param businessType The type of business associated with the sale.
-     * @param property     The property being sold.
-     * @param listedPrice  The listed price of the property.
-     * @param agent        The employee representing the agent associated with the sale.
-     * @return An Optional containing the newly created SaleAnnouncement, or an empty Optional if the creation failed.
-     */
-
-
-    public Optional<SaleAnnouncement> createSaleAnnouncement2(DateTime date, double commission, BusinessType businessType, Property property, double listedPrice, Agent agent){
-
-
-
-
-        return getAnnouncementRepository().createSaleAnnouncement2(date,commission,businessType,property,listedPrice,agent);
-
-
-    }
-
-    /**
-     * Creates a new RentAnnouncement with the specified details and adds it to the announcement repository.
-     *
-     * @param date         The formatted date of the announcement.
-     * @param commission   The commission amount for the rent.
-     * @param businessType The type of business associated with the rent.
-     * @param property     The property being rented.
-     * @param rentDuration The duration of the rent in months.
-     * @param agent        The employee representing the agent associated with the rent.
-     * @return An Optional containing the newly created RentAnnouncement, or an empty Optional if the creation failed.
-     */
-
-
-    public Optional<RentAnnouncement> createRentAnnouncement2(DateTime date, double commission, BusinessType businessType, Property property, Integer rentDuration, Agent agent){
-
-
-
-        return getAnnouncementRepository().createRentAnnouncement2(date,commission,businessType,property,rentDuration,agent);
-
-
-    }
+//    /**
+//     * Creates a new SaleAnnouncement with the specified details and adds it to the announcement repository.
+//     *
+//     * @param date         The formatted date of the announcement.
+//     * @param commission   The commission amount for the sale.
+//     * @param businessType The type of business associated with the sale.
+//     * @param property     The property being sold.
+//     * @param listedPrice  The listed price of the property.
+//     * @param agent        The employee representing the agent associated with the sale.
+//     * @return An Optional containing the newly created SaleAnnouncement, or an empty Optional if the creation failed.
+//     */
+//
+//
+//    public Optional<SaleAnnouncement> createSaleAnnouncement2(DateTime date, double commission, BusinessType businessType, Property property, double listedPrice, Agent agent){
+//
+//
+//
+//
+//        return getAnnouncementRepository().createSaleAnnouncement2(date,commission,businessType,property,listedPrice,agent);
+//
+//
+//    }
+//
+//    /**
+//     * Creates a new RentAnnouncement with the specified details and adds it to the announcement repository.
+//     *
+//     * @param date         The formatted date of the announcement.
+//     * @param commission   The commission amount for the rent.
+//     * @param businessType The type of business associated with the rent.
+//     * @param property     The property being rented.
+//     * @param rentDuration The duration of the rent in months.
+//     * @param agent        The employee representing the agent associated with the rent.
+//     * @return An Optional containing the newly created RentAnnouncement, or an empty Optional if the creation failed.
+//     */
+//
+//
+//    public Optional<RentAnnouncement> createRentAnnouncement2(DateTime date, double commission, BusinessType businessType, Property property, Integer rentDuration, Agent agent){
+//
+//
+//
+//        return getAnnouncementRepository().createRentAnnouncement2(date,commission,businessType,property,rentDuration,agent);
+//
+//
+//    }
 
 
 

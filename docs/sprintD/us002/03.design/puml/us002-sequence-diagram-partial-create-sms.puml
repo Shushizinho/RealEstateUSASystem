@@ -31,16 +31,29 @@ participant "announcementRepository:\nAnnouncementRepository" as AR
                                     deactivate PLAT
 
                                      CTRL -> AR: createSMS(senderNumber, recipientNumber,dateAvailable, address, message)
-                                     deactivate CTRL
+
                                       activate AR
 
                                              AR -> AR: createSMS(senderNumber, recipientNumber,dateAvailable, address, message)
-                                                                        activate AR
+                                            activate AR
 
 
 
-                                                                        AR --> AR
-                                                                        deactivate AR
+                                            AR --> AR
+
+
+                                            deactivate AR
+                                             AR--> CTRL : flag
+
+
+                                             deactivate AR
+
+                                             <--- CTRL : flag
+
+                                             deactivate CTRL
+
+
+
 
 
 

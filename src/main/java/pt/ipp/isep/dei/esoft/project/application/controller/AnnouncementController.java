@@ -192,28 +192,21 @@ private BusinessTypeRepository getBusinessTypeRepository(){
      * @param propertyAddress            the address of the property
      * @param propertyDistanceToCentre   the distance of the property to the city centre
      * @param propertyPhotographs        a list of URLs of photographs of the property
-     * @param propertyBedroomNumber      the property bedroom number
-     * @param propertyBathroomNumber     the property bathroom number
-     * @param propertyParkingSpaceNumber the property parking space number
-     * @param propertyEquipmentList      the property equipment list
-     * @param propertyType               the type of the property
-     * @param store                      the store where the property is listed
-     * @param client                     the Client who created the property
+     * @param propertyTypeDescription    The type description of the property.
+     * @param storeDescription           The store description to which the property is associated.
      * @param date                       the date
      * @return the created property
      */
     public Property createProperty(Double propertyPrice, Double propertyArea, Address propertyAddress,
                                    Double propertyDistanceToCentre, List<Photograph> propertyPhotographs,
-                                   int propertyBedroomNumber, int propertyBathroomNumber, int propertyParkingSpaceNumber, List<String> propertyEquipmentList, PropertyType propertyType, Store store, Client client, DateTime date){
+                                   String propertyTypeDescription, String storeDescription, Client client, DateTime date){
+
+        Store store = getStoreByDescription(storeDescription);
+
+        PropertyType propertyType = getPropertyTypeByDescription(propertyTypeDescription);
 
         return getPropertyRepository().createProperty(propertyPrice, propertyArea, propertyAddress, propertyDistanceToCentre, propertyPhotographs, propertyType, store, client, date);
     }
-
-
-
-
-
-
 
 
 
@@ -232,8 +225,8 @@ private BusinessTypeRepository getBusinessTypeRepository(){
      * @param propertyHasBasement        Whether or not the property has a basement.
      * @param propertyHasLoft            Whether or not the property has a loft.
      * @param propertySunExposure        The sun exposure of the property.
-     * @param propertyType               The type of the property.
-     * @param store                      The store to which the property is associated.
+     * @param propertyTypeDescription    The type description of the property.
+     * @param storeDescription           The store description to which the property is associated.
      * @param client                     The Client who created the Property.
      * @param date                       the date
      * @return The newly created Property.
@@ -241,10 +234,11 @@ private BusinessTypeRepository getBusinessTypeRepository(){
     public Property createProperty(Double propertyPrice, Double propertyArea, Address propertyAddress,
                                    Double propertyDistanceToCentre, List<Photograph> propertyPhotographs, Integer propertyBedroomNumber, Integer propertyBathroomNumber,
                                    Integer propertyParkingSpaceNumber, List<String> propertyEquipmentList, Boolean propertyHasBasement, Boolean propertyHasLoft, String propertySunExposure,
-                                   PropertyType propertyType, Store store, Client client, DateTime date){
+                                   String propertyTypeDescription, String storeDescription, Client client, DateTime date){
 
+        Store store = getStoreByDescription(storeDescription);
 
-
+        PropertyType propertyType = getPropertyTypeByDescription(propertyTypeDescription);
 
 
         return getPropertyRepository().createProperty(propertyPrice, propertyArea, propertyAddress, propertyDistanceToCentre, propertyPhotographs, propertyBedroomNumber,
@@ -264,63 +258,78 @@ private BusinessTypeRepository getBusinessTypeRepository(){
      * @param propertyBathroomNumber     The number of bathrooms in the property.
      * @param propertyParkingSpaceNumber The number of parking spaces available with the property.
      * @param propertyEquipmentList      A list of equipment and amenities available with the property.
-     * @param propertyType               The type of the property (e.g. apartment, house, office).
-     * @param store                      The store where the property is listed for sale.
+     * @param propertyTypeDescription    The type description of the property.
+     * @param storeDescription           The store description to which the property is associated.
      * @param client                     The Client who created the property listing.
      * @return The created Property object.
      */
     public Property createProperty(Double propertyPrice, Double propertyArea, Address propertyAddress,
                                    Double propertyDistanceToCentre, List<Photograph> propertyPhotographs, Integer propertyBedroomNumber, Integer propertyBathroomNumber,
                                    Integer propertyParkingSpaceNumber, List<String> propertyEquipmentList,
-                                   PropertyType propertyType, Store store, Client client){
+                                   String propertyTypeDescription, String storeDescription, Client client){
+        Store store = getStoreByDescription(storeDescription);
+
+        PropertyType propertyType = getPropertyTypeByDescription(propertyTypeDescription);
 
         return getPropertyRepository().createProperty(propertyPrice, propertyArea, propertyAddress, propertyDistanceToCentre, propertyPhotographs, propertyBedroomNumber, propertyBathroomNumber, propertyParkingSpaceNumber, propertyEquipmentList, propertyType, store, client, new DateTime());
     }
 
+    public Optional<AnnouncementDTO> createAnnouncement(DateTime date, double commission, String businessTypeDescription, Property property, Integer rentDuration, Agent agent) {
+        BusinessType businessType = getBusinessTypeByDescription(businessTypeDescription);
+
+        return  getAnnouncementRepository().createAnnouncement(date, commission, businessType, property, rentDuration, agent);
+    }
+
+    public Optional<AnnouncementDTO> createAnnouncement(DateTime date, double commission, String businessTypeDescription, Property property, double listedPrice, Agent agent) {
+        BusinessType businessType = getBusinessTypeByDescription(businessTypeDescription);
+
+        return  getAnnouncementRepository().createAnnouncement(date, commission, businessType, property, listedPrice, agent);
+    }
+
 
     /**
-     * Create announcement optional.
-     *
-     * @param announcementDTO the announcement dto
-     * @return the optional
-     */
+         * Create announcement optional.
+         *
+         * @param announcementDTO the announcement dto
+         * @return the optional
+         */
     public Optional<Announcement> createAnnouncement(AnnouncementDTO announcementDTO){
 
         return getAnnouncementRepository().createAnnouncement( announcementDTO);
     }
 
-    /**
-     * Create property property.
-     *
-     * @param landDTO the land dto
-     * @return the property
-     */
-    public Property createProperty(LandDTO landDTO) {
-
-        return getPropertyRepository().createProperty(landDTO);
-    }
-
-    /**
-     * Create property property.
-     *
-     * @param apartmentDTO the apartment dto
-     * @return the property
-     */
-    public Property createProperty(ApartmentDTO apartmentDTO) {
-
-        return getPropertyRepository().createProperty(apartmentDTO);
-    }
-
-    /**
-     * Create property property.
-     *
-     * @param houseDTO the house dto
-     * @return the property
-     */
-    public Property createProperty(HouseDTO houseDTO) {
-
-        return getPropertyRepository().createProperty(houseDTO);
-    }
+//    /**
+//     * Create property property.
+//     *
+//     * @param landDTO the land dto
+//     * @return the property
+//     */
+//    public Property createProperty(LandDTO landDTO) {
+//
+//        return getPropertyRepository().createProperty(landDTO);
+//    }
+//
+//    /**
+//     * Create property property.
+//     *
+//     * @param apartmentDTO the apartment dto
+//     * @return the property
+//     */
+//    public Property createProperty(ApartmentDTO apartmentDTO) {
+//
+//        return getPropertyRepository().createProperty(apartmentDTO);
+//    }
+//
+//    /**
+//     * Create property property.
+//     *
+//     * @param houseDTO the house dto
+//     * @return the property
+//     */
+//    public Property createProperty(HouseDTO houseDTO) {
+//
+//        return getPropertyRepository().createProperty(houseDTO);
+//    }
 
     /**
      * Create sms.
@@ -330,46 +339,46 @@ private BusinessTypeRepository getBusinessTypeRepository(){
      * @param dateTime        the date time
      * @param address         the address
      */
-    public void createSMS(long senderNumber, String agentName, DateTimeDTO dateTime, AddressDTO address) {
+    public boolean createSMS(long senderNumber, String agentName, DateTimeDTO dateTime, AddressDTO address) {
 
-        getAnnouncementRepository().createSMS(senderNumber, agentName, dateTime, address);
+        return getAnnouncementRepository().createSMS(senderNumber, agentName, dateTime, address);
 
     }
 
 
 
-
-    /**
-     * Creates a new sale announcement with the given parameters.
-     *
-     * @param date         the formatted date of the announcement
-     * @param commission   the commission for the announcement
-     * @param businessType the business type of the announcement
-     * @param property     the property associated with the announcement
-     * @param listedPrice  the listed price of the property
-     * @param agent        the employee responsible for the announcement
-     * @return an optional containing the created sale announcement if successful, or an empty optional otherwise
-     */
-    public Optional<SaleAnnouncement> createSaleAnnouncement(DateTime date, double commission, BusinessType businessType, Property property, double listedPrice, Agent agent){
-
-        return getAnnouncementRepository().createSaleAnnouncement2( date, commission, businessType,property,listedPrice,agent);
-    }
-
-    /**
-     * Creates a new rent announcement with the given parameters.
-     *
-     * @param date         the formatted date of the announcement
-     * @param commission   the commission for the announcement
-     * @param businessType the business type of the announcement
-     * @param property     the property associated with the announcement
-     * @param rentDuration the duration of the rent
-     * @param agent        the employee responsible for the announcement
-     * @return an optional containing the created rent announcement if successful, or an empty optional otherwise
-     */
-    public Optional<RentAnnouncement> createRentAnnouncement(DateTime date, double commission, BusinessType businessType, Property property, Integer rentDuration, Agent agent){
-
-        return getAnnouncementRepository().createRentAnnouncement2(date,commission,businessType,property,rentDuration, agent );
-    }
+//
+//    /**
+//     * Creates a new sale announcement with the given parameters.
+//     *
+//     * @param date         the formatted date of the announcement
+//     * @param commission   the commission for the announcement
+//     * @param businessType the business type of the announcement
+//     * @param property     the property associated with the announcement
+//     * @param listedPrice  the listed price of the property
+//     * @param agent        the employee responsible for the announcement
+//     * @return an optional containing the created sale announcement if successful, or an empty optional otherwise
+//     */
+//    public Optional<SaleAnnouncement> createSaleAnnouncement(DateTime date, double commission, BusinessType businessType, Property property, double listedPrice, Agent agent){
+//
+//        return getAnnouncementRepository().createSaleAnnouncement2( date, commission, businessType,property,listedPrice,agent);
+//    }
+//
+//    /**
+//     * Creates a new rent announcement with the given parameters.
+//     *
+//     * @param date         the formatted date of the announcement
+//     * @param commission   the commission for the announcement
+//     * @param businessType the business type of the announcement
+//     * @param property     the property associated with the announcement
+//     * @param rentDuration the duration of the rent
+//     * @param agent        the employee responsible for the announcement
+//     * @return an optional containing the created rent announcement if successful, or an empty optional otherwise
+//     */
+//    public Optional<RentAnnouncement> createRentAnnouncement(DateTime date, double commission, BusinessType businessType, Property property, Integer rentDuration, Agent agent){
+//
+//        return getAnnouncementRepository().createRentAnnouncement2(date,commission,businessType,property,rentDuration, agent );
+//    }
 
 
     /**

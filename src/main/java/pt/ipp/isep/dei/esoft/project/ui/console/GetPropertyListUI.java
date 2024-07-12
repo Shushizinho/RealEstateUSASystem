@@ -9,6 +9,7 @@ import pt.ipp.isep.dei.esoft.project.ui.console.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * The type Get property list ui.
@@ -101,7 +102,8 @@ public class GetPropertyListUI implements Runnable {
         System.out.println();
         Boolean resp = selectOtherSortOptions("\n\u001B[35mDo you pretend to sort all the properties that are on sale?");
         if(resp){
-            List<Property> p = getListOfPropertiesByPorpertyFilter(pr1, APPROVED);
+            String propertyFilter = (displayPropertyFiltersList());
+            List<Property> p = getListOfPropertiesByPorpertyFilter(pr1, propertyFilter);
             displayListOfProperties(p);
         }
         if (!resp){
@@ -110,7 +112,8 @@ public class GetPropertyListUI implements Runnable {
             if (!pr2.isEmpty()){
                 Boolean response = selectOtherSortOptions("\n\u001B[35mDo you pretend to sort all the properties that are on rent?");
                 if (response){
-                    List<Property> p = getListOfPropertiesByPorpertyFilter(pr2, REJECTED);
+                    String propertyFilter2 = (displayPropertyFiltersList());
+                    List<Property> p = getListOfPropertiesByPorpertyFilter(pr2, propertyFilter2);
                     displayListOfProperties(p);
                 }
             }
@@ -165,11 +168,7 @@ public class GetPropertyListUI implements Runnable {
      * @return chosen property filter.
      */
     public Boolean selectOtherSortOptions (String string){
-        Boolean response = displayOptionYesOrNo(string);
-        if (response){
-           displayPropertyFiltersList();
-        }
-        return response;
+        return displayOptionYesOrNo(string);
     }
 
 
@@ -187,7 +186,7 @@ public class GetPropertyListUI implements Runnable {
                 assert response != null;
                 return response.equals(APPROVED);
             }catch ( Exception e){
-                System.out.println("\u001B[41mError, please type y or n\u001B[0m");
+                System.out.println("\u001B[41mError, please type yes or no\u001B[0m");
             }
         }
 
@@ -234,9 +233,9 @@ public class GetPropertyListUI implements Runnable {
      * @return the chosen business type.
      */
     private String displayAndSelectBusinessType() {
-        //Display the list of business types
-        while(true){
-            try{
+        // Display the list of business types
+        while (true) {
+            try {
                 List<BusinessType> businessTypes = getController().getBusinessTypes();
 
                 int answer = -1;
@@ -245,23 +244,23 @@ public class GetPropertyListUI implements Runnable {
                 displayBusinessTypeOptions(businessTypes);
                 System.out.println("\u001B[0m0. Cancel");
                 System.out.println();
-                answer =Utils.readIntegerFromConsole("Enter business type:");
+                answer = Utils.readIntegerFromConsole("Enter business type:");
 
-
-                if(answer == 0 || answer == businessTypes.size()+1) {
+                if (answer == 0 || answer == businessTypes.size()+1) {
                     return String.valueOf(answer);
+                } else if (answer > 0 && answer <= businessTypes.size()) {
+                    return businessTypes.get(answer - 1).getDescriptionProperty();
+                } else {
+                    System.out.println("\u001B[41mInvalid option, please select from the list!\u001B[0m");
                 }
-                else {
-                    String description = businessTypes.get(answer - 1).getDescriptionProperty();
-                    return description;
-                }
-            }
-            catch (Exception e){
-                System.out.println("\u001B[41mError, select form the following list a business type!\u001B[0m");
+            } catch (NumberFormatException e) {
+                System.out.println("\u001B[41mError, please enter a valid number!\u001B[0m");
+            } catch (Exception e) {
+                System.out.println("\u001B[41mError, unable to retrieve business types!\u001B[0m");
             }
         }
-
     }
+
 
     /**
      * This method display the business type options.
@@ -381,6 +380,7 @@ public class GetPropertyListUI implements Runnable {
                 if (answer != 0) {
                     String description = filters.get(answer - 1).getDescription();
                     return description;
+
                 }else return String.valueOf(answer);
             }catch (Exception e){
                 System.out.println("\u001B[41mError, select form the following list, a property filter!\u001B[0m");

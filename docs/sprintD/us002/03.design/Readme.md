@@ -65,13 +65,15 @@ Other software classes (i.e. Pure Fabrication) identified:
 
 ## 3.2. Sequence Diagram (SD)
 
-### Alternative 1 - Full Diagram
+[//]: # (### Alternative 1 - Full Diagram)
 
-This diagram shows the full sequence of interactions between the classes involved in the realization of this user story.
+[//]: # ()
+[//]: # (This diagram shows the full sequence of interactions between the classes involved in the realization of this user story.)
 
-![Sequence Diagram - Full](svg/us002-sequence-diagram-full.svg)
+[//]: # ()
+[//]: # (![Sequence Diagram - Full]&#40;svg/us002-sequence-diagram-full.svg&#41;)
 
-### Alternative 2 - Split Diagram
+### Split Diagram
 
 This diagram shows the same sequence of interactions between the classes involved in the realization of this user story, but it is split in partial diagrams to better illustrate the interactions between the classes.
 
