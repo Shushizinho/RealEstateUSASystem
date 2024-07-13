@@ -19,7 +19,7 @@ activate ADM
 
     UI-> CTRL** : create
 
-    UI -> CTRL : getRoles()
+    UI -> CTRL : getRole()
                     activate CTRL
                         ref over CTRL
                               Get Roles List
@@ -39,7 +39,7 @@ activate ADM
 
         activate UI
 
-         UI -> CTRL : getStores()
+         UI -> CTRL : getStore()
                     activate CTRL
                         ref over CTRL
                             Get Stores List
@@ -67,35 +67,11 @@ activate ADM
 
     activate UI
 
-    UI --> CTRL: getRoleByDescription(roleDescription)
+     UI --> CTRL: create(name,email,passportNumber,taxNumber,address,phoneNumber,storeByDescription,role)
 
     activate CTRL
-
-        ref over CTRL
-            Get Role
-
-        end ref
-
-    CTRL --> UI: role
-        deactivate CTRL
-
-
-        UI --> CTRL: getStoreByDescription(storeDescription)
-
-        activate CTRL
-
-            ref over CTRL
-                Get Store
-
-            end ref
-
-        CTRL --> UI: store
-
-    deactivate CTRL
-    UI --> CTRL: registerEmployee(name,email,passportNumber,taxNumber,address,phoneNumber,store,role)
-
-    activate CTRL
-    CTRL --> EMPR: registerEmployee(name,email,passportNumber,taxNumber,address,phoneNumber,store,role)
+    CTRL-->CTRL: getStoreByDescription(storeByDescription)
+    CTRL --> EMPR: create(name,email,passportNumber,taxNumber,address,phoneNumber,store,role)
 
     activate EMPR
 

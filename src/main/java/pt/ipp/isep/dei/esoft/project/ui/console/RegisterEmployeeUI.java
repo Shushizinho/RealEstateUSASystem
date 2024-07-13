@@ -77,7 +77,7 @@ public class RegisterEmployeeUI implements Runnable {
 
         if (answer.compareTo("n") == 0 || answer.compareTo("N") == 0) run();
 
-        Optional<Employee> employee = getController().create(name,email,passportNumber,taxNumber,address,phoneNumber,store,role);
+        Optional<Employee> employee = controller.create(name,email,passportNumber,taxNumber,address,phoneNumber,store,role);
 
         if (employee.isPresent()) {
             System.out.println("\u001B[32mEmployee successfully created!\u001B[0m");
@@ -333,8 +333,6 @@ public class RegisterEmployeeUI implements Runnable {
         List<Role> allroles = controller.getRole();
         List<Role> newroles = new ArrayList<>();
 
-
-
         int listSize = allroles.size();
         int answer = -2;
         int point = 0;
@@ -534,9 +532,5 @@ public class RegisterEmployeeUI implements Runnable {
         String regex = "[a-zA-Z]+";
         return str.matches(regex);
     }
-
-
-
-
 
 }

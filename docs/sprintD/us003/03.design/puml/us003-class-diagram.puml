@@ -73,7 +73,7 @@ class RegisterEmployeeController {
     + getStores()
     + getStoreByDescription(storeDescription)
     + getRoleByDescription(roleDescription)
-    + registerEmployee(email,passportNumber,\n taxNumber,address,phoneNumber,store,role)
+    + create(email,passportNumber,\n taxNumber,address,phoneNumber,store,role)
 }
 
 

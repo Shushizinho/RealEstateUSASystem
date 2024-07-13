@@ -98,72 +98,18 @@ activate ADM
 
     activate UI
 
-    UI -> CTRL: getRoleByDescription(roleDescription)
+
+
+    UI -> CTRL: create(name,email,passportNumber,taxNumber,address,phoneNumber,storeByDescription,role)
 
     activate CTRL
-
-        autonumber 13.1
-            CTRL -> RepositorySingleton : getInstance()
-            activate RepositorySingleton
-
-                RepositorySingleton --> CTRL: repositories
-            deactivate RepositorySingleton
-
-            CTRL -> PLAT : getRoleRepository()
-            activate PLAT
-
-                PLAT --> CTRL : roleRepository
-            deactivate PLAT
-
-            CTRL -> ROLR : getRoleByDescription(roleDescription)
-            activate ROLR
-
-                ROLR --> CTRL : role
-            deactivate ROLR
-
-
-    autonumber 14
-    CTRL --> UI: role
-
-    deactivate CTRL
-
-    UI --> CTRL: getStoreByDescription(storeDescription)
-
-        activate CTRL
-
-            autonumber 15.1
-                CTRL -> RepositorySingleton : getInstance()
-                activate RepositorySingleton
-
-                    RepositorySingleton --> CTRL: repositories
-                deactivate RepositorySingleton
-
-                CTRL -> PLAT : getStoreRepository()
-                activate PLAT
-
-                    PLAT --> CTRL : storeRepository
-                deactivate PLAT
-
-                CTRL -> STRR : getStoreByDescription(storeDescription)
-                activate STRR
-
-                    STRR --> CTRL : store
-                deactivate STRR
-
-        autonumber 16
-        CTRL --> UI: store
-
-        deactivate CTRL
-
-    UI -> CTRL: registerEmployee(name,email,passportNumber,taxNumber,address,phoneNumber,store,role)
-
-    activate CTRL
-    CTRL -> EMPR: registerEmployee(name,email,passportNumber,taxNumber,address,phoneNumber,store,role)
+     CTRL-->CTRL: getStoreByDescription(storeByDescription)
+    CTRL -> EMPR: create(name,email,passportNumber,taxNumber,address,phoneNumber,store,role)
 
     activate EMPR
 
 
-    autonumber 18.1
+    autonumber 15.1
 
                     EMPR -> EMPL**: create(name,email,password,passportNumber,\n taxNumber,address,phoneNumber,store, role)
                     EMPR -> EMPR: addEmployee (employee)
@@ -181,7 +127,7 @@ activate ADM
                         EMPR --> EMPR
                     deactivate EMPR
 
-    autonumber 19
+    autonumber 16
 
      EMPR --> CTRL:  employeeRegistered
      deactivate EMPR

@@ -13,7 +13,7 @@ participant "storeRepository:\nStoreRepository" as STRR
 
 
 
-          -> CTRL : getStores()
+          -> CTRL : getStore()
                     activate CTRL
                     autonumber 7.1
                             CTRL -> RepositorySingleton : getInstance()
