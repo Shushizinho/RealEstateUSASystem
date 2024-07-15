@@ -220,7 +220,7 @@ public class GetPropertyListUI implements Runnable {
      * This method display a given list of properties.
      * @param newProperty
      */
-    private void displayListOfProperties(List<Property> newProperty){
+    public void displayListOfProperties(List<Property> newProperty){
         System.out.println("\u001B[36m#=======Property List=======#");
         for (int i = 0; i < newProperty.size(); i++) {
             System.out.printf("\u001B[0m%d. %s%n", i+1, newProperty.get(i).toString());
@@ -232,7 +232,7 @@ public class GetPropertyListUI implements Runnable {
      * This method display the list of business type available and saves the chosen business type.
      * @return the chosen business type.
      */
-    private String displayAndSelectBusinessType() {
+    public String displayAndSelectBusinessType() {
         // Display the list of business types
         while (true) {
             try {
@@ -281,7 +281,7 @@ public class GetPropertyListUI implements Runnable {
      * This method display the list of property type available and saves the chosen property type.
      * @return the chosen property type.
      */
-    private String displayAndSelectPropertyType() {
+    public String displayAndSelectPropertyType() {
         //Display the list of property types
         while (true) {
             try {
@@ -328,7 +328,7 @@ public class GetPropertyListUI implements Runnable {
      * This method saves the chosen number of bedrooms.
      * @return the chosen number of bedrooms.
      */
-    private String selectNumberOfBedrooms() {
+    public String selectNumberOfBedrooms() {
         while (true) {
             try {
                 System.out.println("\u001B[36m#=======Select Number of Bedrroms =======#");
@@ -363,7 +363,7 @@ public class GetPropertyListUI implements Runnable {
      * This method display the property filters list and saves the chosen property filter.
      * @return the chosen property filter.
      */
-    private String displayPropertyFiltersList() {
+    public String displayPropertyFiltersList() {
         while(true){
             try{
                 List<Filters> filters = getController().getPropertyFilters();

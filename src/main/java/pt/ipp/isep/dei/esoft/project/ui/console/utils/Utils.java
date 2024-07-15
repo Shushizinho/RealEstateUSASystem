@@ -3,11 +3,14 @@ package pt.ipp.isep.dei.esoft.project.ui.console.utils;
 import pt.isep.lei.esoft.auth.mappers.dto.UserRoleDTO;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -230,5 +233,11 @@ public class Utils {
         } while (value < 0 || value > list.size());
 
         return value - 1;
+    }
+
+    public static void setInputStream(String input) {
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        Scanner scanner = new Scanner(in);
     }
 }

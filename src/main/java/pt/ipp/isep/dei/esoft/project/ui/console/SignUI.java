@@ -29,6 +29,10 @@ public class SignUI implements Runnable {
 
     private String password;
 
+    private final String APPROVED = "yes";
+
+    private final String REJECTED = "no";
+
     private SignController getController() {
         return controller;
     }
@@ -61,14 +65,14 @@ public class SignUI implements Runnable {
         confirmSubmit();
 
         String answer = "false";
-        while (!answer.equalsIgnoreCase("y") && !answer.equalsIgnoreCase("n")){
-            answer = Utils.readLineFromConsole("\nDo you confirm the displayed information?(Y/N): ");
+        while (!answer.equalsIgnoreCase(APPROVED) && !answer.equalsIgnoreCase(REJECTED)){
+            answer = Utils.readLineFromConsole("\nDo you confirm the displayed information??" + APPROVED + "/" + REJECTED +"):");
         }
 
 
-        if (answer.compareTo("n") == 0 || answer.compareTo("N") == 0) run();
+        if (answer.compareTo(REJECTED) == 0 || answer.compareTo("No") == 0) run();
 
-        Optional<Client> client = getController().create(name,email,passportNumber,taxNumber,address,phoneNumber,password);
+        Optional<Client> client = controller.create(name,email,passportNumber,taxNumber,address,phoneNumber,password);
 
         if (client.isPresent()) {
             System.out.println("\u001B[32mClient successfully created!\u001B[0m");

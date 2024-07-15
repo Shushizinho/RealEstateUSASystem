@@ -47,7 +47,7 @@ class Repositories {
 
 class SignController {
     + SignController()
-    + registerClient(email,passportNumber,\n taxNumber,address,phoneNumber)
+    + create(name,  email,  passportNumber, taxNumber, address, phoneNumber, password)
 }
 
 

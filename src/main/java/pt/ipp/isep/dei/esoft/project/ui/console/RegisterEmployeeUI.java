@@ -16,6 +16,10 @@ import java.util.regex.Pattern;
 public class RegisterEmployeeUI implements Runnable {
 
     private final RegisterEmployeeController controller = new RegisterEmployeeController();
+
+    private final String APPROVED = "yes";
+
+    private final String REJECTED = "no";
     private String name;
     private String email;
     private Integer passportNumber;
@@ -71,11 +75,11 @@ public class RegisterEmployeeUI implements Runnable {
         confirmSubmit();
 
         String answer = "false";
-        while (!answer.equalsIgnoreCase("y") && !answer.equalsIgnoreCase("n")){
-            answer = Utils.readLineFromConsole("\nDo you confirm the displayed information?(Y/N): ");
+        while (!answer.equalsIgnoreCase("y") && !answer.equalsIgnoreCase(REJECTED)){
+            answer = Utils.readLineFromConsole("\nDo you confirm the displayed information??" + APPROVED + "/" + REJECTED +"):");
         }
 
-        if (answer.compareTo("n") == 0 || answer.compareTo("N") == 0) run();
+        if (answer.compareTo(REJECTED) == 0 || answer.compareTo("No") == 0) run();
 
         Optional<Employee> employee = controller.create(name,email,passportNumber,taxNumber,address,phoneNumber,store,role);
 

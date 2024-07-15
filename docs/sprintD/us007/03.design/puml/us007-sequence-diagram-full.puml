@@ -30,11 +30,13 @@ activate UU
     UU -> UI : request data to create a new client ( name, passportNumber, taxNumber, \n address, email, phoneNumber)
     activate UI
 
-       UI -> CTRL : registerClient( name, passportNumber, taxNumber, \n address, email, phoneNumber)
+       UI -> CTRL : create(name,  email,  passportNumber, taxNumber, address, phoneNumber, password)
+
 
             activate CTRL
 
-                CTRL -> CLR: registerClient( name, passportNumber, taxNumber, \n address, email, phoneNumber)
+                CTRL -> CLR: create(name,  email,  passportNumber, taxNumber, address, phoneNumber, password)
+
                         activate CLR
                autonumber 6.1
 

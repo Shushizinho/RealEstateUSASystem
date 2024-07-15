@@ -15,6 +15,10 @@ import java.util.*;
  */
 public class CreatePropertyUI implements Runnable  {
 
+    private final String APPROVED = "yes";
+
+    private final String REJECTED = "no";
+
     private final List<String> EXTENSIONS = List.of(new String[]{"png", "jpg", "jpeg"});
     private final CreatePropertyController controller = new CreatePropertyController();
     private String storeDescription;
@@ -71,13 +75,13 @@ public class CreatePropertyUI implements Runnable  {
         if (Objects.equals(businessTypeDescription, "Rent")) {
             System.out.println("Rent Duration: "+ propertyRentDuration);
         }
-        String answer = Utils.readLineFromConsole("Is this data correct? (y/n):");
-        while (answer.trim().isEmpty() || (!answer.equalsIgnoreCase("y") && !answer.equalsIgnoreCase("n"))) {
+        String answer = Utils.readLineFromConsole("Is this data correct?" + APPROVED + "/" + REJECTED +"):");
+        while (answer.trim().isEmpty() || (!answer.equalsIgnoreCase(APPROVED) && !answer.equalsIgnoreCase("n"))) {
             System.out.println("\u001B[31mInvalid input. Please enter 'y' or 'n'.\u001B[0m");
-            answer = Utils.readLineFromConsole("Is this data correct? (y/n):");
+            answer = Utils.readLineFromConsole("Is this data correct?" + APPROVED + "/" + REJECTED +"):");
         }
         switch (answer) {
-            case "y": return true;
+            case APPROVED: return true;
             default: return false;
         }
     }
@@ -510,13 +514,13 @@ public class CreatePropertyUI implements Runnable  {
      */
     private Boolean requestPropertyHasBasement() {
         Scanner input = new Scanner(System.in);
-        System.out.println("Does the House have a basement? (Y/N):");
+        System.out.println("Does the House have a basement?" + APPROVED + "/" + REJECTED +"):");
         String text = input.nextLine();
-        while(text.trim().isEmpty() || (text.compareToIgnoreCase("Y")!=0 && text.compareToIgnoreCase("n")!=0)) {
-            System.out.println("\u001B[31mMust be either Y or N.\u001B[0m");
+        while(text.trim().isEmpty() || (text.compareToIgnoreCase(APPROVED)!=0 && text.compareToIgnoreCase(REJECTED)!=0)) {
+            System.out.println("\u001B[31mMust be either" + APPROVED + "or" + REJECTED + "." + "\u001B[0m");
             text = input.nextLine();
         }
-        return (!(text.compareToIgnoreCase("n")==0));
+        return (!(text.compareToIgnoreCase(REJECTED)==0));
     }
     /**
      * Asks the user if the house has a loft and returns a boolean value.
@@ -525,13 +529,13 @@ public class CreatePropertyUI implements Runnable  {
 
     private Boolean requestPropertyHasLoft() {
         Scanner input = new Scanner(System.in);
-        System.out.println("Does the House have a loft? (Y/N):");
+        System.out.println("Does the House have a loft?" + APPROVED + "/" + REJECTED +"):");
         String text = input.nextLine();
-        while(text.trim().isEmpty() || (text.compareToIgnoreCase("Y")!=0 && text.compareToIgnoreCase("n")!=0)) {
-            System.out.println("\u001B[31mMust be either Y or N.\u001B[0m");
+        while(text.trim().isEmpty() || (text.compareToIgnoreCase(APPROVED)!=0 && text.compareToIgnoreCase(REJECTED)!=0)) {
+            System.out.println("\u001B[31mMust be either" + APPROVED + "or" + REJECTED + "." + "\u001B[0m");
             text = input.nextLine();
         }
-        return (!(text.compareToIgnoreCase("n")==0));
+        return (!(text.compareToIgnoreCase(REJECTED)==0));
     }
     /**
      * Requests the sun exposure of a house property from the console.

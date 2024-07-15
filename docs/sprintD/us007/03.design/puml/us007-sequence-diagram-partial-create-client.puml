@@ -9,12 +9,13 @@ autonumber 6
 participant ":clientRepository:\nClientRepository" as CLR
 participant "client:\nClient" as CLIT
 
-                 -> CLR : registerClient( name, passportNumber, taxNumber, \n address, email, phoneNumber)
+                 -> CLR : create(name,  email,  passportNumber, taxNumber, address, phoneNumber, password)
+
                         activate CLR
 
                autonumber 6.1
 
-                CLR -> CLIT**: create( name, passportNumber, taxNumber, \n address, email, phoneNumber)
+                CLR -> CLIT**: create(name, passportNumber, taxNumber, \n address, email, phoneNumber)
                 activate CLR
 
                         CLR -> CLR: addEmployee (employee)
