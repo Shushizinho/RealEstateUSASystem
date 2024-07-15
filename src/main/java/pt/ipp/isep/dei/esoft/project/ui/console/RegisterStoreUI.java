@@ -320,7 +320,7 @@ public class RegisterStoreUI implements Runnable{
 
         String answer = Utils.readLineFromConsole("Is this data correct? (y/n):");
         if (answer.equals("y")){
-            Optional<Store> store = getController().registerStore(id, designation, email, storeAddress, phoneNumber, storeManager);
+            Optional<Store> store = controller.registerStore(id, designation, email, storeAddress, phoneNumber, storeManager);
 
             if (store.isPresent()) {
                 System.out.println("Store successfully created!");

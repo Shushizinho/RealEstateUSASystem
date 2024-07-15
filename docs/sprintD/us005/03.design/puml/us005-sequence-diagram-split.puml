@@ -57,17 +57,17 @@ activate ADM
 '                deactivate CTRL
 
 
-            CTRL -> REP: createStore(ID, name, address, email,\n phoneNumber)
+            CTRL -> REP: createStore(id, designation, email, storeAddress, phoneNumber, storeManager)
             activate REP
 
                 ref over REP
                     Create Store
                 end
 
-                REP --> CTRL : store
+                REP --> CTRL : storeClone
             deactivate REP
 
-            CTRL --> UI: store
+            CTRL --> UI: storeClone
             deactivate CTRL
             UI --> ADM: displays operation success
     deactivate UI

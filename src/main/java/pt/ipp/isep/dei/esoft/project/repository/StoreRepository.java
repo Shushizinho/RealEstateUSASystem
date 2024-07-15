@@ -216,11 +216,11 @@ public class StoreRepository {
      */
     public Optional<Store> createStore(Integer id, String designation, String email, Address address, long phoneNumber) {
 
-        Store StoreClone = new Store(id,designation,email,address,phoneNumber);
+        Store storeClone = new Store(id,designation,email,address,phoneNumber);
 
-        Optional<Store> newStore = Optional.of(StoreClone.clone());
+        Optional<Store> newStore = Optional.of(storeClone.clone());
 
-        stores.add(StoreClone);
+        stores.add(storeClone);
 
 //        storeManager.getRole().add(rolesRepository.getRoleByDescription(AuthenticationController.ROLE_STORE_MANAGER));
         //AuthenticationController.ROLE_STORE_MANAGER);
@@ -238,11 +238,11 @@ public class StoreRepository {
      */
     public Optional<Store> createStore(StoreDTO storeDTO) {
 
-        Store StoreClone = StoreMapper.toEntity(storeDTO);
+        Store storeClone = StoreMapper.toEntity(storeDTO);
 
-        Optional<Store> newStore = Optional.of(StoreClone.clone());
+        Optional<Store> newStore = Optional.of(storeClone.clone());
 
-        stores.add(StoreClone);
+        stores.add(storeClone);
 
 //        storeManager.getRole().add(rolesRepository.getRoleByDescription(AuthenticationController.ROLE_STORE_MANAGER));
         //AuthenticationController.ROLE_STORE_MANAGER);

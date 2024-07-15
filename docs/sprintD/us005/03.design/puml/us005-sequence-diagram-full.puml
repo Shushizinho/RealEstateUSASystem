@@ -107,28 +107,24 @@ activate ADM
             activate REP
             autonumber 12.1
             group Create Store
+               autonumber 12.1
 
-                REP -> Str** : create(ID, name, address, email,\n phoneNumber)
+                  REP -> Str** : new Store(id,designation,email,address,phoneNumber)
 
-                REP -> REP: addStore (store)
+                   REP -> REP: storeClone.clone()
 
 
-                activate REP
-                    REP -> REP: validateStore(store)
-                    activate REP
-                        REP --> REP
-                    deactivate REP
+                  activate REP
+                      REP -> REP: add(storeClone);
+                      activate REP
+                          REP --> REP
+                      deactivate REP
 
-                    REP --> REP
-                deactivate REP
-            end group
-            autonumber 13
-            REP --> CTRL : store
+                      REP --> REP
+                  deactivate REP
 
-            deactivate REP
+                  end
 
-            CTRL --> UI: store
-            deactivate CTRL
             UI --> ADM: displays operation success
     deactivate UI
 
