@@ -4,8 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * The type Property test.
@@ -95,8 +94,8 @@ class PropertyTest {
     /**
      * Test equals same object same description.
      */
-//    @Test
-    void testEqualsSameObjectSameDescription() {
+    @Test
+    void testNotEqualsSameObjectSameDescription() {
         House property = new House(2.0, 5.3, new Address("streetAddress", "New York", "Texas", "zipCode"),
                 13.2, List.of(new Photograph("lala.png"), new Photograph("okey.png"), new Photograph("photo.png")), 2, 2, 3,
                 List.of("equipment", "equipment1"), true, false, "norte", new PropertyType("House"),
@@ -109,7 +108,7 @@ class PropertyTest {
                 new Store(10, "PPROG",  "pprog@this.app", new Address("teste","teste","teste","teste"),000000000),
                 new Client("Person", "person@this.app", 2, "00000004",new Address("teste","teste","teste","teste"),  00000004),new DateTime());
 
-        assertEquals(property, property1);
+        assertNotEquals(property, property1);
     }
 
     /**

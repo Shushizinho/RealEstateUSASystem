@@ -366,7 +366,7 @@ public class GetPropertyListUI implements Runnable {
     public String displayPropertyFiltersList() {
         while(true){
             try{
-                List<Filters> filters = getController().getPropertyFilters();
+                List<Filters> filters = controller.getPropertyFilters();
 
                 int answer = -1;
 

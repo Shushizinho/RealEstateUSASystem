@@ -6,6 +6,7 @@ import pt.ipp.isep.dei.esoft.project.dto.PairDTO;
 import pt.ipp.isep.dei.esoft.project.mapper.PairMapper;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +14,7 @@ import java.util.Optional;
 /**
  * A repository class for managing all Filters.
  */
-public class PropertyFiltersRepository {
+public class PropertyFiltersRepository implements Serializable {
 
     private final List<Filters> filter = new ArrayList<>();
     private final List<Pair<Integer, Integer>> priceRanges = new ArrayList<>();
