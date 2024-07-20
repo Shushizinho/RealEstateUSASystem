@@ -98,114 +98,9 @@ activate CLN
 
         UI --> UI : isValidTimeSlot(timeSlot)
 
-        UI --> CTRL : getClient()
 
 
 
-        activate CTRL
-
-
-            CTRL -> _APP: getInstance()
-            activate _APP
-                _APP -> CTRL: appSession
-            deactivate _APP
-
-
-            CTRL -> APP: getCurrentSession()
-            activate APP
-
-            APP --> CTRL: currentSession
-            deactivate APP
-
-            CTRL -> SESSION: email = getUserEmail()
-            activate SESSION
-
-             SESSION --> CTRL: email
-            deactivate SESSION
-            CTRL -> RepositorySingleton : getInstance()
-            activate RepositorySingleton
-
-             RepositorySingleton --> CTRL: repositories
-            deactivate RepositorySingleton
-
-            CTRL -> PLAT : getClientRepository()
-            activate PLAT
-
-             PLAT -> CTRL : clientRepository
-            deactivate PLAT
-            CTRL -> CLI: client = getClientByEmail(email)
-            activate CLI
-
-             CLI --> CTRL : client
-
-            deactivate CLI
-
-
-
-
-            CTRL --> UI : client
-
-            deactivate CTRL
-
-
-
-
-
-        UI -> CTRL : client.getName()
-        activate CTRL
-
-
-        CTRL -> RepositorySingleton : getInstance()
-        activate RepositorySingleton
-
-         RepositorySingleton --> CTRL: repositories
-        deactivate RepositorySingleton
-
-        CTRL -> PLAT : getClientRepository()
-        activate PLAT
-
-         PLAT -> CTRL : clientRepository
-        deactivate PLAT
-
-        CTRL -> CLI : getClientName()
-        activate CLI
-
-
-        CLI --> CTRL : clientName
-        deactivate CLI
-
-
-
-
-        CTRL --> UI : clientName
-        deactivate CTRL
-        UI -> CTRL : client.getPhoneNumber()
-        activate CTRL
-
-
-
-        CTRL -> RepositorySingleton : getInstance()
-        activate RepositorySingleton
-
-         RepositorySingleton --> CTRL: repositories
-        deactivate RepositorySingleton
-
-        CTRL -> PLAT : getClientRepository()
-        activate PLAT
-
-         PLAT -> CTRL : clientRepository
-        deactivate PLAT
-
-        CTRL -> CLI : getClientPhoneNumber()
-        activate CLI
-
-        CLI --> CTRL : clientPhoneNumber
-        deactivate CLI
-
-
-        CTRL --> UI : clientPhoneNumber
-
-        deactivate CTRL
 
         UI --> CLN :  asks to confirmation to submit data
 
@@ -214,10 +109,17 @@ activate CLN
         CLN -> UI : confirmation to submit data
         activate UI
 
-            UI -> CTRL : CreateVisitRequest ((VisitRequestDTO)
+            UI -> CTRL : createVisitRequest(property, preferredDate,timeSlot)
 
 
                     activate CTRL
+
+                        CTRL --> CTRL : getClientFromSession()
+
+                        CTRL -> VRDTO** : new VisitRequestDTO(new PropertyDTO(property), new DateTimeDTO(preferredDate.getDate()), timeSlot,client.getName(), client.getPhoneNumber(), 0 );
+                        activate VRDTO
+                        VRDTO --> CTRL : visitRequestDTO
+                        deactivate VRDTO
 
                         CTRL -> RepositorySingleton : getInstance()
 
@@ -234,7 +136,7 @@ activate CLN
                         deactivate PLAT
 
 
-                         CTRL -> VRR :createVisitRequest (VisitRequestDTO)
+                         CTRL -> VRR :createVisitRequest(VisitRequestDTO)
                         activate VRR
 
 
@@ -300,10 +202,16 @@ activate CLN
 
         activate UI
 
-            UI -> CTRL :createVisitRequest (VisitRequestDTO)
+            UI -> CTRL :createVisitRequest(property, preferredDate,timeSlot)
 
 
             activate CTRL
+                 CTRL --> CTRL : getClientFromSession()
+
+                CTRL -> VRDTO** : new VisitRequestDTO(new PropertyDTO(property), new DateTimeDTO(preferredDate.getDate()), timeSlot,client.getName(), client.getPhoneNumber(), 0 );
+                activate VRDTO
+                VRDTO --> CTRL : visitRequestDTO
+                deactivate VRDTO
 
                 CTRL -> RepositorySingleton : getInstance()
 
@@ -320,7 +228,7 @@ activate CLN
                 deactivate PLAT
 
 
-               CTRL -> VRR :createVisitRequest (VisitRequestDTO)
+               CTRL -> VRR :createVisitRequest(VisitRequestDTO)
                activate VRR
 
 
@@ -396,10 +304,16 @@ activate CLN
                     CLN -> UI : confirmation to submit data
 
                     activate UI
-                    UI -> CTRL :createVisitRequest (VisitRequestDTO)
+                    UI -> CTRL :createVisitRequest(property, preferredDate,timeSlot)
 
 
                             activate CTRL
+                                 CTRL --> CTRL : getClientFromSession()
+
+                                CTRL -> VRDTO** : new VisitRequestDTO(new PropertyDTO(property), new DateTimeDTO(preferredDate.getDate()), timeSlot,client.getName(), client.getPhoneNumber(), 0 );
+                                activate VRDTO
+                                VRDTO --> CTRL : visitRequestDTO
+                                deactivate VRDTO
 
                                 CTRL -> RepositorySingleton : getInstance()
 
@@ -416,7 +330,7 @@ activate CLN
                                 deactivate PLAT
 
 
-                                CTRL -> VRR :createVisitRequest (VisitRequestDTO)
+                                CTRL -> VRR :createVisitRequest(VisitRequestDTO)
                                    activate VRR
 
 

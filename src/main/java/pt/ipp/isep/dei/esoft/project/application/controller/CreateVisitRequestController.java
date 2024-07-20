@@ -2,8 +2,11 @@ package pt.ipp.isep.dei.esoft.project.application.controller;
 
 import pt.ipp.isep.dei.esoft.project.application.session.ApplicationSession;
 import pt.ipp.isep.dei.esoft.project.domain.Client;
+import pt.ipp.isep.dei.esoft.project.domain.DateTime;
 import pt.ipp.isep.dei.esoft.project.domain.Property;
 import pt.ipp.isep.dei.esoft.project.domain.VisitRequest;
+import pt.ipp.isep.dei.esoft.project.dto.DateTimeDTO;
+import pt.ipp.isep.dei.esoft.project.dto.PropertyDTO;
 import pt.ipp.isep.dei.esoft.project.repository.ClientRepository;
 import pt.ipp.isep.dei.esoft.project.repository.PropertyRepository;
 import pt.ipp.isep.dei.esoft.project.repository.Repositories;
@@ -133,10 +136,12 @@ public class CreateVisitRequestController {
     /**
      * Creates a visit request.
      *
-     * @param visitRequestDTO the VisitRequestDTO to be created
      */
-    public void createVisitRequest(VisitRequestDTO visitRequestDTO){
-        VisitRequestRepository.CreateVisitRequest(visitRequestDTO);
+    public VisitRequest createVisitRequest(Property property, DateTime preferredDate, List<DateTime> timeSlot ){
+        Client client = getClientFromSession();
+        VisitRequestDTO visitRequestDTO = new VisitRequestDTO(new PropertyDTO(property), new DateTimeDTO(preferredDate.getDate()), timeSlot,client.getName(), client.getPhoneNumber(), 0 );
+        visitRequestRepository.add(visitRequestDTO);
+        return VisitRequestRepository.CreateVisitRequest(visitRequestDTO);
 
     }
 

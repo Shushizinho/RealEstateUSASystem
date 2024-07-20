@@ -79,8 +79,8 @@ public class VisitRequestRepository {
      *
      * @param visitRequestDTO the visit request dto
      */
-    public static void CreateVisitRequest(VisitRequestDTO visitRequestDTO){
-        VisitRequest visitRequest = VisitRequestMapper.toEntity(visitRequestDTO);
+    public static VisitRequest CreateVisitRequest(VisitRequestDTO visitRequestDTO){
+        return VisitRequestMapper.toEntity(visitRequestDTO);
     }
 
     /**

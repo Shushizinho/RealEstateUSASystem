@@ -14,7 +14,7 @@ participant "VisitRequest:\VisitRequest" as VR
 
 
 autonumber
--> CTRL : CreateVisitRequest ((VisitRequestDTO)
+-> CTRL : CreateVisitRequest (VisitRequestDTO)
 
 
         activate CTRL

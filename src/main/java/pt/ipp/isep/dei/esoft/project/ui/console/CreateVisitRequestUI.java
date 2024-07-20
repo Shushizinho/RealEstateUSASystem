@@ -19,10 +19,6 @@ public class CreateVisitRequestUI implements Runnable{
 
     private Property property;
 
-    private String clientName;
-
-    private long clientPhoneNumber;
-
     private DateTime preferredDate;
 
     private List<DateTime> timeSlot = new ArrayList<>();
@@ -71,13 +67,7 @@ public class CreateVisitRequestUI implements Runnable{
         if (property == null) return null;
 
 
-       Client client = getController().getClientFromSession();
-
-       clientName = client.getName();
-
-       clientPhoneNumber = client.getPhoneNumber();
-
-       preferredDate = requestPreferredDate();
+        preferredDate = requestPreferredDate();
        if(preferredDate == null) return null;
 
 
@@ -280,19 +270,16 @@ public class CreateVisitRequestUI implements Runnable{
      * @return true if the visit request is successfully sent and added to the repository.
      */
     public boolean creatVisitRequest(){
-
-        VisitRequest visitRequest = new VisitRequest(property, preferredDate,timeSlot, clientName, clientPhoneNumber, 0);
-        VisitRequestDTO visitRequestDTO = VisitRequestMapper.toDTO(visitRequest);
-        getController().createVisitRequest(visitRequestDTO);
+        VisitRequest visitRequest = controller.createVisitRequest(property, preferredDate,timeSlot);
         displayVisitRequestInformation(visitRequest);
 
         boolean point = true;
-        if (displayOptionYesOrNo("\u001B[33mDo you wish to submit this data?").equals("y")){
+        if (displayOptionYesOrNo("\u001B[33mDo you wish to submit this data?").equals("yes")){
             if (validateVisitRequest(visitRequest)){
                 System.out.println("\u001B[32mVisit request send!");
-                getController().getVisitRequestRepository().add(visitRequestDTO);
+
             }
-        }else if (displayOptionYesOrNo("\u001B[33mDo you wish to submit this data?").equals("n")){
+        }else if (displayOptionYesOrNo("\u001B[33mDo you wish to submit this data?").equals("no")){
             System.out.println("\u001B[41mVisit request not send, please insert the data again\u001B[0m");
             point = false;
         }

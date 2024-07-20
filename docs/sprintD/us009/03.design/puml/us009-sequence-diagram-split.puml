@@ -63,51 +63,10 @@ activate CLN
 
         UI -> UI : keepData(timeSlot)
 
-        UI --> CTRL : getClient()
+       
 
 
 
-        activate CTRL
-
-
-           ref over CTRL
-            get Client
-            end ref
-
-            autonumber 15
-
-            CTRL --> UI : client
-
-            deactivate CTRL
-
-
-
-
-
-        UI -> CTRL : client.getName()
-        activate CTRL
-
-
-        ref over CTRL
-         get Client Name
-         end ref
-
-
-
-
-        CTRL --> UI : clientName
-        deactivate CTRL
-        UI -> CTRL : client.getPhoneNumber()
-        activate CTRL
-
-
-
-        ref over CTRL
-                     get Client Phone Number
-                     end ref
-
-        autonumber 19
-        CTRL --> UI : clientPhoneNumber
 
         deactivate CTRL
 
@@ -118,7 +77,7 @@ activate CLN
         CLN -> UI : confirmation to submit data
         activate UI
 
-        UI -> CTRL : creatVisitRequest (property, preferredDate, timeSlot, clientName, clientPhoneNumber)
+        UI -> CTRL : creatVisitRequest (property, preferredDate, timeSlot)
 
 
         activate CTRL
@@ -161,7 +120,7 @@ activate CLN
 
         activate UI
 
-            UI -> CTRL : creatVisitRequest (property, preferredDate, timeSlot, clientName, clientPhoneNumber)
+            UI -> CTRL : creatVisitRequest (property, preferredDate, timeSlot)
 
 
             activate CTRL
@@ -208,7 +167,7 @@ activate CLN
                     CLN -> UI : confirmation to submit data
 
                     activate UI
-                    UI -> CTRL : creatVisitRequest (property, preferredDate, timeSlot, clientName, clientPhoneNumber)
+                    UI -> CTRL : creatVisitRequest (property, preferredDate, timeSlot)
 
 
                             activate CTRL
