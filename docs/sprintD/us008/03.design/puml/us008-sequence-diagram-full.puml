@@ -38,50 +38,14 @@ participant "Agent" as AG
 
     UI -> CTRL** : create
 
-    UI -> CTRL : getAgentFromSession()
-    activate CTRL
 
-    CTRL -> _APP : getInstance()
-    activate _APP
 
-    _APP --> CTRL : appSession
-    deactivate _APP
+    UI -> CTRL: getAnnouncementsRequestsByAgent()
+     activate CTRL
 
-    CTRL -> APP : getCurrentSession()
-    activate APP
+        CTRL --> CTRL : getAgentFromSession()
 
-    APP --> CTRL : currentSession
-    deactivate APP
 
-    CTRL -> SESSION : email = getUserEmail()
-    activate SESSION
-
-    SESSION --> CTRL : email
-    deactivate SESSION
-
-      CTRL -> MainRepository : getInstance()
-      activate MainRepository
-
-    MainRepository -->CTRL : Repositories
-    deactivate MainRepository
-
-    CTRL -> Repository: getEmployeeRepository()
-    activate Repository
-
-    Repository --> CTRL : EmployeeRepository
-    deactivate Repository
-
-    CTRL -> ER: agent = getEmployeeByEmail(email)
-    activate ER
-
-    ER --> CTRL: agent
-    deactivate ER
-
-    CTRL --> UI: agent
-    deactivate CTRL
-
-    UI -> CTRL: getAnnouncementsRequestsByAgent(agent)
-    activate CTRL
 
 
 

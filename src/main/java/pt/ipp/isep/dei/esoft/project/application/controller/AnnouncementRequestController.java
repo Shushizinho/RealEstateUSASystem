@@ -134,11 +134,11 @@ public class AnnouncementRequestController {
     /**
      * Get announcements requests by agent list.
      *
-     * @param announcementRequestsListByAgent the announcement requests list by agent
      * @return the list
      */
-    public List<AnnouncementRequestDTO> getAnnouncementsRequestsByAgent(String announcementRequestsListByAgent){
+    public List<AnnouncementRequestDTO> getAnnouncementsRequestsByAgent(){
 
+        String announcementRequestsListByAgent = getAgentFromSession().getEmail();
 
         List <AnnouncementRequest> announcementRequests= getAnnouncementsRequestsAgent(announcementRequestsListByAgent);
 
@@ -150,12 +150,10 @@ public class AnnouncementRequestController {
     /**
      * Announcement request dto list to announcement request list list.
      *
-     * @param announcementRequestsListByAgent the announcement requests list by agent
      * @return the list
      */
-    public List<AnnouncementRequest> announcementRequestDTOListToAnnouncementRequestList(String announcementRequestsListByAgent){
-
-        List <AnnouncementRequestDTO> announcementRequests= getAnnouncementsRequestsByAgent(announcementRequestsListByAgent);
+    public List<AnnouncementRequest> announcementRequestDTOListToAnnouncementRequestList(){
+        List <AnnouncementRequestDTO> announcementRequests= getAnnouncementsRequestsByAgent();
 
         return AnnouncementRequestMapper.getAnnouncementRequests(announcementRequests);
 

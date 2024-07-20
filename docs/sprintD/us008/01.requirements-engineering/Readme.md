@@ -39,47 +39,42 @@ request is accepted, the offer will not be shown again to clients using the appl
 >  
 > **Answer:** The Owner attributes are: the name, the citizen's card number, the tax number, the address, the email address and the contact
 telephone number. The Agent is an employee of the company.
-> 
+
 > **Question:** About US08, since as an agent I intend to see the advertisement requests made to me in order to publish the chosen advertisement after consulting the list, why should there be an option to reject it since the previously chosen advertisement had already the intention of being published.The rejection operation shouldn't be described as another feature?
 > 
 > **Answer:** I want to check all property announcement requests and have the option to accept or reject any announcement request. The property owner is a human being and can make errors like any other human being...
-> 
+
 > **Question:** besides the creation of a message justifying the rejection should a message or an email be sent to the client.
 > 
 > **Answer:** The system should also send the message to the owner by e-mail.
-> 
+
 > **Question:** Does the request once it's declined by the agent be deleted from the request list?
 > 
 > **Answer:** The announcement request should not be shown again to the agent. We never delete information from our system.
-> 
+
 > **Question:** Do the agent have to insert the commission after accepting the request from the request list?
 > 
 > **Answer:** The agent should, firstly, set the commission and then publishes the offer in the system. The sale price (the USD value that is shown in the announcement) should include the commission value (owner requested price + commission) and should not show the commission. The commission is only specified when the agent accepts the request.
-> 
+
 > **Question:**  Is the owner responsible to assigning the property to an agent or there are other ways to do that?
 > 
 > **Answer:** In US8 we get "As an agent, I intend to see the list of property announcement requests made to myself, so that I can post the announcement". In this US the agent is the actor.
-> 
+
 > **Question:** In this US8, will it be necessary to show search criteria? If so, which ones?
 > 
 > **Answer:** There is no search criteria.
-> 
+
 > **Question:** Regarding US008, can the agent decline an announcement request?
 > 
 > **Answer:** Yes. The agent must include a message justifying the rejection.
->
+
 > **Question:** Can the agent select multiple requests at the same time?
 > 
 > **Answer:** No. The agent can only post one announcement at a time.
-> 
+ 
 > **Question:** When displaying the property announcement requests in the system to the agent besides them being ordered from most recent to oldest is there a need to display the specific day when the requests were published?
 > 
 > **Answer:** The list of property announcement requests should be sorted by the date they were created, with the most recent requests appearing first. The system should show the date when the property announcement requests was made.
-
-
-
-
-
 
 
 ### 1.3. Acceptance Criteria
@@ -92,9 +87,6 @@ telephone number. The Agent is an employee of the company.
   should be refreshed, and that request should not be shown again.
 * **AC3:** If the agent refuses the announcement request, they should send a message or an email with the appropriate justification.
 * **AC4:** The agent must first define the commission and then publish the offer in the system. The sale price (the USD amount that is shown in the ad) must include the commission amount (owner asked price + commission) and must not show the commission.
-
-
-
 
 
 ### 1.4. Found out Dependencies
@@ -128,6 +120,7 @@ telephone number. The Agent is an employee of the company.
 
 ![System Sequence Diagram](svg/us008-system-sequence-diagram.svg)
 
-### 1.7 Other Relevant Remarks
+[//]: # (### 1.7 Other Relevant Remarks)
 
-* 
+[//]: # ()
+[//]: # (* )

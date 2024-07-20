@@ -208,7 +208,7 @@ public class AnnouncementRepository {
         Optional<Announcement> newAnnouncement = Optional.of(announcement);
 
         announcements.add(announcement);
-        System.out.println(newAnnouncement.get().getAgent().getEmployee().getName());
+      //  System.out.println(newAnnouncement.get().getAgent().getEmployee().getName());
 
         return newAnnouncement;
 

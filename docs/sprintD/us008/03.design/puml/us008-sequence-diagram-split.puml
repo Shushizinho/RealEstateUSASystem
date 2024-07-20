@@ -11,24 +11,7 @@ actor "Agent" as Agent
 
 participant ":AnnouncementRequestUI" as UI
 participant ":AnnouncementRequestController" as CTRL
-participant ":Repositories" as MainRepository
-participant "Repository: \nRepositories" as Repository
-participant ":ApplicationSession" as _APP
-participant "appSession\n:ApplicationSession" as APP
-participant "currentSession\n:UserSession" as SESSION
-participant "employeeRepository:\nEmployeeRepository" as ER
-participant " announcementRequestRepository:\nAnnouncementRequestRepository" as ARR
-participant "AnnouncementRepository:\nAnnouncementRepository" as AnnouncementRepository
-participant "AnnouncementRequestMapper" as ARM
-participant "ListAnnouncementRequestDTO : List<AnnouncementRequestDTO>" as LARDTO
-participant "ListAnnouncementRequest : List<AnnouncementRequest>" as LAR
-participant "AnnouncementRequestDTO:AnnouncementRequestDTO" as ARDTO
-participant "Announcement:Announcement" as A
 
-
-
-
-participant "Agent" as AG
 
 
     activate Agent
@@ -38,17 +21,8 @@ participant "Agent" as AG
 
     UI -> CTRL** : create
 
-    UI -> CTRL : getAgentFromSession()
-    activate CTRL
 
-ref over CTRL
-get Agent From Session
-end ref
-
-    CTRL --> UI: agent
-    deactivate CTRL
-
-    UI -> CTRL: getAnnouncementsRequestsByAgent(agent)
+    UI -> CTRL: getAnnouncementsRequestsByAgent()
     activate CTRL
 
 ref over CTRL

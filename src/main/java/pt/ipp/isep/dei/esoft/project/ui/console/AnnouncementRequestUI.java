@@ -25,13 +25,12 @@ public class AnnouncementRequestUI implements Runnable {
      */
     AuthenticationRepository authentication = Repositories.getInstance().getAuthenticationRepository();
 
-    /**
-     * The Agent 1.
-     */
-    Agent agent1= getController().getAgentFromSession();
+//    /**
+//     * The Agent 1.
+//     */
+//    Agent agent1= getController().getAgentFromSession();
+//
 
-
-    private AnnouncementRequestRepository announcementRequestRepository = new AnnouncementRequestRepository();
 
     /**
      * The Commission.
@@ -50,7 +49,7 @@ public class AnnouncementRequestUI implements Runnable {
     /**
      * The Announcement list dto.
      */
-    List<AnnouncementRequestDTO> announcementListDTO = getController().getAnnouncementsRequestsByAgent(agent1.getEmail());
+    List<AnnouncementRequestDTO> announcementListDTO = controller.getAnnouncementsRequestsByAgent();
 
     /**
      * The Business type description.
@@ -67,7 +66,7 @@ public class AnnouncementRequestUI implements Runnable {
 
         System.out.println("List of all announcement requests:");
 
-            displayAnnouncementRequests(agent1.getEmail());
+            displayAnnouncementRequests();
 
 
 
@@ -79,10 +78,8 @@ public class AnnouncementRequestUI implements Runnable {
     }
 
 
-    private void displayAnnouncementRequests(String email) {
+    private void displayAnnouncementRequests() {
         int index =1;
-
-        AnnouncementRepository announcementRepository = Repositories.getInstance().getAnnouncementRepository();
 
         for (AnnouncementRequestDTO announcementRequest : announcementListDTO) {
 
@@ -95,7 +92,7 @@ public class AnnouncementRequestUI implements Runnable {
 
         }
 
-         getController().getAnnouncementsRequestsAgent(email);
+         //getController().getAnnouncementsRequestsAgent(email);
 
 
     }
@@ -110,11 +107,6 @@ public class AnnouncementRequestUI implements Runnable {
         int selectedAnnouncementIndex;
         boolean valid = false;
         String subject = "Announcement Request was declined";
-
-
-     announcementRequestRepository = Repositories.getInstance().getAnnouncementRequestRepository();
-
-
 
         if(options() == 1) {
 
@@ -131,31 +123,26 @@ public class AnnouncementRequestUI implements Runnable {
 
 
                     selectedAnnouncementIndex = input;
+                    boolean flag = true;
 
                     if (selectedAnnouncementIndex >= 1 && selectedAnnouncementIndex <= announcementList.size()) {
                         AnnouncementRequestDTO selectedAnnouncement = announcementList.get(selectedAnnouncementIndex - 1);
 
 
                         valid = true;
-
-                        if (askAnnouncement().equalsIgnoreCase("Yes")) {
-
-                            createAnnouncement(selectedAnnouncement);
-                            getController().setAcceptedAnnouncementRequest(selectedAnnouncement, true);
-
-
-
-
-
-
-                        } else {
+                        if (askAnnouncement().equalsIgnoreCase("No")) {
                             System.out.print("Insert the message: ");
                             String message = scanner.nextLine();
                             getController().createEmail(selectedAnnouncement.getAgent().getEmployee().getEmail(), selectedAnnouncement.getClient().getEmail(), subject, message);
-                            getController().setAcceptedAnnouncementRequest(selectedAnnouncement, true);
 
+                            flag = false;
+
+                        } else {
+                            createAnnouncement(selectedAnnouncement);
 
                         }
+                        controller.setAcceptedAnnouncementRequest(selectedAnnouncement, flag);
+
                     } else {
                         throw new IllegalArgumentException("Invalid selection. Please try again.");
                     }
