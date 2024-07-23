@@ -56,8 +56,7 @@ public class PlaceOrderUI implements Runnable  {
      */
     private PurchaseOrder submitData() {
 //        throw new NotImplementedException();
-        PurchaseOrder order = controller.placeOrder(orderAmount, propertyDescription);
-        return order;
+        return controller.placeOrder(orderAmount, propertyDescription);
     }
 
     /**
@@ -106,14 +105,14 @@ public class PlaceOrderUI implements Runnable  {
     private PairDTO<Integer, Integer> displayAndSelectPriceRange() {
         while (true){
             try{
-                List<PairDTO<Integer, Integer>> priceRanges = controller.getPriceRanges();
-                int listSize = priceRanges.size();
+                List<PairDTO<Integer, Integer>> priceRangeList = controller.getPriceRanges();
+                int listSize =priceRangeList.size();
                 int answer = -2;
 
                 Scanner input = new Scanner(System.in);
 
                 while (answer < -1 || answer > listSize) {
-                    displayPriceRangeList(priceRanges);
+                    displayPriceRangeList(priceRangeList);
                     System.out.println("\u001B[35m\nType your option: \u001B[0m");
                     answer = input.nextInt();
                     if ( answer < -1 || answer > listSize ) {
@@ -122,7 +121,7 @@ public class PlaceOrderUI implements Runnable  {
                 }
                 if (answer == 0) return new PairDTO<>(0,Integer.MAX_VALUE);
                 if (answer == -1) return new PairDTO<>(-1,-1);
-                else return priceRanges.get(answer - 1).clone();
+                else return priceRangeList.get(answer - 1).clone();
 
 
             }catch (Exception e){
@@ -139,15 +138,15 @@ public class PlaceOrderUI implements Runnable  {
      */
     private String displayAndSelectProperty() {
         //Display the list of property types
-        List<PropertyDTO> properties = controller.getAvailableProperties(Repositories.getInstance().getStoreRepository().getStoreByDescription(storeDescription), priceRange);
+        List<PropertyDTO> propertyList = controller.getAvailableProperties(Repositories.getInstance().getStoreRepository().getStoreByDescription(storeDescription), priceRange);
 
-        int listSize = properties.size();
+        int listSize = propertyList.size();
         int answer = -1;
 
         Scanner input = new Scanner(System.in);
 
         while (answer < 0 || answer > listSize) {
-            displayPropertyOptions(properties);
+            displayPropertyOptions(propertyList);
             if (listSize != 0) {
                 answer = Utils.readIntegerFromConsole("Select a property:");
             }
@@ -157,7 +156,7 @@ public class PlaceOrderUI implements Runnable  {
             }
         }
 
-        if (answer != 0) return properties.get(answer - 1).toStringDTO();
+        if (answer != 0) return propertyList.get(answer - 1).toStringDTO();
         else return null;
 
     }
@@ -169,15 +168,15 @@ public class PlaceOrderUI implements Runnable  {
 
     private String displayAndSelectStore() {
         //Display the list of property types
-        List<StoreDTO> storeList = controller.getStoresWithAgents();
+        List<StoreDTO> storeDTOList = controller.getStoresWithAgents();
 
-        int listSize = storeList.size();
+        int listSize = storeDTOList.size();
         int answer = -1;
 
         Scanner input = new Scanner(System.in);
         if (listSize>=1) {
             while (answer < 1 || answer > listSize) {
-                displayStoreOptions(storeList);
+                displayStoreOptions(storeDTOList);
                 System.out.println("\u001B[35m\nType your option: \u001B[0m");
                 answer = input.nextInt();
                 if (answer < -1 || answer > listSize) {
@@ -189,8 +188,7 @@ public class PlaceOrderUI implements Runnable  {
         } else {
             answer = 1;
         }
-        String description = storeList.get(answer - 1).getDesignation();
-        return description;
+        return storeDTOList.get(answer - 1).getDesignation();
 
     }
 
@@ -215,14 +213,14 @@ public class PlaceOrderUI implements Runnable  {
     }
     /**
      * Displays the list of price ranges as a menu with number options to select.
-     * @param priceRanges A List of PriceRanges to be displayed as menu options.
+     * @parampriceRangeList A List ofpriceRangeList to be displayed as menu options.
      */
-    private void displayPriceRangeList(List<PairDTO<Integer, Integer>> priceRanges) {
+    private void displayPriceRangeList(List<PairDTO<Integer, Integer>>priceRangeList) {
         //display the property types as a menu with number options to select
         System.out.println("\u001B[36m#=======Price Range=======#");
 
         int i = 1;
-        for (PairDTO<Integer, Integer> priceRange : priceRanges) {
+        for (PairDTO<Integer, Integer> priceRange :priceRangeList) {
             System.out.println("\u001B[0m"+i + ". " + controller.printPriceRange(priceRange));
             i++;
         }
@@ -249,12 +247,12 @@ public class PlaceOrderUI implements Runnable  {
 
 //    /**
 //     * Displays the list of stores as a menu with number options to select.
-//     * @param priceRanges A List of PriceRange objects to be displayed as menu options.
+//     * @parampriceRangeList A List of PriceRange objects to be displayed as menu options.
 //     */
-//    private void displayPriceRangeOptions(List<Pair<Integer, Integer>> priceRanges) {
+//    private void displayPriceRangeOptions(List<Pair<Integer, Integer>>priceRangeList) {
 //        //display the property types as a menu with number options to select
 //        int i = 1;
-//        for (Pair<Integer, Integer> priceRange : priceRanges) {
+//        for (Pair<Integer, Integer> priceRange :priceRangeList) {
 //            System.out.println(i + " - " + priceRange.toString());
 //            i++;
 //        }
