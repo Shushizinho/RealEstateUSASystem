@@ -42,13 +42,13 @@ public class ListEmployeesEveryStoreUI implements Runnable {
             int i = 1;
 
             List<EmployeeDTO> employeesList = controller.getEmployeeFromSpecificStore(storeDTO);
-            List<Property> propertyList  = controller.getPropertyFromSpecificStore(storeDTO);
+            int numberOfProperties  = controller.getNumberPropertiesFromSpecificStore(storeDTO);
 
 
 
 //            if(employeesList.size() >= 0){
 //            if(propertyList.size() >= 0){
-                System.out.println("\u001B[34m== "+ storeDTO.getId() + " - " + storeDTO.getDesignation() + " -- Total of Propertys: " + propertyList.size()+ " ==\u001B[0m" );
+                System.out.println("\u001B[34m== "+ storeDTO.getId() + " - " + storeDTO.getDesignation() + " -- Total of Propertys: " + numberOfProperties+ " ==\u001B[0m" );
 
                 for (EmployeeDTO empl: employeesList ) {
                     String rolestext="";

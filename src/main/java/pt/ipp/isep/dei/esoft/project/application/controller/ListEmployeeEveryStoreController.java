@@ -161,7 +161,7 @@ public class ListEmployeeEveryStoreController {
      * @param strdto the strdto
      * @return the property from specific store
      */
-    public List<Property> getPropertyFromSpecificStore(StoreDTO strdto) {
+    public int getNumberPropertiesFromSpecificStore(StoreDTO strdto) {
 
         StoreMapper storeMapper = new StoreMapper();
         Store str = storeMapper.toEntity(strdto);
@@ -174,7 +174,7 @@ public class ListEmployeeEveryStoreController {
 
         }
 
-        return propertyList;
+        return propertyList.size();
     }
 
     /**

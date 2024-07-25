@@ -198,6 +198,37 @@ activate NM
                             CTRL-->UI :  employeeListDTO
                         deactivate CTRL
 
+                         UI-> CTRL : getNumberPropertiesFromSpecificStore(storeDTO)
+                                                activate CTRL
+
+                                                CTRL -> STRMAP : toEntity(storeDTO)
+                                                activate STRMAP
+                                                ref over STRMAP
+                                                create Store
+
+                                                end ref
+
+                                                STRMAP --> CTRL : store
+                                                deactivate STRMAP
+
+                                                loop each property
+
+                                                CTRL -> STOR : store = getStore()
+                                                activate STOR
+
+                                                deactivate STOR
+
+                                                CTRL --> CTRL : add(property)
+
+
+
+                                                end loop
+
+
+                                                CTRL --> UI : numberOfProperties
+                                                 deactivate CTRL
+
+
 
         UI --> NM : show the list of all employees grouped by store
         deactivate UI
