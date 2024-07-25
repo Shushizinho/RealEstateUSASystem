@@ -21,48 +21,34 @@ activate AGT
 
             UI -> CTRL** : create
 
-            UI->CTRL : getSaleAnnouncements()
+            UI->CTRL : getPropertiesAndOffers(AnnouncementComparator, BuyOrderComparator)
+
 
                 activate CTRL
-                    ref over CTRL
-                    get Sale Announcements List
-                    end ref
+                 CTRL --> CTRL :getSaleAnnouncements()
+                 CTRL --> CTRL : getListOldestToNewest(announcementList,AnnouncementComparator)
 
-                autonumber 4
-                CTRL-->UI : announcementList
+                CTRL --> UI : announcementList
+
                 deactivate CTRL
 
-            UI -> CTRL : getListOldestToNewest(announcementList,AnnouncementComparator)
-                activate CTRL
-
-'                ref over CTRL
-'                get Announcements List Sorted By Oldest to Newest
-'                end ref
-
-            autonumber 6
-            CTRL --> UI : itemListSorted
-            deactivate CTRL
-
-            UI ->CTRL: getBuyOrders(saleAnnouncement)
+                UI-> CTRL : getOrders(saleAnnouncement, BuyOrderComparator)
 
                 activate CTRL
-                    ref over CTRL
-                    get Buy Orders List
-                    end ref
 
-                autonumber 8
-            CTRL-->UI : buyOrdersList
-            deactivate CTRL
+                 CTRL -->CTRL: getBuyOrders(saleAnnouncement)
 
-            UI -> CTRL : getListDescendingOrder(buyOrdersList,BuyOrderComparator)
-                activate CTRL
 
-'                ref over CTRL
-'                get Buy Order List Sorted By Higher to lower
-'                end ref
-            autonumber 10
-            CTRL --> UI : itemListSorted
-            deactivate CTRL
+
+                 CTRL --> CTRL : getListDescendingOrder(buyOrdersList,BuyOrderComparator)
+
+                autonumber 4
+                CTRL-->UI : itemListSorted
+                deactivate CTRL
+
+
+
+'
 
             UI --> AGT : provide properties list and respective offers
         deactivate UI

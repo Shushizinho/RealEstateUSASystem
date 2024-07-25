@@ -120,7 +120,7 @@ public class PurchaseOrdersController {
      * @param saleAnnouncement The SaleAnnouncement for which to retrieve the index.
      * @return The index of the SaleAnnouncement in the PurchaseOrderRepository, or -1 if not found.
      */
-    public List<PurchaseOrder> getOrdersByAnnouncement(Announcement saleAnnouncement) {
+    public List<PurchaseOrder> getBuyOrders(Announcement saleAnnouncement) {
         return purchaseOrderRepository.getOrderByAnnouncement(saleAnnouncement);
     }
 
@@ -161,9 +161,11 @@ public class PurchaseOrdersController {
      *
      * @param announcements          the announcements
      * @param announcementComparator the announcement comparator
+     * @return
      */
-    public void getListOldestToNewest(List<Announcement> announcements, AnnouncementComparator announcementComparator) {
+    public List<Announcement> getListOldestToNewest(List<Announcement> announcements, AnnouncementComparator announcementComparator) {
         Collections.sort(announcements, announcementComparator);
+        return announcements;
     }
 
     /**
@@ -174,5 +176,23 @@ public class PurchaseOrdersController {
      */
     public void getListHighestToLowest(List<PurchaseOrder> orders, PurchaseOrderComparator purchaseOrderComparator) {
         Collections.sort(orders, purchaseOrderComparator);
+    }
+
+    public List<Announcement> getPropertiesAndOffers(AnnouncementComparator announcementComparator) {
+        List<Announcement> announcements = getSaleAnnouncemets();
+
+        return getListOldestToNewest(announcements,announcementComparator);
+
+
+
+    }
+
+    public List<PurchaseOrder> getOrders(Announcement saleAnnouncement, PurchaseOrderComparator purchaseOrderComparator) {
+
+        List<PurchaseOrder> orders = getBuyOrders(saleAnnouncement);
+
+        getListHighestToLowest(orders, purchaseOrderComparator);
+
+        return orders;
     }
 }

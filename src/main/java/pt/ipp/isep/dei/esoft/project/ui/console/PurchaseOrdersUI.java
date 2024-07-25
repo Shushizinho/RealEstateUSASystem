@@ -41,7 +41,7 @@ public class PurchaseOrdersUI implements Runnable {
     /**
      * The Announcements.
      */
-    List<Announcement> announcements = controller.getSaleAnnouncemets();
+    List<Announcement> announcements = controller.getPropertiesAndOffers(new AnnouncementComparator());
 
     public void run() {
         System.out.println("=".repeat(13) + " List of Buy Orders " + "=".repeat(14) + "\n");
@@ -60,7 +60,6 @@ public class PurchaseOrdersUI implements Runnable {
 
         String CurrentUser = String.valueOf(authentication.getCurrentUserSession().getUserId());
 
-        controller.getListOldestToNewest(announcements,new AnnouncementComparator());
 
         if(!announcements.isEmpty()) {
             for (Announcement saleAnnouncement : announcements) {
@@ -69,9 +68,10 @@ public class PurchaseOrdersUI implements Runnable {
                 if (PropUser.equalsIgnoreCase(CurrentUser)) {
 
                     System.out.println("=".repeat(12) + " " + i + " - " + saleAnnouncement.getProperty().getPropertyType().getDescription() + " - " + saleAnnouncement.getDate() + " " + "=".repeat(12));
-                    List<PurchaseOrder> orders = controller.getOrdersByAnnouncement(saleAnnouncement);
+                    List<PurchaseOrder> orders =  controller.getOrders(saleAnnouncement, new PurchaseOrderComparator());
+
                     if (orders.size() > 0) {
-                        controller.getListHighestToLowest(orders, new PurchaseOrderComparator());
+                       // controller.getListHighestToLowest(orders, new PurchaseOrderComparator());
                         for (PurchaseOrder purchaseOrder : orders) {
                             if ( purchaseOrder.getWasAccepted() != 1 && purchaseOrder.getWasAccepted() != -1) {
                                 System.out.println(j + " - " + purchaseOrder.getOrderAmount());
