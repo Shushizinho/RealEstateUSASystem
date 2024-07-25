@@ -28,6 +28,8 @@ ADM -> UI : asks to import a csv file
 activate UI
 UI -> CTRL** : create
 
+UI --> UI : displayFiles()
+
 UI --> ADM : show the list of all csv files in the resources folder
 deactivate UI
 

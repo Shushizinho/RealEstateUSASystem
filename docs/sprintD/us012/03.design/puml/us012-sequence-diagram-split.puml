@@ -18,7 +18,11 @@ UI-> CTRL** : create
 'ref over CTRL
 '    Get List of CSV Files
 'end ref
+
+UI --> UI : displayFiles()
+
 UI --> ADM : show the list of all csv files in the resources folder
+
 deactivate UI
 
 ADM -> UI : choose an option to import the file
@@ -33,7 +37,7 @@ ref over CTRL
 end ref
 
 CTRL --> UI: operationResult
-
+deactivate CTRL
 UI --> ADM : display operation success
 deactivate UI
 

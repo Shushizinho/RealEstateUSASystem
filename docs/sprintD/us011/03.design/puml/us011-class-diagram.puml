@@ -137,10 +137,12 @@ class PurchaseOrdersController {
     + PurchaseOrdersController(propertyRepository, userRepository)
     - getEmployeeFromSession()
     - getAnnouncements()
-    -getOrdersBuyAnnouncement(Announcement)
+    - getBuyOrders(Announcement)
     - createEmail(String sender, String receiver, String subject, String message)
     - setAcceptedPurchaseOrder(purchaseOrder)
     - getListOldestToNewest(announcement, announcementComparator)
+    - getPropertiesAndOffers(announcementComparator)
+    - getOrders(saleAnnouncement, purchaseOrderComparator)
 }
 
 
