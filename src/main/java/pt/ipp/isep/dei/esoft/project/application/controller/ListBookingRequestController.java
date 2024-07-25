@@ -155,15 +155,14 @@ public class ListBookingRequestController {
     /**
      * Get visit requests by agent list.
      *
-     * @param visitRequestsListByAgent the visit requests list by agent
-     * @param begin                    the begin
+      * @param begin                    the begin
      * @param end                      the end
      * @return the list
      */
-    public List<VisitRequestDTO> getVisitRequestsByAgent(String visitRequestsListByAgent, DateTime begin, DateTime end ){
+    public List<VisitRequestDTO> getVisitRequestsByAgent(DateTime begin, DateTime end ){
 
-
-        List <VisitRequest> visitRequestList= getVisitRequests(visitRequestsListByAgent, begin, end);
+        String agentEmail = getAgentFromSession().getEmail();
+        List <VisitRequest> visitRequestList= getVisitRequests(agentEmail, begin, end);
 
         return VisitRequestMapper.getVisitRequestsDTO(visitRequestList);
 

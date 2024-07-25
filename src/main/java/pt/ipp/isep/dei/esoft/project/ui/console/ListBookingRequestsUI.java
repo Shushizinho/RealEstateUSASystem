@@ -27,10 +27,6 @@ public class ListBookingRequestsUI implements Runnable {
     List<VisitRequest> visitRequests = controller.getVisitRequests();
 
 
-    /**
-     * The Agent.
-     */
-    Agent agent =  controller.getAgentFromSession();
 
     /**
      * The Date formatted begin.
@@ -48,7 +44,7 @@ public class ListBookingRequestsUI implements Runnable {
         dateTimeEnd = requestEndDate();
         int index = 1;
 
-        List<VisitRequestDTO> visitRequestDTOS = controller.getVisitRequestsByAgent(agent.getEmail(), dateTimeBegin, dateTimeEnd);
+        List<VisitRequestDTO> visitRequestDTOS = controller.getVisitRequestsByAgent(dateTimeBegin, dateTimeEnd);
 
         for(VisitRequestDTO visitRequestDTO : visitRequestDTOS){
             if ( visitRequestDTO.accepted() != 1 && visitRequestDTO.accepted() != -1) {

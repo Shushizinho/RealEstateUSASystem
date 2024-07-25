@@ -13,26 +13,12 @@ participant ":ListBookingRequestsUI" as UI
 participant ":ListBookingRequestsController" as CTRL
 
 
-
-
-
-
-
-
-
-
-
-
-
     activate Agent
 
   Agent -> UI : asks for the list of all booking requests made for myself
     activate UI
 
     UI -> CTRL** : create
-
-
-
 
 
       UI --> Agent : asks for the start date to view booking requests
@@ -51,18 +37,12 @@ participant ":ListBookingRequestsController" as CTRL
           Agent -> UI : selects the end date
            activate UI
 
-    UI -> CTRL : getAgentFromSession()
+
+
+       UI -> CTRL: getVisitRequestsByAgent(DateTime begin,DateTime end )
        activate CTRL
 
-      ref over CTRL
-      get Agent From Session
-      end ref
-       CTRL --> UI: agent
-       deactivate CTRL
-
-       UI -> CTRL: getVisitRequestsByAgent(String agent,DateTime begin,DateTime end )
-       activate CTRL
-
+       CTRL--> CTRL : getAgentFromSession()
 
      ref over CTRL
      get Visit Requests List Ascending Order

@@ -61,53 +61,53 @@ participant "visitRequestsByAgentInPeriodSorted : List<VisitRequest>" as VR
 
 
 
-
-
-    UI -> CTRL : getAgentFromSession()
-       activate CTRL
-
-       CTRL -> _APP : getInstance()
-       activate _APP
-
-       _APP --> CTRL : appSession
-       deactivate _APP
-
-       CTRL -> APP : getCurrentSession()
-       activate APP
-
-       APP --> CTRL : currentSession
-       deactivate APP
-
-       CTRL -> SESSION : email = getUserEmail()
-       activate SESSION
-
-       SESSION --> CTRL : email
-       deactivate SESSION
-
-         CTRL -> MainRepository : getInstance()
-         activate MainRepository
-
-       MainRepository -->CTRL : Repositories
-       deactivate MainRepository
-
-       CTRL -> Repository: getEmployeeRepository()
-       activate Repository
-
-       Repository --> CTRL : EmployeeRepository
-       deactivate Repository
-
-       CTRL -> ER: agent = getEmployeeByEmail(email)
-       activate ER
-
-       ER --> CTRL: agent
-       deactivate ER
-
-       CTRL --> UI: agent
+'
+'
+'    UI -> CTRL : getAgentFromSession()
+'       activate CTRL
+'
+'       CTRL -> _APP : getInstance()
+'       activate _APP
+'
+'       _APP --> CTRL : appSession
+'       deactivate _APP
+'
+'       CTRL -> APP : getCurrentSession()
+'       activate APP
+'
+'       APP --> CTRL : currentSession
+'       deactivate APP
+'
+'       CTRL -> SESSION : email = getUserEmail()
+'       activate SESSION
+'
+'       SESSION --> CTRL : email
+'       deactivate SESSION
+'
+'         CTRL -> MainRepository : getInstance()
+'         activate MainRepository
+'
+'       MainRepository -->CTRL : Repositories
+'       deactivate MainRepository
+'
+'       CTRL -> Repository: getEmployeeRepository()
+'       activate Repository
+'
+'       Repository --> CTRL : EmployeeRepository
+'       deactivate Repository
+'
+'       CTRL -> ER: agent = getEmployeeByEmail(email)
+'       activate ER
+'
+'       ER --> CTRL: agent
+'       deactivate ER
+'
+'       CTRL --> UI: agent
        deactivate CTRL
 
-       UI -> CTRL: getVisitRequestsByAgent(String agent,DateTime begin,DateTime end )
+       UI -> CTRL: getVisitRequestsByAgent(DateTime begin,DateTime end)
        activate CTRL
-
+               CTRL--> CTRL : getAgentFromSession()
 
       CTRL -> MainRepository : getInstance()
          activate MainRepository
