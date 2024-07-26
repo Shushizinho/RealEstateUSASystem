@@ -17,6 +17,8 @@ class GetDealListController {
    + getDealsOrder()
    + getBubbleSort (double[] areaProperty)
    + getInsertionSort (double[] areaProperty)
+   + sortDeals(List<Property> properties, int method)
+   + getPropertySorted (List<Property> propertyList ,double[] areaProperty)
 }
 
 
@@ -40,12 +42,12 @@ class PurchaseOrder{
     - DateTime creationDate
 }
 
-class BubbleSort{
+class BubbleSortAlgorithm{
     + sort(double[] arr)
 
 }
 
-class InsertionSort{
+class InsertionSortAlgorithm{
     + sort(double[] arr)
  }
 
@@ -65,9 +67,9 @@ GetDealListController .-> Repositories : repositories
 
 GetDealListController --> PurchaseOrderRepository
 
-GetDealListController --> BubbleSort
+GetDealListController --> BubbleSortAlgorithm
 
-GetDealListController --> InsertionSort
+GetDealListController --> InsertionSortAlgorithm
 
 PurchaseOrderRepository --> PurchaseOrder
 

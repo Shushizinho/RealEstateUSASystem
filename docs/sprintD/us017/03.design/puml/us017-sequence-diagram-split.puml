@@ -22,16 +22,18 @@ activate NM
     activate UI
     UI -> CTRL** : createGetDealListController()
 
-    UI -> CTRL : getDeals()
+    UI -> CTRL : getPropertyDealsList()
     activate CTRL
     ref over CTRL
     Get deals list
     end ref
     autonumber 4
-    CTRL --> UI : dealsList
+    CTRL --> UI : propertyList
 
 
     deactivate CTRL
+
+    UI --> UI : displayListOfProperties(propertyList)
 
     UI --> UI : displayAndRequestOrder()
 
@@ -81,6 +83,9 @@ activate NM
       autonumber 15
         deactivate CTRL
 
+
+
+    UI --> UI : GetPropertySorted(sortedDealsList)
 
     UI --> UI : displaySortedDeals(sortedProperties, order)
 
