@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 /**
  * The type Visit request ui.
  */
-public class VisitRequestUI implements Runnable{
+public class RespondVisitRequestUI implements Runnable{
 
     private static final String filterGmail = "filter.term.gmail";
 
@@ -40,7 +40,7 @@ public class VisitRequestUI implements Runnable{
     /**
      * The Visit requests.
      */
-    List<VisitRequest> visitRequests = getController().getVisitRequests();
+    List<VisitRequest> visitRequests = controller.getVisitRequests();
 
     public void run() {
 

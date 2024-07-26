@@ -8,8 +8,8 @@ title As an Agent, I want to list real estate purchase orders to accept or decli
 autonumber
 
 actor "Agent" as AGT
-participant ":ListBookingRequestUI" as UI
-participant ":ListBookingRequestController" as CTRL
+participant "RespondVisitRequestUI" as UI
+participant ":VisitRequestController" as CTRL
 'participant ":Repositories" as RepositorySingleton
 'participant "repositories\n:Repositories" as PLAT
 'participant "visitRequestRepository\n:VisitRequestRepository" as REP
@@ -18,10 +18,50 @@ participant "EmailFilter" as EmFilter
 participant "GmailFilter" as GmFilter
 participant "HotmailFilter" as HmFilter
 participant "YahooFilter" as YhFilter
+participant ":Repositories" as MainRepository
+participant " visitRequestRepository:\nVisitRequestRepository" as VRR
 
 
 
 activate AGT
+
+    AGT -> UI : asks to respond to the visit request
+    activate UI
+
+    UI ->CTRL**: create()
+     UI -> CTRL : getVisitRequests()
+
+     activate CTRL
+        CTRL -> MainRepository : getInstance()
+         activate MainRepository
+
+         MainRepository -->CTRL : Repositories
+         deactivate MainRepository
+
+         CTRL -> VRR: getVisitRequestRepository()
+         activate VRR
+
+         VRR --> CTRL: visitRequestRepository
+         deactivate VRR
+
+         CTRL -> VRR : getVisitRequests()
+
+         activate VRR
+
+         VRR-->CTRL : visitRequests
+
+         deactivate VRR
+
+
+
+      CTRL --> UI : provide list of visit requests
+     deactivate CTRL
+
+
+
+    UI --> AGT : provide list of visit requests
+    deactivate UI
+
 
     group loop
     AGT -> UI : selectes request

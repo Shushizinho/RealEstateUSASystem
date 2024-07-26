@@ -7,18 +7,7 @@ skinparam linetype polyline
 
 skinparam classAttributeIconSize 0
 
-'left to right direction
 
-class ApplicationSession
-{
-    + static getInstance()
-    + getCurrentSession()
-}
-
-class UserSession
-{
-    + getUserEmail()
-}
 
 class Client {
     - String name
@@ -47,13 +36,10 @@ class Employee{
 class Repositories {
     - Repositories()
     + getInstance() : Repositories
-    + getPropertyRepository()
     + getVisitRequestRepository()
-    +getClientRepository()
+    + getClientRepository()
 }
-class propertyRepository{
-    +getProperties()
-}
+
 
 class ClientRepository{
 '    - ArrayList<Client> clients
@@ -76,13 +62,10 @@ class VisitRequest{
 }
 
 
-class Property {
-}
 
 
-class Agent {
 
-}
+
 
 class Person{
     - String name
@@ -93,52 +76,40 @@ class Person{
 }
 
 
-class ListBookingRequestController {
-    + ListBookingRequestController()
-    - getAgentFromSession()
+class RespondVisitRequestController {
+
+    + createEmail(String sender, String receiver, String subject, String message)
     + getClientLIst()
     + getVisitRequests()
 
 }
 
-class PropertyType{
--String description
-}
-
-class Role {
--Integer id
--String description
-}
 
 
-class ListBookingRequestUI {
+class RespondVisitRequestUI {
 }
 
 ApplicationSession -> ApplicationSession : instance
-ListBookingRequestUI .> ListBookingRequestController
-ApplicationSession -> "1" UserSession : userSession
-ListBookingRequestController .> ApplicationSession
-ListBookingRequestController ..> UserSession
-ListBookingRequestController .> Repositories : repositories
+RespondVisitRequestUI .> RespondVisitRequestController
+
+RespondVisitRequestController .> ApplicationSession
+
+RespondVisitRequestController .> Repositories : repositories
 Repositories -> Repositories : instance
-ListBookingRequestController -> Agent : Agent
+RespondVisitRequestController -> Agent : Agent
 Agent --|> Employee : implements
 Address "1" <-- "1"  Person
-Address "1" <- "1" Property
-Repositories -> "1" propertyRepository
-propertyRepository "1"-->"*" Property
-ListBookingRequestController ..> propertyRepository : propertyRepository
-ListBookingRequestController ..> VisitRequestRepository : visitRequestRepository
-ListBookingRequestController ..> ClientRepository : clientRepository
+RespondVisitRequestController ..> VisitRequestRepository : visitRequestRepository
+RespondVisitRequestController ..> ClientRepository : clientRepository
 Repositories --> "1" ClientRepository
 ClientRepository --> "1" Client
 VisitRequestRepository "1" -> "1" VisitRequest
 Repositories --> "1" VisitRequestRepository
 Client "1" --> "*" VisitRequest : creates
 Agent "1" -> "*" VisitRequest : responds
-VisitRequest "*" --> "1" Property
+
 Role"1" <-- "*"Employee : has a
-Property"*" --> "1"PropertyType
+
 Person <|- Client
 Person <|-- Employee
 

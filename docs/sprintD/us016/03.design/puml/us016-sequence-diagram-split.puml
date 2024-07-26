@@ -8,76 +8,53 @@ title As an Agent, I want to list real estate purchase orders to accept or decli
 autonumber
 
 actor "Agent" as AGT
-participant ":PurchaseOrdersUI" as UI
-participant ":PurchaseOrdersController" as CTRL
-participant ":Repositories" as RepositorySingleton
-participant "repositories\n:Repositories" as PLAT
-participant "announcementRepository\n:AnnouncementRepository" as LOC
-participant "buyOrdersRepository\n:BuyOrdersRepository" as REP
+participant "RespondVisitRequestUI" as UI
+participant ":VisitRequestController" as CTRL
+'participant ":Repositories" as RepositorySingleton
+'participant "repositories\n:Repositories" as PLAT
+'participant "visitRequestRepository\n:VisitRequestRepository" as REP
+
 
 
 activate AGT
 
-    AGT -> UI : asks to list purchase orders
-
-        activate UI
-
-            UI -> CTRL** : create
-
-            UI->CTRL : getSaleAnnouncements()
-
-                activate CTRL
-                    ref over CTRL
-                    get Sale Announcements List
-                    end ref
-
-                autonumber 4
-                CTRL-->UI : announcementList
-                deactivate CTRL
-
-            UI -> CTRL : getListOldestToNewest(announcementList,AnnouncementComparator)
-                activate CTRL
-
-
-
-            autonumber 6
-            CTRL --> UI : itemListSorted
-            deactivate CTRL
-
-            UI ->CTRL: getBuyOrders()
-
-                activate CTRL
-                    ref over CTRL
-                    get Buy Orders List
-                    end ref
-
-                autonumber 8
-            CTRL-->UI : buyOrdersList
-            deactivate CTRL
-
-            UI -> CTRL : getListDescendingOrder(buyOrdersList,BuyOrderComparator)
-                activate CTRL
-
-
-            autonumber 10
-            CTRL --> UI : itemListSorted
-            deactivate CTRL
-
-            UI --> AGT : provide properties list and respective offers
-        deactivate UI
-
-    group loop
-    AGT -> UI : selectes property and offer
+    AGT -> UI : asks to respond to the visit request
     activate UI
 
-        UI -> UI : selectBuyOrder()
+    UI ->CTRL**: create()
+     UI -> CTRL : getVisitRequests()
+
+     activate CTRL
+
+     ref over CTRL
+
+     get visit requests
+
+     end ref
+
+
+
+      CTRL --> UI : provide list of visit requests
+     deactivate CTRL
+
+
+
+    UI --> AGT : provide list of visit requests
+    deactivate UI
+
+
+    group loop
+    AGT -> UI : selectes request
+    activate UI
+
+        UI -> UI : selectRequest()
         activate UI
 
         UI->UI : ValidateInput()
         deactivate UI
 
 
-    UI--> AGT : asks if is to accept or decline offer
+    UI--> AGT : asks what message wants to write
     deactivate UI
     end
 
@@ -90,18 +67,23 @@ activate AGT
 
         UI->UI : ValidateAnswer()
         deactivate UI
-    end
+
+        end
 
         UI -> CTRL : createEmail(String sender, String receiver, String subject, String message)
-            activate CTRL
-                ref over CTRL
-                create email
-                end ref
-            CTRL --> UI : message
+
+        activate CTRL
+
+        ref over CTRL
+        create email
+
+        end ref
+
+
+        CTRL --> UI : message
         deactivate CTRL
     UI --> AGT: displays operation success and send email to client
     deactivate UI
-
 
 deactivate AGT
 

@@ -11,7 +11,7 @@ participant "YahooFilter" as YhFilter
 
 
 
-autonumber 3
+autonumber 13
 
 'hide footbox
 
@@ -25,10 +25,10 @@ autonumber 3
                     EmFilter -> GmFilter: createEmail(String sender, String receiver, String subject, String message)
                         activate GmFilter
 
-                        GmFilter -> EmFilter
+                        GmFilter -> EmFilter  : message
                     deactivate GmFilter
 
-                EmFilter --> Config
+                EmFilter --> Config  : message
             deactivate EmFilter
             end alt
 
@@ -39,10 +39,10 @@ autonumber 3
                     EmFilter -> HmFilter: createEmail(String sender, String receiver, String subject, String message)
                         activate HmFilter
 
-                        HmFilter -> EmFilter
+                        HmFilter -> EmFilter  : message
                     deactivate HmFilter
 
-                EmFilter --> Config
+                EmFilter --> Config  : message
             deactivate EmFilter
             end alt
 
@@ -53,13 +53,13 @@ autonumber 3
                     EmFilter -> YhFilter: createEmail(String sender, String receiver, String subject, String message)
                         activate YhFilter
 
-                        YhFilter -> EmFilter
+                        YhFilter -> EmFilter : message
                     deactivate YhFilter
 
-                EmFilter --> Config
+                EmFilter --> Config  : message
             deactivate EmFilter
             end alt
-            <-- Config
+            <-- Config  : message
         deactivate Config
 
 @enduml

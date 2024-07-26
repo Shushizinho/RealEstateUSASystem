@@ -1,0 +1,47 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+
+participant ":VisitRequestController" as CTRL
+participant ":Repositories" as MainRepository
+participant " visitRequestRepository:\nVisitRequestRepository" as VRR
+
+autonumber 3
+
+'hide footbox
+
+         -> CTRL : getVisitRequests()
+
+             activate CTRL
+                CTRL -> MainRepository : getInstance()
+                 activate MainRepository
+
+                 MainRepository -->CTRL : Repositories
+                 deactivate MainRepository
+
+                 CTRL -> VRR: getVisitRequestRepository()
+                 activate VRR
+
+                 VRR --> CTRL: visitRequestRepository
+                 deactivate VRR
+
+                 CTRL -> VRR : getVisitRequests()
+
+                 activate VRR
+
+                 VRR-->CTRL : visitRequests
+
+                 deactivate VRR
+
+
+
+              <-- CTRL : provide list of visit requests
+             deactivate CTRL
+
+
+
+
+@enduml

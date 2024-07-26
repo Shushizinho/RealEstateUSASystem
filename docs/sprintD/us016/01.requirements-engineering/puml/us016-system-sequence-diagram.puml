@@ -12,11 +12,11 @@ participant ":System" as System
 
 activate Agent
 
-'    Agent -> System : asks to list all the visit requests
-'    activate System
+    Agent -> System : asks to respond to the visit request
+    activate System
 
-'        System --> Agent : provide visit requests
-'    deactivate System
+        System --> Agent : provide list of visit requests
+    deactivate System
 
     Agent -> System : selectes visit request
     activate System

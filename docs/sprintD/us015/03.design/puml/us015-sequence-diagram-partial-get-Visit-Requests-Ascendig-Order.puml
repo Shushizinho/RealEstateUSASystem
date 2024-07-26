@@ -7,9 +7,9 @@
 
 participant ":ListBookingRequestsController" as CTRL
 participant ":Repositories" as MainRepository
-participant "Repository: \nRepositories" as Repository
 
-participant "employeeRepository:\nEmployeeRepository" as ER
+
+
 participant " visitRequestRepository:\nVisitRequestRepository" as VRR
 
 
