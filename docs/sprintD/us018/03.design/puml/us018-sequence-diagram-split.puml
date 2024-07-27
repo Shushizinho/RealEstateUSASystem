@@ -37,7 +37,7 @@ activate SM
     activate UI
     UI --> UI : keep (regressionModel)
 
-    UI --> CTRL : displayIndependentVariables ()
+    UI --> CTRL : displayIndependentVariables()
     activate CTRL
     ref over CTRL
     get independent variables

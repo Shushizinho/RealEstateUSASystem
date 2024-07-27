@@ -49,3 +49,5 @@ was carried out as described in the following table.
 # 3. Code maintenance ###
 
 All maintenance of the code to date has been carried out by Ana Miguel Silva, N.º 1221133.
+
+This also includes the correction of previous design and implementation errors, as well as the respective unit tests

@@ -131,5 +131,5 @@ java -jar target/project-template-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 # Who do I talk to about this project
 
-Nuno Bettencourt
+Ana Miguel Silva
 
